@@ -1,0 +1,83 @@
+/* .float-message .lastmsg {
+	display: none;
+} */
+.actpost .formbutton,
+.tip,
+#u_button {
+	-webkit-transition-property: opacity, top;
+	-webkit-transition-duration: 300ms;
+}
+#phupdate textarea {
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 300ms;
+}
+.float-message {
+	position: fixed;
+	top: 0;
+	z-index: 100;
+	background:
+		-webkit-gradient(
+			linear,
+			left top,
+			left bottom,
+			from(rgba(255, 255, 255, 1)),
+			color-stop(30%, rgba(255, 255, 255, .9)),
+			color-stop(75%, rgba(255, 255, 255, .9)),
+			color-stop(100%, rgba(255, 255, 255, 0))
+		);
+	border-bottom: none;
+	padding: 10px 0;
+	pointer-events: none;
+}
+.float-message.msgempty {
+	background:
+		-webkit-gradient(
+			linear,
+			left top,
+			left bottom,
+			from(rgba(255, 255, 255, 1)),
+			color-stop(30%, rgba(255, 255, 255, .9)),
+			color-stop(60%, rgba(255, 255, 255, .9)),
+			color-stop(80%, rgba(255, 255, 255, 0))
+		);
+}
+.float-message h2,
+.float-message textarea,
+.float-message .actpost .formbutton,
+.float-message #upload-wrapper,
+.float-message .upload-button-wrapper {
+	pointer-events: auto;
+}
+.float-message::before {
+	content: " ";
+	width: 500px;
+	height: 65px;
+	position: absolute;
+	margin-top: -10px;
+	background: transparent;
+	pointer-events: auto;
+}
+.float-message.msgempty textarea {
+	height: 20px !important;
+}
+.float-message textarea:focus {
+	height: 4.6em !important;
+}
+.float-message .tip {
+	text-shadow: 0 1px 1px #fff;
+}
+.float-message.msgempty .tip {
+	top: 67px !important;
+}
+.float-message .actpost .formbutton,
+.float-message #u_button,
+.float-message .upload-button-wrapper,
+.float-message .tip {
+	opacity: 0;
+}
+.float-message:hover .actpost .formbutton,
+.float-message:hover #u_button,
+.float-message:hover .upload-button-wrapper,
+.float-message:hover .tip {
+	opacity: 1;
+}
