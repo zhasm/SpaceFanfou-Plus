@@ -1,12 +1,3 @@
-SF.version = (function() {
-	var req = new XMLHttpRequest();
-	req.open('GET', 'manifest.json', false);
-	req.send(null);
-	var version = JSON.parse(req.responseText).version;
-	localStorage['sf_version'] = version;
-	return version;
-})();
-
 /* 文件缓存 */
 
 var cache = { };
@@ -19,6 +10,13 @@ function cacheFile(file) {
 	}
 	return cache[file];
 }
+
+SF.version = (function() {
+	var manifest = cacheFile('manifest.json');
+	var version = JSON.parse(manifest).version;
+	localStorage['sf_version'] = version;
+	return version;
+})();
 
 /* 初始化插件 */
 
