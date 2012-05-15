@@ -22,10 +22,8 @@ SF.fn.waitFor = (function() {
 				}
 			}
 
-			if (! not_avail) {
-				var t = interval;
-				interval = 0;
-				clearInterval(t);
+			if (! not_avail || document.readyState == 'complete') {
+        interval = 0 * clearInterval(interval);
 			}
 
 			lock = false;
