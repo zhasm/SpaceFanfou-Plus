@@ -180,9 +180,10 @@
 	font-weight: 300 !important;
 }
 #phupdate .act .loading {
-	position: absolute;
+	/*position: absolute;
 	top: 0;
-	right: 0;
+	right: 0;*/
+	-webkit-transform: translateX(-40px);
 }
 #phupdate textarea {
 	width: 490px !important;
