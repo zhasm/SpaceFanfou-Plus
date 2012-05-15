@@ -42,11 +42,6 @@ var plugins = [
 		css: 'expanding_replies.css'
 	},
 	{
-		name: 'image_uploading',
-		js: 'image_uploading.js',
-		css: 'image_uploading.css'
-	},
-	{
 		name: 'user_switcher',
 		js: 'user_switcher.js',
 		css: 'user_switcher.css'
