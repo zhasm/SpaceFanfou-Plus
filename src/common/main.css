@@ -293,7 +293,7 @@
 #upload-button {
 	background-position: top left !important;
 }
-#upload-button:hover {
+.upload-button-wrapper:hover #upload-button {
 	background-position: top right !important;
 }
 .sl-file {
