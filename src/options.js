@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
   var $preview_img = $('preview_img');
   var $preview_des = $('preview_des');
 
-  var timeout;
   for (var i = 0; i < $screenshots.length; i++) {
     var $ss = $screenshots[i];
     $ss.description = $ss.title;
@@ -71,8 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			if (e.target != this) return;
       $preview_img.src = this.rel;
       $preview_des.textContent = this.description;
-      clearTimeout(timeout);
-      $screenshot.classList.remove('hide');
       $screenshot.classList.remove('fadeOut');
     }, false);
     $ss.addEventListener('mousemove', function(e) {
@@ -81,9 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
     $ss.addEventListener('mouseout', function(e) {
 			if (e.target != this) return;
       $screenshot.classList.add('fadeOut');
-      timeout = setTimeout(function() {
-        $screenshot.classList.add('hide');
-      }, 250)
     }, false);
   }
 

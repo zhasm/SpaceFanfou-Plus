@@ -267,6 +267,7 @@ input[key="expanding_replies.number"] {
   -webkit-transition: opacity .2s ease-in;
 	color: #333;
 	text-shadow: 0 1px 0 white;
+	pointer-events: none;
 }
 #screenshot.fadeOut {
   opacity: 0;
