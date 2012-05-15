@@ -32,7 +32,7 @@ SF.st.default_settings = {
 /* 读取选项 */
 
 SF.st.settings = (function() {
-	var settings = JSON.parse(localStorage['settings']);
+	var settings = JSON.parse(localStorage['settings'] || '{}');
 	for (var key in SF.st.default_settings) {
 		if (! SF.st.default_settings.hasOwnProperty(key)) continue;
 		if (settings[key] === undefined)
