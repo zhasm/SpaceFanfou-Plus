@@ -11,7 +11,7 @@ SF.pl.share_to_fanfou = new SF.plugin((function() {
 					'&s=bm' +
 					'&d=' + encode(select ? select : ''),
 					'sharer',
-					'toolbar=0,status=0,resizable=0,width=600,height=400');
+					'toolbar=0,status=0,resizable=0,width=630,height=400');
 		//chrome.tabs.executeScript(tab.id, { code: share_script });
 	}
 
