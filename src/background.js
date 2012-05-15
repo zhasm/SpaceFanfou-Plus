@@ -11,11 +11,13 @@ function cacheFile(file) {
 	return cache[file];
 }
 
-SF.version = (function() {
-	var manifest = cacheFile('manifest.json');
-	var version = JSON.parse(manifest).version;
+(function() {
+	var manifest = JSON.parse(cacheFile('manifest.json'));
+
+	var version = SF.version = manifest.version;
 	localStorage['sf_version'] = version;
-	return version;
+
+	SF.contentScripts = manifest['content_scripts']['js'];
 })();
 
 /* 初始化插件 */
@@ -169,9 +171,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 // 连接已打开的页面
 function connectTab(tab) {
 	if (tab && checkURL(tab.url)) {
-		chrome.tabs.executeScript(tab.id, { file: 'namespace.js' });
-		chrome.tabs.executeScript(tab.id, { file: 'functions.js' });
-		chrome.tabs.executeScript(tab.id, { file: 'load.js' });
+		SF.contentScripts.forEach(function(cs) {
+			chrome.tabs.executeScript(tab.id, { file: cs });
+		});
 	}
 }
 chrome.tabs.getCurrent(connectTab);
