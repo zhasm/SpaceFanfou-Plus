@@ -67,40 +67,40 @@
 }
 @-webkit-keyframes bl-blinking {
 	from {
-		box-shadow: 
-			0 999px 0 rgba(172, 172, 172, 0) inset, 
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, 0) inset,
 			0 1px 0 rgba(255, 255, 255, 1) inset,
 			0 1px 0 rgba(0, 0, 0, .09);
 	}
 	50% {
-		box-shadow: 
-			0 999px 0 rgba(172, 172, 172, .2) inset, 
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, .2) inset,
 			0 1px 0 rgba(255, 255, 255, 1) inset,
 			0 1px 0 rgba(0, 0, 0, .09);
 	}
 	to {
-		box-shadow: 
-			0 999px 0 rgba(172, 172, 172, 0) inset, 
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, 0) inset,
 			0 1px 0 rgba(255, 255, 255, 1) inset,
 			0 1px 0 rgba(0, 0, 0, .09);
 	}
 }
 @-webkit-keyframes bh-blinking {
 	from {
-		box-shadow: 
-			0 999px 0 rgba(0, 115, 215, 0) inset, 
+		box-shadow:
+			0 999px 0 rgba(0, 115, 215, 0) inset,
 			0 1px 0 rgba(255, 255, 255, 1) inset,
 			0 1px 0 rgba(0, 0, 0, .09);
 	}
 	50% {
-		box-shadow: 
-			0 999px 0 rgba(0, 115, 215, .2) inset, 
+		box-shadow:
+			0 999px 0 rgba(0, 115, 215, .2) inset,
 			0 1px 0 rgba(255, 255, 255, 1) inset,
 			0 1px 0 rgba(0, 0, 0, .09);
 	}
 	to {
-		box-shadow: 
-			0 999px 0 rgba(0, 115, 215, 0) inset, 
+		box-shadow:
+			0 999px 0 rgba(0, 115, 215, 0) inset,
 			0 1px 0 rgba(255, 255, 255, 1) inset,
 			0 1px 0 rgba(0, 0, 0, .09);
 	}
@@ -702,7 +702,7 @@ span.ajaxprompt {
 .tabs li a:hover {
 	background:
 		-webkit-gradient(
-			linear, 
+			linear,
 			left top,
 			left bottom,
 			from(#eee),
@@ -758,7 +758,7 @@ span.ajaxprompt {
 	top: -2px;
 	background: rgba(230, 50, 0, .75);
 	color: white;
-	font-size: 12px;
+	font-size: 11px;
 	margin-left: -5px !important;
 	padding: 0 1px;
 	min-width: 16px;
@@ -766,6 +766,7 @@ span.ajaxprompt {
 	line-height: 18px;
 	border-radius: 30px;
 	text-align: center;
+	-webkit-text-size-adjust: none;
 }
 #sidebar .stabs li {
 	position: relative;
