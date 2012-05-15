@@ -3,25 +3,35 @@ function $c(tagname) { return document.createElement(tagname); }
 function $t(text) { return document.createTextNode(text); }
 
 var docelem = document.documentElement;
+var timeout;
+var fragment;
+
+function insertCode(type, code, name) {
+	var id ='sf_' + type + '_' + name;
+	if ($i(id)) return;
+	var $code = $c(type);
+	$code.appendChild($t(code));
+	if (name) $code.id = id;
+	$code.className = 'space-fanfou';
+
+	fragment = fragment || document.createDocumentFragment();
+	fragment.appendChild($code);
+	clearTimeout(timeout);
+	timeout = setTimeout(apply, 0);
+}
 
 function insertStyle(style, name) {
-	var id ='sf_style_' + name;
-	if ($i(id)) return;
-	var $style = $c('style');
-	$style.appendChild($t(style));
-	if (name) $style.id = id;
-	$style.className = 'space-fanfou';
-	docelem.appendChild($style);
+	insertCode('style', style, name);
 }
 
 function insertScript(script, name) {
-	var id = 'sf_script_' + name;
-	if ($i(id)) return;
-	var $script = $c('script');
-	$script.appendChild($t(script));
-	if (name) $script.id = id;
-	$script.className = 'space-fanfou';
-	docelem.appendChild($script);
+	insertCode('script', script, name);
+}
+
+function apply() {
+	if (! fragment) return;
+	docelem.appendChild(fragment);
+	delete fragment;
 }
 
 var port = chrome.extension.connect();
