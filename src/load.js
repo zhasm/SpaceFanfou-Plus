@@ -36,6 +36,9 @@ function apply() {
 
 var port = chrome.extension.connect();
 port.onMessage.addListener(function(msg) {
+	if (typeof msg == 'string')
+		msg = JSON.parse(msg);
+
 	if (msg.type == 'init') {
 		insertStyle(msg.common.style.css, 'common');
 		var scripts = [];

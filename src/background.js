@@ -58,9 +58,8 @@ function getPluginOptions(name) {
 }
 
 // 建立为页面提供的数据缓存
-var page_cache;
 function buildPageCache() {
-	page_cache = [];
+	var page_cache = [];
 	for (var name in details) {
 		if (! details.hasOwnProperty(name)) continue;
 		var item = details[name];
@@ -74,6 +73,21 @@ function buildPageCache() {
 			detail.options = getPluginOptions(name);
 		page_cache.push(detail);
 	}
+	var init_message = {
+		type: 'init',
+		common: {
+			probe: cacheFile('common/probe.js'),
+			namespace: cacheFile('namespace.js'),
+			functions: cacheFile('functions.js'),
+			style: {
+				css: cacheFile('common/main.css'),
+				js: cacheFile('common/style.js')
+			},
+			common: cacheFile('common/common.js')
+		},
+		data: page_cache
+	};
+	localStorage['init_message'] = JSON.stringify(init_message);
 }
 buildPageCache();
 
@@ -146,20 +160,7 @@ chrome.extension.onConnect.addListener(function(port) {
 	// 显示太空饭否图标
 	chrome.pageAction.show(tabId);
 	// 向目标发送初始化数据
-	port.postMessage({
-		type: 'init',
-		common: {
-			probe: cacheFile('common/probe.js'),
-			namespace: cacheFile('namespace.js'),
-			functions: cacheFile('functions.js'),
-			style: {
-				css: cacheFile('common/main.css'),
-				js: cacheFile('common/style.js')
-			},
-			common: cacheFile('common/common.js')
-		},
-		data: page_cache
-	});
+	port.postMessage(localStorage['init_message']);
 });
 
 // 维持太空饭否图标
