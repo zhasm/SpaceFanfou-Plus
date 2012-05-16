@@ -1,7 +1,8 @@
 /* 文件缓存 */
 
-var cache = { };
+var cache;
 function cacheFile(file) {
+	cache = cache || { };
 	if (cache[file] === undefined) {
 		var req = new XMLHttpRequest();
 		req.open('GET', file, false);
@@ -88,6 +89,7 @@ function buildPageCache() {
 		data: page_cache
 	};
 	localStorage['init_message'] = JSON.stringify(init_message);
+	delete cache;
 }
 buildPageCache();
 
