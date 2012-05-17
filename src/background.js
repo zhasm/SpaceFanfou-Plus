@@ -1,19 +1,14 @@
 /* 文件缓存 */
 
-var cache;
-function cacheFile(file) {
-	cache = cache || { };
-	if (cache[file] === undefined) {
-		var req = new XMLHttpRequest();
-		req.open('GET', file, false);
-		req.send(null);
-		cache[file] = req.responseText;
-	}
-	return cache[file];
+function loadFile(file) {
+	var req = new XMLHttpRequest();
+	req.open('GET', file, false);
+	req.send(null);
+	return req.responseText;
 }
 
 (function() {
-	var manifest = JSON.parse(cacheFile('manifest.json'));
+	var manifest = JSON.parse(loadFile('manifest.json'));
 
 	var version = SF.version = manifest.version;
 	localStorage['sf_version'] = version;
@@ -35,9 +30,9 @@ for (var i = 0; i < plugins.length; ++i) {
 	};
 	// 同步缓存样式内容
 	if (item.css)
-		detail.style = cacheFile(PLUGINS_DIR + item.css);
+		detail.style = loadFile(PLUGINS_DIR + item.css);
 	if (item.js)
-		detail.script = cacheFile(PLUGINS_DIR + item.js);
+		detail.script = loadFile(PLUGINS_DIR + item.js);
 	details[item.name] = detail;
 
 	// 处理其他类型扩展
@@ -46,6 +41,7 @@ for (var i = 0; i < plugins.length; ++i) {
 		script.innerHTML = detail.script;
 		document.head.appendChild(script);
 	}
+	delete plugins;
 }
 
 // 获取一个插件的全部选项信息
@@ -77,19 +73,18 @@ function buildPageCache() {
 	var init_message = {
 		type: 'init',
 		common: {
-			probe: cacheFile('common/probe.js'),
-			namespace: cacheFile('namespace.js'),
-			functions: cacheFile('functions.js'),
+			probe: loadFile('common/probe.js'),
+			namespace: loadFile('namespace.js'),
+			functions: loadFile('functions.js'),
 			style: {
-				css: cacheFile('common/main.css'),
-				js: cacheFile('common/style.js')
+				css: loadFile('common/main.css'),
+				js: loadFile('common/style.js')
 			},
-			common: cacheFile('common/common.js')
+			common: loadFile('common/common.js')
 		},
 		data: page_cache
 	};
 	localStorage['init_message'] = JSON.stringify(init_message);
-	delete cache;
 }
 buildPageCache();
 
