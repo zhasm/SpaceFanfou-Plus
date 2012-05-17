@@ -89,6 +89,11 @@ var plugins = [
 		js: 'share_to_fanfou.js'
 	},
 	{
+		name: 'notification',
+		type: 'background',
+		js: 'notification.js'
+	},
+	{
 		name: 'amy_star',
 		css: 'amy_star.css'
 	},
