@@ -35,13 +35,16 @@ function apply() {
 }
 
 var port = chrome.extension.connect();
+port.onDisconnect.addListener(function() {
+	location.assign('javascript:SF.unload();');
+});
 port.onMessage.addListener(function(msg) {
 	if (typeof msg == 'string')
 		msg = JSON.parse(msg);
 
 	if (msg.type == 'init') {
-		insertStyle(msg.common.style.css, 'common');
 		var scripts = [];
+		insertStyle(msg.common.style.css, 'common');
 		insertScript(msg.common.namespace, 'namespace');
 		insertScript(msg.common.functions, 'functions');
 		insertScript(msg.common.style.js, 'style');

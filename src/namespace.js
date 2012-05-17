@@ -27,6 +27,17 @@ var SF = (function() {
 			this.update = func.update || empty_func;
 			this.load = pluginLoader(func.load || empty_func);
 			this.unload = pluginUnloader(func.unload || empty_func);
+		},
+		unload: function() {
+			if (typeof FF == 'undefined') return;
+      for (var key in SF.pl) {
+        if (! SF.pl.hasOwnProperty(key)) continue;
+				var plugin = SF.pl[key];
+        setTimeout(plugin.unload.bind(plugin), 0);
+      }
+			setTimeout(function() {
+				jQuery('#sf_flag_libs_ok, style.space-fanfou, script.space-fanfou').remove();
+			}, 0);
 		}
 	};
 })();
