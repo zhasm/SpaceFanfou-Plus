@@ -13,7 +13,7 @@ function loadFile(file) {
 	var version = SF.version = manifest.version;
 	localStorage['sf_version'] = version;
 
-	SF.contentScripts = manifest['content_scripts']['js'];
+	SF.contentScripts = manifest['content_scripts'][0];
 })();
 
 /* 初始化插件 */
@@ -169,12 +169,24 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 // 连接已打开的页面
 function connectTab(tab) {
 	if (tab && checkURL(tab.url)) {
-		SF.contentScripts.forEach(function(cs) {
-			chrome.tabs.executeScript(tab.id, { file: cs });
+		(function loadJS(i) {
+			chrome.tabs.executeScript(tab.id, {
+				file: SF.contentScripts.js[i++]
+			}, function() {
+				if (SF.contentScripts.js[i]) loadJS(i);
+			});
+		})(0);
+
+		SF.contentScripts.css.forEach(function(css) {
+			chrome.tabs.insertCSS(tab.id, {
+				file: css
+			});
 		});
 	}
 }
-chrome.tabs.getCurrent(connectTab);
+chrome.tabs.query({}, function(tabs) {
+	tabs.forEach(connectTab);
+});
 chrome.tabs.onSelectionChanged.addListener(function(tabId) {
 	if (ports['port_' + tabId] !== undefined)
 		return;
