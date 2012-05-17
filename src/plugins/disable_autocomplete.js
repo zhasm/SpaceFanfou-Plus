@@ -11,7 +11,7 @@ SF.pl.disable_autocomplete = new SF.plugin((function($) {
 			});
 		},
 		unload: function() {
-			$content.autocomplete('enable');
+			$content.autocomplete && $content.autocomplete('enable');
 		}
 	};
 })(jQuery));
