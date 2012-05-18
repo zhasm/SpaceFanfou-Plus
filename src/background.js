@@ -84,7 +84,7 @@ function buildPageCache() {
 		},
 		data: page_cache
 	};
-	localStorage['init_message'] = JSON.stringify(init_message);
+	return localStorage['init_message'] = JSON.stringify(init_message);
 }
 buildPageCache();
 
@@ -157,7 +157,7 @@ chrome.extension.onConnect.addListener(function(port) {
 	// 显示太空饭否图标
 	chrome.pageAction.show(tabId);
 	// 向目标发送初始化数据
-	port.postMessage(localStorage['init_message']);
+	port.postMessage(localStorage['init_message'] || buildPageCache());
 });
 
 // 维持太空饭否图标
