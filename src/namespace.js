@@ -3,17 +3,19 @@ var SF = (function() {
 
 	function pluginLoader(load_func) {
 		return function() {
-			if (this.loaded) return;
+			if (this.loaded) return false;
 			this.loaded = true;
 			load_func.call(this);
+			return true;
 		};
 	}
 
 	function pluginUnloader(unload_func) {
 		return function() {
-			if (! this.loaded) return;
+			if (! this.loaded) return false;
 			this.loaded = false;
 			unload_func.call(this);
+			return true;
 		};
 	}
 

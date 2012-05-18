@@ -80,9 +80,10 @@ port.onMessage.addListener(function(msg) {
 			var updates = [];
 			switch (item.type) {
 				case 'update':
-					updates.push(
-							plugin + '.update.apply(' + plugin + ',' +
-							JSON.stringify(item.options) + ');');
+          updates.push('if(' + plugin + ')');
+          updates.push(
+              plugin + '.update.apply(' + plugin + ',' +
+              JSON.stringify(item.options) + ');');
 					break;
 				case 'enable':
 					if (item.style)
@@ -106,7 +107,8 @@ port.onMessage.addListener(function(msg) {
 					break;
 			}
 			// 对每个插件单独执行可以防止一个更新错误影响后面的更新
-			location.assign('javascript:' + updates.join(''));
+			insertScript(updates.join(''), 'update_' + item.name);
 		}
+		insertScript('jQuery("[id^=sf_script_update_]").remove();', 'update_clear');
 	}
 });
