@@ -30,14 +30,12 @@ var SF = (function() {
 		},
 		unload: function() {
 			if (typeof FF == 'undefined') return;
-      for (var key in SF.pl) {
-        if (! SF.pl.hasOwnProperty(key)) continue;
-				var plugin = SF.pl[key];
-        setTimeout(plugin.unload.bind(plugin), 0);
+      for (var plugin in SF.pl) {
+        if (! SF.pl.hasOwnProperty(plugin)) continue;
+        SF.pl[plugin].unload();
       }
-			setTimeout(function() {
-				jQuery('#sf_flag_libs_ok, style.space-fanfou, script.space-fanfou').remove();
-			}, 0);
+			jQuery('#sf_flag_libs_ok, style.space-fanfou, script.space-fanfou').remove();
+			delete SF;
 		}
 	};
 })();
