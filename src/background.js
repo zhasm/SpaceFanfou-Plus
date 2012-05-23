@@ -7,6 +7,8 @@ function loadFile(file) {
 	return req.responseText;
 }
 
+/* 扩展信息 */
+
 (function() {
 	var manifest = JSON.parse(loadFile('manifest.json'));
 
@@ -15,6 +17,42 @@ function loadFile(file) {
 
 	SF.contentScripts = manifest['content_scripts']['js'];
 })();
+
+/* 通知 */
+
+var Notifications = window.Notifications || window.webkitNotifications;
+var createNotification = Notifications.createNotification.bind(Notifications);
+var notifications = [];
+
+function showNotification(options) {
+	var notification;
+	if (options.type == 'text') {
+		notification = Notifications.createNotification(options.icon || '/icons/icon-128.png',
+			options.title || '太空饭否++', options.content);
+	} else if (options.type == 'page') {
+		notification = Notifications.createHTMLNotification(options.url);
+	}
+
+	notification.addEventListener('close', function(e) {
+		clearTimeout(notification.timeout);
+		var index = notifications.indexOf(notification);
+		if (index > -1)
+			notifications.splice(index, 1);
+	}, false);
+
+	notification.show();
+	notifications.push(notification);
+
+	notification.timeout = setTimeout(notification.cancel.bind(notification),
+		options.timeout || 30000);
+
+	return notification;
+}
+function hideAllNotifications() {
+	while (notifications.length) {
+		notifications.shift().cancel();
+	}
+}
 
 /* 初始化插件 */
 
