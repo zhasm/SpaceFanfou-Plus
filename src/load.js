@@ -30,7 +30,9 @@ function insertScript(script, name) {
 
 function apply() {
 	if (! fragment) return;
-	docelem.appendChild(fragment);
+	try {
+		docelem.appendChild(fragment);
+	} catch (e) { }
 	delete fragment;
 }
 
@@ -109,7 +111,10 @@ port.onMessage.addListener(function(msg) {
 					break;
 			}
 			// 对每个插件单独执行可以防止一个更新错误影响后面的更新
-			location.assign('javascript:' + updates.join(''));
+			insertScript(updates.join(''), 'update_' + plugin);
 		}
+		insertScript('setTimeout(function() {' +
+			'jQuery("[id^=\'sf_script_update\']").remove();' +
+		'}, 0);', 'update');
 	}
 });
