@@ -202,7 +202,7 @@ function updateSettings(e) {
 	if (e.oldValue == e.newValue) return;
 
 	// 查找发生变动的选项
-	var old_settings = JSON.parse(e.oldValue);
+	var old_settings = JSON.parse(e.oldValue) || {};
 	var new_settings = JSON.parse(e.newValue);
 	var changed_keys = [];
 	for (var key in new_settings) {
