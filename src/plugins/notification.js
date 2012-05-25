@@ -9,6 +9,9 @@ SF.pl.notification = new SF.plugin((function() {
 	var data, old_data;
 	var username;
 
+	var url = 'http://m.fanfou.com/home';
+	var xhr = new XMLHttpRequest;
+
 	var timer = {
 		interval: null,
 		setup: function() {
@@ -20,9 +23,6 @@ SF.pl.notification = new SF.plugin((function() {
 			this.interval = null;
 		}
 	};
-
-	var xhr = new XMLHttpRequest;
-	var url = 'http://m.fanfou.com/home'
 
 	function check() {
 		abort();
@@ -39,7 +39,7 @@ SF.pl.notification = new SF.plugin((function() {
 		if (! checkIfLoggedIn()) return;
 		getUsername();
 		count();
-		if (data.sum > old_data.sum) {
+		if (old_data.sum && data.sum > old_data.sum) {
 			notify();
 		} else {
 			for (var key in old_data) {
