@@ -30,18 +30,23 @@ function insertScript(script, name) {
 
 function apply() {
 	if (! fragment) return;
-	docelem.appendChild(fragment);
+	try {
+		docelem.appendChild(fragment);
+	} catch (e) { }
 	delete fragment;
 }
 
 var port = chrome.extension.connect();
+port.onDisconnect.addListener(function() {
+	location.assign('javascript:SF.unload();');
+});
 port.onMessage.addListener(function(msg) {
 	if (typeof msg == 'string')
 		msg = JSON.parse(msg);
 
 	if (msg.type == 'init') {
-		insertStyle(msg.common.style.css, 'common');
 		var scripts = [];
+		insertStyle(msg.common.style.css, 'common');
 		insertScript(msg.common.namespace, 'namespace');
 		insertScript(msg.common.functions, 'functions');
 		insertScript(msg.common.style.js, 'style');
@@ -80,9 +85,10 @@ port.onMessage.addListener(function(msg) {
 			var updates = [];
 			switch (item.type) {
 				case 'update':
-					updates.push(
-							plugin + '.update.apply(' + plugin + ',' +
-							JSON.stringify(item.options) + ');');
+          updates.push('if(' + plugin + ')');
+          updates.push(
+              plugin + '.update.apply(' + plugin + ',' +
+              JSON.stringify(item.options) + ');');
 					break;
 				case 'enable':
 					if (item.style)
@@ -106,7 +112,8 @@ port.onMessage.addListener(function(msg) {
 					break;
 			}
 			// 对每个插件单独执行可以防止一个更新错误影响后面的更新
-			location.assign('javascript:' + updates.join(''));
+			insertScript(updates.join(''), 'update_' + item.name);
 		}
+		insertScript('jQuery("[id^=sf_script_update_]").remove();', 'update_clear');
 	}
 });

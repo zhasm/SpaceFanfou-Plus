@@ -1,24 +1,19 @@
 /* 文件缓存 */
 
-var cache;
-function cacheFile(file) {
-	cache = cache || { };
-	if (cache[file] === undefined) {
-		var req = new XMLHttpRequest();
-		req.open('GET', file, false);
-		req.send(null);
-		cache[file] = req.responseText;
-	}
-	return cache[file];
+function loadFile(file) {
+	var req = new XMLHttpRequest();
+	req.open('GET', file, false);
+	req.send(null);
+	return req.responseText;
 }
 
 (function() {
-	var manifest = JSON.parse(cacheFile('manifest.json'));
+	var manifest = JSON.parse(loadFile('manifest.json'));
 
 	var version = SF.version = manifest.version;
 	localStorage['sf_version'] = version;
 
-	SF.contentScripts = manifest['content_scripts']['js'];
+	SF.contentScripts = manifest['content_scripts'][0];
 })();
 
 /* 初始化插件 */
@@ -35,9 +30,9 @@ for (var i = 0; i < plugins.length; ++i) {
 	};
 	// 同步缓存样式内容
 	if (item.css)
-		detail.style = cacheFile(PLUGINS_DIR + item.css);
+		detail.style = loadFile(PLUGINS_DIR + item.css);
 	if (item.js)
-		detail.script = cacheFile(PLUGINS_DIR + item.js);
+		detail.script = loadFile(PLUGINS_DIR + item.js);
 	details[item.name] = detail;
 
 	// 处理其他类型扩展
@@ -46,6 +41,7 @@ for (var i = 0; i < plugins.length; ++i) {
 		script.innerHTML = detail.script;
 		document.head.appendChild(script);
 	}
+	delete plugins;
 }
 
 // 获取一个插件的全部选项信息
@@ -77,19 +73,18 @@ function buildPageCache() {
 	var init_message = {
 		type: 'init',
 		common: {
-			probe: cacheFile('common/probe.js'),
-			namespace: cacheFile('namespace.js'),
-			functions: cacheFile('functions.js'),
+			probe: loadFile('common/probe.js'),
+			namespace: loadFile('namespace.js'),
+			functions: loadFile('functions.js'),
 			style: {
-				css: cacheFile('common/main.css'),
-				js: cacheFile('common/style.js')
+				css: loadFile('common/main.css'),
+				js: loadFile('common/style.js')
 			},
-			common: cacheFile('common/common.js')
+			common: loadFile('common/common.js')
 		},
 		data: page_cache
 	};
-	localStorage['init_message'] = JSON.stringify(init_message);
-	delete cache;
+	return localStorage['init_message'] = JSON.stringify(init_message);
 }
 buildPageCache();
 
@@ -162,7 +157,7 @@ chrome.extension.onConnect.addListener(function(port) {
 	// 显示太空饭否图标
 	chrome.pageAction.show(tabId);
 	// 向目标发送初始化数据
-	port.postMessage(localStorage['init_message']);
+	port.postMessage(localStorage['init_message'] || buildPageCache());
 });
 
 // 维持太空饭否图标
@@ -174,12 +169,24 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 // 连接已打开的页面
 function connectTab(tab) {
 	if (tab && checkURL(tab.url)) {
-		SF.contentScripts.forEach(function(cs) {
-			chrome.tabs.executeScript(tab.id, { file: cs });
+		(function loadJS(i) {
+			chrome.tabs.executeScript(tab.id, {
+				file: SF.contentScripts.js[i++]
+			}, function() {
+				if (SF.contentScripts.js[i]) loadJS(i);
+			});
+		})(0);
+
+		SF.contentScripts.css.forEach(function(css) {
+			chrome.tabs.insertCSS(tab.id, {
+				file: css
+			});
 		});
 	}
 }
-chrome.tabs.getCurrent(connectTab);
+chrome.tabs.query({}, function(tabs) {
+	tabs.forEach(connectTab);
+});
 chrome.tabs.onSelectionChanged.addListener(function(tabId) {
 	if (ports['port_' + tabId] !== undefined)
 		return;
@@ -195,7 +202,7 @@ function updateSettings(e) {
 	if (e.oldValue == e.newValue) return;
 
 	// 查找发生变动的选项
-	var old_settings = JSON.parse(e.oldValue);
+	var old_settings = JSON.parse(e.oldValue) || {};
 	var new_settings = JSON.parse(e.newValue);
 	var changed_keys = [];
 	for (var key in new_settings) {

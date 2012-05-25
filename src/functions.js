@@ -31,6 +31,7 @@ SF.fn.waitFor = (function() {
 	}
 
 	return function(checker, worker) {
+		if (checker()) return worker();
 		waiting_list.push({ checker: checker, worker: worker });
 		setWaiting();
 	};
