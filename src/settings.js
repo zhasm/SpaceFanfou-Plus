@@ -27,7 +27,8 @@ SF.st.default_settings = {
 	clean_personal_theme: false,
 	auto_pager: true,
 	notification: true,
-	'notification.mentionsandpm': true,
+	'notification.updates': true,
+	'notification.mentions': true,
 	'notification.followers': true
 };
 
