@@ -29,6 +29,15 @@ var SF = (function() {
 			this.update = func.update || empty_func;
 			this.load = pluginLoader(func.load || empty_func);
 			this.unload = pluginUnloader(func.unload || empty_func);
+		},
+		unload: function() {
+			if (typeof FF == 'undefined') return;
+      for (var plugin in SF.pl) {
+        if (! SF.pl.hasOwnProperty(plugin)) continue;
+        SF.pl[plugin].unload();
+      }
+			jQuery('#sf_flag_libs_ok, style.space-fanfou, script.space-fanfou').remove();
+			delete SF;
 		}
 	};
 })();
