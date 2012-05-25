@@ -23,7 +23,6 @@ function loadFile(file) {
 /* 通知 */
 
 var Notifications = window.Notifications || window.webkitNotifications;
-var createNotification = Notifications.createNotification.bind(Notifications);
 var notifications = [];
 
 function showNotification(options) {
