@@ -11,8 +11,10 @@ function loadFile(file) {
 	var manifest = JSON.parse(loadFile('manifest.json'));
 
 	var version = SF.version = manifest.version;
+	var old_version = localStorage['sf_version'];
 	localStorage['sf_version'] = version;
 
+	SF.updated = old_version && old_version != version;
 	SF.contentScripts = manifest['content_scripts'][0];
 })();
 
