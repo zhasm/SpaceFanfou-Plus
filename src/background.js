@@ -15,7 +15,7 @@ function loadFile(file) {
 	var version = SF.version = manifest.version;
 	localStorage['sf_version'] = version;
 
-	SF.contentScripts = manifest['content_scripts']['js'];
+	SF.contentScripts = manifest['content_scripts'][0];
 })();
 
 /* 通知 */
@@ -122,7 +122,7 @@ function buildPageCache() {
 		},
 		data: page_cache
 	};
-	localStorage['init_message'] = JSON.stringify(init_message);
+	return localStorage['init_message'] = JSON.stringify(init_message);
 }
 buildPageCache();
 
@@ -195,7 +195,7 @@ chrome.extension.onConnect.addListener(function(port) {
 	// 显示太空饭否图标
 	chrome.pageAction.show(tabId);
 	// 向目标发送初始化数据
-	port.postMessage(localStorage['init_message']);
+	port.postMessage(localStorage['init_message'] || buildPageCache());
 });
 
 // 维持太空饭否图标
@@ -207,12 +207,24 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 // 连接已打开的页面
 function connectTab(tab) {
 	if (tab && checkURL(tab.url)) {
-		SF.contentScripts.forEach(function(cs) {
-			chrome.tabs.executeScript(tab.id, { file: cs });
+		(function loadJS(i) {
+			chrome.tabs.executeScript(tab.id, {
+				file: SF.contentScripts.js[i++]
+			}, function() {
+				if (SF.contentScripts.js[i]) loadJS(i);
+			});
+		})(0);
+
+		SF.contentScripts.css.forEach(function(css) {
+			chrome.tabs.insertCSS(tab.id, {
+				file: css
+			});
 		});
 	}
 }
-chrome.tabs.getCurrent(connectTab);
+chrome.tabs.query({}, function(tabs) {
+	tabs.forEach(connectTab);
+});
 chrome.tabs.onSelectionChanged.addListener(function(tabId) {
 	if (ports['port_' + tabId] !== undefined)
 		return;
@@ -228,7 +240,7 @@ function updateSettings(e) {
 	if (e.oldValue == e.newValue) return;
 
 	// 查找发生变动的选项
-	var old_settings = JSON.parse(e.oldValue);
+	var old_settings = JSON.parse(e.oldValue) || {};
 	var new_settings = JSON.parse(e.newValue);
 	var changed_keys = [];
 	for (var key in new_settings) {

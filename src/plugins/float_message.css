@@ -72,6 +72,7 @@
 .float-message .actpost .formbutton,
 .float-message #u_button,
 .float-message .upload-button-wrapper,
+.float-message .location-button-wrapper,
 .float-message .tip {
 	opacity: 0;
 }

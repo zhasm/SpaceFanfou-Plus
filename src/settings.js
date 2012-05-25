@@ -14,7 +14,6 @@ SF.st.default_settings = {
 	expanding_replies: true,
 	'expanding_replies.number': 3,
 	'expanding_replies.auto_expand': false,
-	image_uploading: true,
 	user_switcher: false,
 	float_message: false,
 	'float_message.noajaxattop': false,
