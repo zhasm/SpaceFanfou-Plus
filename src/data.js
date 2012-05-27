@@ -92,6 +92,6 @@ var plugins = [
 	{
 		name: 'amy_star',
 		css: 'amy_star.css'
-	},
+	}
 
 ];
