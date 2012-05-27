@@ -92,6 +92,7 @@ var plugins = [
 	{
 		name: 'notification',
 		type: 'background',
+		options: ['updates', 'mentions', 'followers'],
 		js: 'notification.js'
 	},
 	{

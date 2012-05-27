@@ -1,20 +1,26 @@
 SF.pl.notification = new SF.plugin((function() {
-	var settings = SF.st.settings;
-	var notifyonupdated = settings['notification.updates'];
-	var notifyonmentioned = settings['notification.mentions'];
-	var notifyonfollowed = settings['notification.followers'];
+	var notifyonupdated, notifyonmentioned, notifyonfollowed;
 	var period = 60000;
 
 	var source;
 	var data, old_data;
 	var username;
 
-	var url = 'http://m.fanfou.com/home';
+	var web_url = 'http://fanfou.com/';
+	var wap_url = 'http://m.fanfou.com/home';
 	var xhr = new XMLHttpRequest;
+
+	var options = {
+		at: ['mentions', '你被 @ 了 %n 次'],
+		pm: ['privatemsg', '你有 %n 封未读私信'],
+		fo: ['home', '有 %n 个新饭友关注了你'],
+		fo_req: ['home', '有 %n 个新饭友请求关注你']
+	};
 
 	var timer = {
 		interval: null,
 		setup: function() {
+			this.cancel();
 			this.interval = setInterval(check, period);
 		},
 		cancel: function() {
@@ -24,9 +30,18 @@ SF.pl.notification = new SF.plugin((function() {
 		}
 	};
 
+	function getUpdates() {
+		if (! updates) return;
+		if (updates.length === 1)
+			return updates[0];
+		return updates.map(function(item, i) {
+			return (i + 1) + '. ' + item;
+		}).join('; ');
+	}
+
 	function check() {
 		abort();
-		xhr.open('GET', url, true);
+		xhr.open('GET', wap_url, true);
 		xhr.onload = onload;
 		try {
 			xhr.send(null);
@@ -34,29 +49,22 @@ SF.pl.notification = new SF.plugin((function() {
 	}
 
 	function onload() {
-		if (! xhr.status || ! xhr.responseText) return;
 		source = xhr.responseText;
-		if (! checkIfLoggedIn()) return;
+		if (! xhr.status || ! source)
+			return;
+		if (! checkIfLoggedIn())
+			return;
+
+		old_data = data;
+		data = { counts: {} };
+
 		getUsername();
+		if (data.username && data.username != old_data.username) reset();
+
 		count();
-		if (old_data.sum && data.sum > old_data.sum) {
-			notify();
-		} else {
-			for (var key in old_data) {
-				if (! data.hasOwnProperty(key)) {
-					key = null;
-					continue;
-				}
-				if (data[key] && data[key] > old_data[key])
-					return notify();
-			}
-			if (! key) {
-				for (var key in data) {
-					if (data.hasOwnProperty(key) && data[key])
-						return notify();
-				}
-			}
-		}
+		if (data.sum) notify();
+
+		source = '';
 	}
 
 	function abort() {
@@ -66,8 +74,8 @@ SF.pl.notification = new SF.plugin((function() {
 	}
 
 	function reset() {
-		data = {};
-		old_data = {};
+		data = { counts: {} };
+		old_data = { counts: {} };
 		source = username = '';
 	}
 
@@ -78,12 +86,10 @@ SF.pl.notification = new SF.plugin((function() {
 
 	function getUsername() {
 		var re = /<title> 饭否 \| 欢迎你，(.+)<\/title>/;
-		username = source.match(re)[1];
+		data.username = source.match(re)[1];
 	}
 
 	function count() {
-		old_data = data;
-		data = {};
 		var sum = 0;
 		if (notifyonmentioned) {
 			checkAt();
@@ -92,39 +98,84 @@ SF.pl.notification = new SF.plugin((function() {
 		if (notifyonfollowed) {
 			checkFo();
 		}
-		for (var key in data) {
-			if (! data.hasOwnProperty(key)) continue;
-			data[key] && (data[key] = data[key][1]);
-			data[key] = parseInt(data[key] + '') || 0;
-			sum += data[key];
+		var counts = data.counts;
+		for (var key in counts) {
+			if (! counts.hasOwnProperty(key)) continue;
+			counts[key] && (counts[key] = counts[key][1]);
+			counts[key] = parseInt(counts[key], 10) || 0;
+			sum += counts[key];
 		}
 		data.sum = sum;
 	}
 
 	function checkAt() {
 		var re = /<a href=\"\/mentions\">@我的\((\w*)\)<\/a>/;
-		data.at = source.match(re);
+		data.counts.at = source.match(re);
 	}
 
 	function checkPM() {
 		var re = /<a href="\/privatemsg">你有 (\d+) 条新私信<\/a>/;
-		data.pm = source.match(re);
+		data.counts.pm = source.match(re);
 	}
 
 	function checkFo() {
-		var re = /<p>(\d+) 个人关注了你<\/p><p><span><a href=|(\d+) 个人申请关注你，<a href="/;
-		data.fo = source.match(re);
+		data.counts.fo = source.match(/<p>(\d+) 个人关注了你<\/p><p><span><a href=/);
+		data.counts.fo_req = source.match(/(\d+) 个人申请关注你，<a href="/);
 	}
 
 	function notify() {
-		var msg = [];
-		msg.push(data.at ? '你被 @ 了' + data.at + ' 次' : '');
-		msg.push(data.pm ? '有' + data.pm + ' 封未读私信' : '');
-		msg.push(data.fo ? '又有' + data.fo + ' 个饭友关注了你' : '');
-		showNotification({
-			type: 'text',
-			content: msg.join('\n')
+		var items = [];
+		var counts = data.counts;
+		var old_counts = old_data.counts;
+		for (var type in counts) {
+			if (! counts.hasOwnProperty(type)) continue;
+			if (counts[type] && counts[type] > old_counts[type]) {
+				items.push(type);
+			}
+		}
+		items.forEach(function(item) {
+			var template = options[item][1];
+			var content = template.replace(/%n/, counts[item]);
+			var path = options[item][0];
+			showNotification({
+				type: 'text',
+				content: content
+			}).
+			addEventListener('click', function(e) {
+				this.cancel();
+				createTab(web_url + path);
+			}, false);
 		});
+	}
+
+	function load() {
+		if (notifyonupdated && SF.updated) {
+			var updated_items = getUpdates() || '';
+			if (updated_items)
+				updated_items = '更新内容: ' + updated_items;
+
+			showNotification({
+				type: 'text',
+				title: '太空饭否++ 升级至 ' + SF.version,
+				content: updated_items
+			}).
+			addEventListener('click', function(e) {
+				this.cancel();
+			}, false);
+
+			SF.updated = false;
+		}
+		if (notifyonmentioned || notifyonfollowed) {
+			timer.setup();
+			check();
+		}
+	}
+
+	function unload() {
+		abort();
+		timer.cancel();
+		reset();
+		hideAllNotifications();
 	}
 
 	return {
@@ -132,25 +183,9 @@ SF.pl.notification = new SF.plugin((function() {
 			notifyonupdated = a;
 			notifyonmentioned = b;
 			notifyonfollowed = c;
+			unload();
+			load();
 		},
-		load: function() {
-			reset();
-			if (notifyonmentioned || notifyonfollowed) {
-				timer.setup();
-				check();
-			}
-			if (SF.updated) {
-				showNotification({
-					type: 'text',
-					content: '太空饭否++ 刚刚升级到了 ' + SF.version + '.'
-				});
-				SF.updated = false;
-			}
-		},
-		unload: function() {
-			abort();
-			timer.cancel();
-			reset();
-		}
+		unload: unload
 	};
 })());
