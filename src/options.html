@@ -12,13 +12,13 @@
 <body>
 	<div id="wrapper">
 		<div class="logo">
-			太空饭否++
+			<h1 id="ext-name">太空饭否++</h1>
 			<span id="version">请稍候...</span>
 		</div>
 
 		<div id="navigation">
 			<ul>
-				<li class="current"><a id="tab1" onclick="current('tabs0', this)" href="javascript:void(0)">扩展功能</a></li>
+				<li><a id="tab1" onclick="current('tabs0', this)" href="javascript:void(0)">扩展功能</a></li>
 				<li><a id="tab2" onclick="current('tabs1', this)" href="javascript:void(0)">页面样式</a></li>
 				<!--<li><a id="tab3" onclick="current('tabs2', this)" href="javascript:void(0)">关于太空饭否++</a></li>-->
 			</ul>
@@ -152,18 +152,30 @@
 	<p id="screenshot" class="fadeOut"><img id="preview_img" src="" alt="预览" /><br /><span id="preview_des" /></p>
 
 	<script>
-		function current(showContent, selfObj) {
+		function current(target, self) {
+			localStorage['latest_options_tab'] = self.id;
+			var button = self.parentElement;
+			if (button.classList.contains('current')) return;
+			var current_button = $$('li.current a')[0];
+			var current_tab_no = current_button ? +current_button.id.split('').reverse()[0] : $$('#navigation ul li').length;
+			var target_tab_no = self.id.split('').reverse()[0];
 			var tab = $$('#navigation li');
 			var i, j, len = tab.length;
 			for (i = 0; i < len; i++) {
-				tab[i].className = '';
+				tab[i].classList.remove('current');
 			}
-			selfObj.parentNode.className = 'current';
+			button.classList.add('current');
 			for (i = 0; j = $('tabs' + i); i++) {
 				j.style.display = 'none';
+				j.style.webkitAnimation = j.style.animation = '';
 			}
-			$(showContent).style.display = 'block';
+			var target_style = $(target).style;
+			target_style.display = 'block';
+			var animation_name = current_tab_no > target_tab_no ? 'leftSlideIn' : 'rightSlideIn';
+			target_style.webkitAnimation = target_style.animation = animation_name + '.2s ease-out';
 		}
+		var latest_tab = localStorage['latest_options_tab'] || 'tab1';
+		SF.fn.emulateClick($(latest_tab));
 	</script>
 
 </body>
