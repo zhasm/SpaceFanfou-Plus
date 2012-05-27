@@ -13,11 +13,11 @@ function loadFile(file) {
 (function() {
 	var manifest = JSON.parse(loadFile('manifest.json'));
 
-	var version = SF.version = manifest.version;
-	var old_version = localStorage['sf_version'];
-	localStorage['sf_version'] = version;
+	SF.version = manifest.version;
+	SF.old_version = localStorage['sf_version'];
+	localStorage['sf_version'] = SF.version;
 
-	SF.updated = old_version && old_version != version;
+	SF.updated = SF.old_version && SF.old_version != SF.version;
 	SF.contentScripts = manifest['content_scripts'][0];
 })();
 
@@ -55,6 +55,30 @@ function hideAllNotifications() {
 		notifications.shift().cancel();
 	}
 }
+
+/* 更新历史 */
+
+var updates = (function() {
+	function fixVersionNum(version) {
+		return parseInt(version.replace(/\./g, ''), 10);
+	}
+
+	var updated_items = [];
+	var old_version = fixVersionNum(SF.old_version);
+
+	var updates = Object.keys(history).filter(function(version_num) {
+		return fixVersionNum(version_num) > old_version;
+	});
+
+	updates.forEach(function(version) {
+		history[version].forEach(function(item) {
+			if (updated_items.indexOf(item) === -1)
+				updated_items.push(item);
+		});
+	});
+
+	return updated_items;
+})();
 
 /* 初始化插件 */
 

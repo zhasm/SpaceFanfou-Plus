@@ -101,3 +101,8 @@ var plugins = [
 	}
 
 ];
+
+/* 历史记录 */
+
+var history = {
+};
