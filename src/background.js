@@ -1,6 +1,7 @@
 /* 文件缓存 */
 
 function loadFile(file) {
+	if (! file) return;
 	var req = new XMLHttpRequest();
 	req.open('GET', file, false);
 	req.send(null);
@@ -69,15 +70,15 @@ for (var i = 0; i < plugins.length; ++i) {
 	};
 	// 同步缓存样式内容
 	if (item.css)
-		detail.style = loadFile(PLUGINS_DIR + item.css);
+		detail.style = PLUGINS_DIR + item.css;
 	if (item.js)
-		detail.script = loadFile(PLUGINS_DIR + item.js);
+		detail.script = PLUGINS_DIR + item.js;
 	details[item.name] = detail;
 
 	// 处理其他类型扩展
 	if (detail.type == 'background') {
 		var script = document.createElement('script');
-		script.innerHTML = detail.script;
+		script.innerHTML = loadFile(detail.script);
 		document.head.appendChild(script);
 	}
 	delete plugins;
@@ -102,8 +103,8 @@ function buildPageCache() {
 		if (item.type || ! SF.st.settings[name]) continue;
 		var detail = {
 			name: name,
-			style: item.style,
-			script: item.script,
+			style: loadFile(item.style),
+			script: loadFile(item.script)
 		};
 		if (item.options)
 			detail.options = getPluginOptions(name);
@@ -196,7 +197,7 @@ chrome.extension.onConnect.addListener(function(port) {
 	// 显示太空饭否图标
 	chrome.pageAction.show(tabId);
 	// 向目标发送初始化数据
-	port.postMessage(localStorage['init_message'] || buildPageCache());
+	port.postMessage(localStorage['init_message']);
 });
 
 // 维持太空饭否图标
@@ -241,7 +242,7 @@ function updateSettings(e) {
 	if (e.oldValue == e.newValue) return;
 
 	// 查找发生变动的选项
-	var old_settings = JSON.parse(e.oldValue) || {};
+	var old_settings = e.oldValue ? JSON.parse(e.oldValue) : SF.st.default_settings;
 	var new_settings = JSON.parse(e.newValue);
 	var changed_keys = [];
 	for (var key in new_settings) {
@@ -297,8 +298,8 @@ function updateSettings(e) {
 						update_info.push({
 							type: 'enable',
 							name: main_name,
-							style: detail.style,
-							script: detail.script,
+							style: loadFile(detail.style),
+							script: loadFile(detail.script),
 							options: getPluginOptions(main_name)
 						});
 					}

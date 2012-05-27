@@ -26,6 +26,7 @@ var plugins = [
 	},
 	{
 		name: 'logo_remove_beta',
+		css: 'logo_remove_beta.css',
 		js: 'logo_remove_beta.js'
 	},
 	{
@@ -96,6 +97,6 @@ var plugins = [
 	{
 		name: 'amy_star',
 		css: 'amy_star.css'
-	},
+	}
 
 ];

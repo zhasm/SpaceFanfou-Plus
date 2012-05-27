@@ -18,7 +18,7 @@
 
 		<div id="navigation">
 			<ul>
-				<li class="current"><a id="tab1" onclick="current('tabs0', this)" href="javascript:void(0)">扩展功能</a></li>
+				<li><a id="tab1" onclick="current('tabs0', this)" href="javascript:void(0)">扩展功能</a></li>
 				<li><a id="tab2" onclick="current('tabs1', this)" href="javascript:void(0)">页面样式</a></li>
 				<!--<li><a id="tab3" onclick="current('tabs2', this)" href="javascript:void(0)">关于太空饭否++</a></li>-->
 			</ul>
@@ -36,10 +36,6 @@
 							<label class="sublabel"><input type="checkbox" key="expanding_replies.auto_expand" />载入页面时自动展开一条消息上文</label>
 						</p>
 					</li>
-					<!--<li>
-						<label><a class="screenshot" rel="screenshots/01_02_01.png" title="图片上传功能预览"><input type="checkbox" key="image_uploading" />使用太空饭否++图片上传</a></label>
-						<span class="comment">将禁用官方的图片上传功能</span>
-					</li>-->
 					<li>
 						<label><a class="screenshot" rel="screenshots/01_03_01.png" title="多用户切换功能预览"><input type="checkbox" key="user_switcher" />启用多用户切换</a></label>
 					</li>
@@ -164,18 +160,30 @@
 	<p id="screenshot" class="fadeOut"><img id="preview_img" src="" alt="预览" /><br /><span id="preview_des" /></p>
 
 	<script>
-		function current(showContent, selfObj) {
+		function current(target, self) {
+			localStorage['latest_options_tab'] = self.id;
+			var button = self.parentElement;
+			if (button.classList.contains('current')) return;
+			var current_button = $$('li.current a')[0];
+			var current_tab_no = current_button ? +current_button.id.split('').reverse()[0] : $$('#navigation ul li').length;
+			var target_tab_no = self.id.split('').reverse()[0];
 			var tab = $$('#navigation li');
 			var i, j, len = tab.length;
 			for (i = 0; i < len; i++) {
-				tab[i].className = '';
+				tab[i].classList.remove('current');
 			}
-			selfObj.parentNode.className = 'current';
+			button.classList.add('current');
 			for (i = 0; j = $('tabs' + i); i++) {
 				j.style.display = 'none';
+				j.style.webkitAnimation = j.style.animation = '';
 			}
-			$(showContent).style.display = 'block';
+			var target_style = $(target).style;
+			target_style.display = 'block';
+			var animation_name = current_tab_no > target_tab_no ? 'leftSlideIn' : 'rightSlideIn';
+			target_style.webkitAnimation = target_style.animation = animation_name + '.2s ease-out';
 		}
+		var latest_tab = localStorage['latest_options_tab'] || 'tab1';
+		SF.fn.emulateClick($(latest_tab));
 	</script>
 
 </body>
