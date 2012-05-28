@@ -29,7 +29,8 @@ SF.st.default_settings = {
 	notification: true,
 	'notification.updates': true,
 	'notification.mentions': true,
-	'notification.followers': true
+	'notification.followers': true,
+	'notification.playsound': true
 };
 
 /* 读取选项 */

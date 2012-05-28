@@ -92,7 +92,7 @@ var plugins = [
 	{
 		name: 'notification',
 		type: 'background',
-		options: ['updates', 'mentions', 'followers'],
+		options: ['updates', 'mentions', 'followers', 'playsound'],
 		js: 'notification.js'
 	},
 	{

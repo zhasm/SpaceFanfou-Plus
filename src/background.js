@@ -51,6 +51,7 @@ function showNotification(options) {
 		clearTimeout(notification.timeout);
 		hideNotification(notification);
 	}, false);
+	notification.addEventListener('display', playSound, false);
 
 	notification.show();
 	notifications.push(notification);
@@ -74,6 +75,21 @@ function hideNotification(notification) {
 	if (index > -1)
 		notifications.splice(index, 1);
 }
+
+var playSound = (function() {
+	var audio = new Audio;
+	audio.src = '/ding.mp3';
+	var timeout;
+	return function() {
+		clearTimeout(timeout);
+		setTimeout(function() {
+			if (! SF.st.settings['notification.playsound']) return;
+			if (audio.networkState !== 1)
+				return playSound();
+			audio.play();
+		}, 50);
+	}
+})();
 
 function createTab(url) {
 	chrome.tabs.create({
