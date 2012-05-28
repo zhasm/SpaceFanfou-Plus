@@ -29,6 +29,7 @@ SF.st.default_settings = {
 	'notification.updates': true,
 	'notification.mentions': true,
 	'notification.followers': true,
+	'notification.notdisturb': true,
 	'notification.playsound': true
 };
 

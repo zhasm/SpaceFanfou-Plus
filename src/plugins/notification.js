@@ -1,6 +1,6 @@
 SF.pl.notification = new SF.plugin((function() {
-	var notifyonupdated, notifyonmentioned, notifyonfollowed;
-	var period = 60000;
+	var notifyonupdated, notifyonmentioned, notifyonfollowed, notdisturb;
+	var period = 30000;
 
 	var source;
 	var data, old_data;
@@ -9,6 +9,8 @@ SF.pl.notification = new SF.plugin((function() {
 	var web_url = 'http://fanfou.com/';
 	var wap_url = 'http://m.fanfou.com/home';
 	var xhr = new XMLHttpRequest;
+
+	var visiting_ff = false;
 
 	var options = {
 		at: ['mentions', '你被 @ 了 %n 次'],
@@ -59,10 +61,13 @@ SF.pl.notification = new SF.plugin((function() {
 		data = { counts: {} };
 
 		getUsername();
-		if (data.username && data.username != old_data.username) reset();
+		if (data.username &&
+			data.username != old_data.username) {
+			reset();
+		}
 
 		count();
-		if (data.sum) notify();
+		data.sum && notify();
 
 		source = '';
 	}
@@ -124,15 +129,19 @@ SF.pl.notification = new SF.plugin((function() {
 	}
 
 	function notify() {
+		if (notdisturb && visiting_ff) return;
+
 		var items = [];
 		var counts = data.counts;
 		var old_counts = old_data.counts;
+
 		for (var type in counts) {
 			if (! counts.hasOwnProperty(type)) continue;
 			if (counts[type] && (! old_counts[type] || counts[type] > old_counts[type])) {
 				items.push(type);
 			}
 		}
+
 		items.forEach(function(item) {
 			var template = options[item][1];
 			var content = template.replace(/%n/, counts[item]);
@@ -140,7 +149,8 @@ SF.pl.notification = new SF.plugin((function() {
 			showNotification({
 				id: item,
 				type: 'text',
-				content: content
+				content: content,
+				timeout: period / 2
 			}).
 			addEventListener('click', function(e) {
 				this.cancel();
@@ -149,7 +159,15 @@ SF.pl.notification = new SF.plugin((function() {
 		});
 	}
 
+	function onTabUpdated(tabId, changeInfo, tab) {
+		if (visiting_ff = checkURL(tab.url))
+			hideAllNotifications();
+	});
+
 	function load() {
+		if (notdisturb)
+			chrome.tabs.onUpdated.addListener(onTabUpdated);
+
 		if (notifyonupdated && SF.updated) {
 			var updated_items = getUpdates() || '';
 			if (updated_items)
@@ -158,7 +176,8 @@ SF.pl.notification = new SF.plugin((function() {
 			showNotification({
 				type: 'text',
 				title: '太空饭否++ 升级至 ' + SF.version,
-				content: updated_items
+				content: updated_items,
+				timeout: period / 2
 			}).
 			addEventListener('click', function(e) {
 				this.cancel();
@@ -177,13 +196,15 @@ SF.pl.notification = new SF.plugin((function() {
 		timer.cancel();
 		reset();
 		hideAllNotifications();
+		chrome.tabs.onUpdated.removeListener(onTabUpdated);
 	}
 
 	return {
-		update: function(a, b, c) {
+		update: function(a, b, c, d) {
 			notifyonupdated = a;
 			notifyonmentioned = b;
 			notifyonfollowed = c;
+			notdisturb = d;
 			unload();
 			load();
 		},
