@@ -94,10 +94,6 @@ var plugins = [
 		type: 'background',
 		options: ['updates', 'mentions', 'followers', 'playsound'],
 		js: 'notification.js'
-	},
-	{
-		name: 'amy_star',
-		css: 'amy_star.css'
 	}
 
 ];
