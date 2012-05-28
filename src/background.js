@@ -82,7 +82,7 @@ var playSound = (function() {
 	var timeout;
 	return function() {
 		clearTimeout(timeout);
-		setTimeout(function() {
+		timeout = setTimeout(function() {
 			if (! SF.st.settings['notification.playsound']) return;
 			if (audio.networkState !== 1)
 				return playSound();
@@ -107,7 +107,7 @@ var updates = (function() {
 	}
 
 	var updated_items = [];
-	var old_version = fixVersionNum(SF.old_version);
+	var old_version = fixVersionNum(SF.old_version || '0.6.4.0');
 
 	var updates = Object.keys(history).filter(function(version_num) {
 		return fixVersionNum(version_num) > old_version;
