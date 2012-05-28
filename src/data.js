@@ -88,10 +88,6 @@ var plugins = [
 		name: 'share_to_fanfou',
 		type: 'background',
 		js: 'share_to_fanfou.js'
-	},
-	{
-		name: 'amy_star',
-		css: 'amy_star.css'
 	}
 
 ];
