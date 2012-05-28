@@ -76,7 +76,7 @@ SF.pl.notification = new SF.plugin((function() {
 	function reset() {
 		data = { counts: {} };
 		old_data = { counts: {} };
-		source = username = '';
+		username = '';
 	}
 
 	function checkIfLoggedIn() {
@@ -129,7 +129,7 @@ SF.pl.notification = new SF.plugin((function() {
 		var old_counts = old_data.counts;
 		for (var type in counts) {
 			if (! counts.hasOwnProperty(type)) continue;
-			if (counts[type] && counts[type] > old_counts[type]) {
+			if (counts[type] && (! old_counts[type] || counts[type] > old_counts[type])) {
 				items.push(type);
 			}
 		}
@@ -138,6 +138,7 @@ SF.pl.notification = new SF.plugin((function() {
 			var content = template.replace(/%n/, counts[item]);
 			var path = options[item][0];
 			showNotification({
+				id: item,
 				type: 'text',
 				content: content
 			}).

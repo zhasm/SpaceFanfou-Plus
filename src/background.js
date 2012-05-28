@@ -28,6 +28,8 @@ var notifications = [];
 
 function showNotification(options) {
 	var notification;
+
+	options.type = options.type || 'text';
 	if (options.type == 'text') {
 		notification = Notifications.createNotification(options.icon || '/icons/icon-128.png',
 			options.title || '太空饭否++', options.content);
@@ -35,26 +37,51 @@ function showNotification(options) {
 		notification = Notifications.createHTMLNotification(options.url);
 	}
 
+	if (options.id) {
+		notification.id = options.id;
+		notifications = notifications.filter(function(n) {
+			if (n.id != options.id)
+				return true;
+			n.cancel();
+			return false;
+		});
+	}
+
 	notification.addEventListener('close', function(e) {
 		clearTimeout(notification.timeout);
-		var index = notifications.indexOf(notification);
-		if (index > -1)
-			notifications.splice(index, 1);
+		hideNotification(notification);
 	}, false);
 
 	notification.show();
 	notifications.push(notification);
 
-	notification.timeout = setTimeout(notification.cancel.bind(notification),
-		options.timeout || 30000);
+	notification.timeout = setTimeout(function() {
+		hideNotification(notification);
+	}, options.timeout || 30000);
 
 	return notification;
 }
 function hideAllNotifications() {
-	while (notifications.length) {
-		notifications.shift().cancel();
-	}
+	notifications.
+	slice(0, notifications.length).
+	forEach(hideNotification);
 }
+function hideNotification(notification) {
+	notification.cancel();
+	if (notification.timeout)
+		clearTimeout(notification.timeout);
+	var index = notifications.indexOf(notification);
+	if (index > -1)
+		notifications.splice(index, 1);
+}
+
+function createTab(url) {
+	chrome.tabs.create({
+		url: url,
+		selected: true
+	});
+}
+
 
 /* 更新历史 */
 
