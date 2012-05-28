@@ -19,7 +19,7 @@ SF.st.default_settings = {
 	'float_message.notlostfocus': false,
 	'float_message.keepmentions': false,
 	disable_autocomplete: false,
-	share_to_fanfou: true,
+	share_to_fanfou: false,
 	privatemsg_manage: true,
 	friend_manage: true,
 	advanced_sidebar: true,
