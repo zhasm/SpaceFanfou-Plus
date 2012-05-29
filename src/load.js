@@ -36,7 +36,7 @@ function apply() {
 	delete fragment;
 }
 
-if ($i('sf_flag_libs_ok')) {
+if (($i('sf_flag_libs_ok') || {}).name == 'spacefanfou-flags') {
 	location.assign('javascript:(' + SF.unload + ')();');
 }
 
