@@ -32,10 +32,12 @@ var SF = (function() {
 		},
 		unload: function() {
 			if (typeof FF == 'undefined') return;
-      for (var plugin in SF.pl) {
-        if (! SF.pl.hasOwnProperty(plugin)) continue;
-        SF.pl[plugin].unload();
-      }
+			for (var plugin in SF.pl) {
+				if (! SF.pl.hasOwnProperty(plugin)) continue;
+				try {
+					SF.pl[plugin].unload();
+				} catch (e) { }
+			}
 			jQuery('#sf_flag_libs_ok, style.space-fanfou, script.space-fanfou').remove();
 			delete SF;
 		}

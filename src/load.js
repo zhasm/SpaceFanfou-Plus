@@ -117,3 +117,7 @@ port.onMessage.addListener(function(msg) {
 		insertScript('jQuery("[id^=sf_script_update_]").remove();', 'update_clear');
 	}
 });
+
+if ($i('sf_flag_libs_ok')) {
+	location.assign('javascript:(' + SF.unload + ')();');
+}
