@@ -234,6 +234,9 @@ h4 {
 	max-height: 365px;
 	overflow-y: auto;
 }
+#tabs0, #tabs1, #tabs2 {
+	display: none;
+}
 #tabs0 li, #tabs1 li {
 	border-bottom: 1px solid rgba(0, 0, 0, .12);
 	padding: 3px 0;

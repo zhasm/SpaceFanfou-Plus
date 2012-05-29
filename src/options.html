@@ -18,7 +18,7 @@
 
 		<div id="navigation">
 			<ul>
-				<li><a id="tab1" onclick="current('tabs0', this)" href="javascript:void(0)">扩展功能</a></li>
+				<li class="current"><a id="tab1" onclick="current('tabs0', this)" href="javascript:void(0)">扩展功能</a></li>
 				<li><a id="tab2" onclick="current('tabs1', this)" href="javascript:void(0)">页面样式</a></li>
 				<!--<li><a id="tab3" onclick="current('tabs2', this)" href="javascript:void(0)">关于太空饭否++</a></li>-->
 			</ul>
@@ -112,7 +112,7 @@
 			</div>
 
 			<div class="tabs" id="tabs2" style="display: none;">
-				<style>
+				<!--<style>
 					.fanfou_statuses p, .fanfou_statuses .fanfou_statuses_more {
 						display: none;
 					}
@@ -128,11 +128,11 @@
 					<p>
 						太空饭否++ 是基于 <a href="https://github.com/anegie/Space-Fanfou" target="_blank">太空饭否</a> 开发的新一代 Chrome 扩展, 为饭否爱好者继续提供更好的饭否体验.
 					</p>
-					<!--<h2>@<a href="http://fanfou.com/spacefanfou" target="_blank">太空饭否</a> (spacefanfou)</h2>
+					<h2>@<a href="http://fanfou.com/spacefanfou" target="_blank">太空饭否</a> (spacefanfou)</h2>
 					<p>
 						太空饭否官方账号。负责版本发布、答疑、交流等事宜，有问题请私信。
-					</p>-->
-				</div>
+					</p>
+				</div>-->
 				<div class="clear"></div>
 				<div id="footer">
 					&copy; 2012 <a href="#" target="_blank">SpaceFanfou-Plus Team</a>. All rights reserved.<br />
@@ -160,15 +160,17 @@
 			button.classList.add('current');
 			for (i = 0; j = $('tabs' + i); i++) {
 				j.style.display = 'none';
-				j.style.webkitAnimation = j.style.animation = '';
+				//j.style.webkitAnimation = j.style.animation = '';
 			}
 			var target_style = $(target).style;
 			target_style.display = 'block';
-			var animation_name = current_tab_no > target_tab_no ? 'leftSlideIn' : 'rightSlideIn';
-			target_style.webkitAnimation = target_style.animation = animation_name + '.2s ease-out';
+			//var animation_name = current_tab_no > target_tab_no ? 'leftSlideIn' : 'rightSlideIn';
+			//target_style.webkitAnimation = target_style.animation = animation_name + '.2s ease-out';
 		}
-		var latest_tab = localStorage['latest_options_tab'] || 'tab1';
-		SF.fn.emulateClick($(latest_tab));
+		addEventListener('load', function(e) {
+			var latest_tab = localStorage['latest_options_tab'] || 'tab1';
+			SF.fn.emulateClick($(latest_tab));
+		}, false);
 	</script>
 
 </body>
