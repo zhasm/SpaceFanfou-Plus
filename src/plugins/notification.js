@@ -32,6 +32,19 @@ SF.pl.notification = new SF.plugin((function() {
 		}
 	};
 
+	var onActivated = (function() {
+		var timeout;
+		return function(info) {
+			clearTimeout(timeout);
+			timeout = setTimeout(function() {
+				chrome.tabs.get(info.tabId, function(tab) {
+					if (visiting_ff = (tab != null && checkURL(tab.url)))
+						hideAllNotifications();
+				});
+			}, 50);
+		}
+	})();
+
 	function getUpdates() {
 		if (! updates) return;
 		if (updates.length === 1)
@@ -61,7 +74,7 @@ SF.pl.notification = new SF.plugin((function() {
 		data = { counts: {} };
 
 		getUsername();
-		if (data.username &&
+		if (old_data.username &&
 			data.username != old_data.username) {
 			reset();
 		}
@@ -159,14 +172,9 @@ SF.pl.notification = new SF.plugin((function() {
 		});
 	}
 
-	function onTabUpdated(tabId, changeInfo, tab) {
-		if (visiting_ff = checkURL(tab.url))
-			hideAllNotifications();
-	});
-
 	function load() {
 		if (notdisturb)
-			chrome.tabs.onUpdated.addListener(onTabUpdated);
+			chrome.tabs.onActivated.addListener(onActivated);
 
 		if (notifyonupdated && SF.updated) {
 			var updated_items = getUpdates() || '';
@@ -196,7 +204,7 @@ SF.pl.notification = new SF.plugin((function() {
 		timer.cancel();
 		reset();
 		hideAllNotifications();
-		chrome.tabs.onUpdated.removeListener(onTabUpdated);
+		chrome.tabs.onActivated.removeListener(onActivated);
 	}
 
 	return {
