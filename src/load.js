@@ -36,6 +36,10 @@ function apply() {
 	delete fragment;
 }
 
+if ($i('sf_flag_libs_ok')) {
+	location.assign('javascript:(' + SF.unload + ')();');
+}
+
 var port = chrome.extension.connect();
 port.onDisconnect.addListener(function() {
 	location.assign('javascript:SF.unload();');
@@ -117,7 +121,3 @@ port.onMessage.addListener(function(msg) {
 		insertScript('jQuery("[id^=sf_script_update_]").remove();', 'update_clear');
 	}
 });
-
-if ($i('sf_flag_libs_ok')) {
-	location.assign('javascript:(' + SF.unload + ')();');
-}
