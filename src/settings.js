@@ -24,7 +24,13 @@ SF.st.default_settings = {
 	friend_manage: true,
 	advanced_sidebar: true,
 	clean_personal_theme: false,
-	auto_pager: true
+	auto_pager: true,
+	notification: true,
+	'notification.updates': true,
+	'notification.mentions': true,
+	'notification.followers': true,
+	'notification.notdisturb': false,
+	'notification.playsound': true
 };
 
 /* 读取选项 */

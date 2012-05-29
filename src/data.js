@@ -88,6 +88,17 @@ var plugins = [
 		name: 'share_to_fanfou',
 		type: 'background',
 		js: 'share_to_fanfou.js'
+	},
+	{
+		name: 'notification',
+		type: 'background',
+		options: ['updates', 'mentions', 'followers', 'notdisturb', 'playsound'],
+		js: 'notification.js'
 	}
 
 ];
+
+/* 历史记录 */
+
+var history = {
+};

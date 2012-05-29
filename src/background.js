@@ -8,15 +8,119 @@ function loadFile(file) {
 	return req.responseText;
 }
 
+/* 扩展信息 */
+
 (function() {
 	var manifest = JSON.parse(loadFile('manifest.json'));
 
-	var version = SF.version = manifest.version;
-	var old_version = localStorage['sf_version'];
-	localStorage['sf_version'] = version;
+	SF.version = manifest.version;
+	SF.old_version = localStorage['sf_version'];
+	localStorage['sf_version'] = SF.version;
 
-	SF.updated = old_version && old_version != version;
+	SF.updated = SF.old_version && SF.old_version != SF.version;
 	SF.contentScripts = manifest['content_scripts'][0];
+})();
+
+/* 通知 */
+
+var Notifications = window.Notifications || window.webkitNotifications;
+var notifications = [];
+
+function showNotification(options) {
+	var notification;
+
+	options.type = options.type || 'text';
+	if (options.type == 'text') {
+		notification = Notifications.createNotification(options.icon || '/icons/icon-128.png',
+			options.title || '太空饭否++', options.content);
+	} else if (options.type == 'page') {
+		notification = Notifications.createHTMLNotification(options.url);
+	}
+
+	if (options.id) {
+		notification.id = options.id;
+		notifications = notifications.filter(function(n) {
+			if (n.id != options.id)
+				return true;
+			n.cancel();
+			return false;
+		});
+	}
+
+	notification.addEventListener('close', function(e) {
+		clearTimeout(notification.timeout);
+		hideNotification(notification);
+	}, false);
+	notification.addEventListener('display', playSound, false);
+
+	notification.show();
+	notifications.push(notification);
+
+	notification.timeout = setTimeout(function() {
+		hideNotification(notification);
+	}, options.timeout || 30000);
+
+	return notification;
+}
+function hideAllNotifications() {
+	notifications.
+	slice(0, notifications.length).
+	forEach(hideNotification);
+}
+function hideNotification(notification) {
+	notification.cancel();
+	if (notification.timeout)
+		clearTimeout(notification.timeout);
+	var index = notifications.indexOf(notification);
+	if (index > -1)
+		notifications.splice(index, 1);
+}
+
+var playSound = (function() {
+	var audio = new Audio;
+	audio.src = '/ding.mp3';
+	var timeout;
+	return function() {
+		clearTimeout(timeout);
+		timeout = setTimeout(function() {
+			if (! SF.st.settings['notification.playsound']) return;
+			if (audio.networkState !== 1)
+				return playSound();
+			audio.play();
+		}, 50);
+	}
+})();
+
+function createTab(url) {
+	chrome.tabs.create({
+		url: url,
+		selected: true
+	});
+}
+
+
+/* 更新历史 */
+
+var updates = (function() {
+	function fixVersionNum(version) {
+		return parseInt(version.replace(/\./g, ''), 10);
+	}
+
+	var updated_items = [];
+	var old_version = fixVersionNum(SF.old_version || '0.6.4.0');
+
+	var updates = Object.keys(history).filter(function(version_num) {
+		return fixVersionNum(version_num) > old_version;
+	});
+
+	updates.forEach(function(version) {
+		history[version].forEach(function(item) {
+			if (updated_items.indexOf(item) === -1)
+				updated_items.push(item);
+		});
+	});
+
+	return updated_items;
 })();
 
 /* 初始化插件 */
