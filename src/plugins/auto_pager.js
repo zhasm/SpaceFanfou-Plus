@@ -10,15 +10,10 @@ SF.pl.auto_pager = new SF.plugin((function($) {
   var docelem = document.documentElement;
   var $totop = $('#pagination-totop');
 
-  var t;
   var currentPos;
-
   var remain = 500;
 
-  function onScroll(e) {
-    clearTimeout(t);
-    t = setTimeout(autoPager, 250);
-  }
+  var onScroll = SF.fn.throttle(autoPager, 250);
 
   function autoPager() {
     currentPos = body.scrollTop + docelem.clientHeight;

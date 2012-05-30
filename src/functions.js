@@ -23,7 +23,7 @@ SF.fn.waitFor = (function() {
 			}
 
 			if (! not_avail || document.readyState == 'complete') {
-        interval = 0 * clearInterval(interval);
+				interval = 0 * clearInterval(interval);
 			}
 
 			lock = false;
@@ -51,8 +51,8 @@ SF.fn.formatDate = function(date) {
 	var datestr;
 	if (! datestr) {
 		datestr = SF.fn.fixNumber(date.getFullYear(), 4) + '-' +
-				  SF.fn.fixNumber(date.getMonth() + 1, 2) + '-' +
-				  SF.fn.fixNumber(date.getDate(), 2);
+					SF.fn.fixNumber(date.getMonth() + 1, 2) + '-' +
+					SF.fn.fixNumber(date.getDate(), 2);
 	}
 	return datestr;
 };
@@ -65,6 +65,18 @@ SF.fn.emulateClick = function(elem) {
 	var e = document.createEvent('MouseEvents');
 	e.initMouseEvent('click', false, true)
 	elem.dispatchEvent(e);
+}
+
+SF.fn.throttle = function(func, delay) {
+	var timeout, context, args;
+	return function() {
+		context = this;
+		args = arguments;
+		clearTimeout(timeout);
+		timeout = setTimeout(function() {
+			func.apply(context, args);
+		}, delay);
+	}
 }
 
 SF.fn.waitFor(function() {

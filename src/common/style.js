@@ -33,6 +33,14 @@
 	SF.fn.waitFor(function() {
 		return $i('pagination-totop') || $i('footer');
 	}, function() {
+		var $, $totop;
+		var hidden = false;
+		function hideTotop() {
+			if (! hidden && $totop) {
+				$totop.hide();
+				hidden = true;
+			}
+		}
 		var totop = $i('pagination-totop');
 		if (! totop) {
 			var pagination = $cn(document, 'pagination')[0];
@@ -52,25 +60,32 @@
 			totop.innerHTML = '返回顶部';
 			pagination.appendChild(totop);
 		}
-		totop.addEventListener('click', SF.fn.goTop, false);
+		totop.addEventListener('click', function(e) {
+			hideTotop();
+			SF.fn.goTop(e);
+		}, false);
 		SF.fn.waitFor(function() {
-			return window.jQuery;
+			return $ = window.jQuery;
 		}, function() {
-			var $ = jQuery;
-			var $totop = $(totop), $win = $(window);
+			var $win = $(window);
 			var main_top = 66;
+			$totop = $(totop);
 			$totop.hide();
 			$totop.removeClass('more more-right');
 			$totop.css('visibility', 'visible');
-			$win.scroll(function() {
-				if ($totop.is(':visible')) {
+			$win.scroll((function() {
+				var onscroll = SF.fn.throttle(function() {
+					hidden = false;
 					if ($win.scrollTop() < main_top)
 						$totop.fadeOut();
-				} else {
-					if ($win.scrollTop() > main_top)
+					else
 						$totop.fadeIn();
+				}, 500);
+				return function() {
+					hideTotop();
+					onscroll();
 				}
-			});
+			})());
 		});
 	});
 
