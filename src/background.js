@@ -297,9 +297,7 @@ chrome.tabs.query({}, function(tabs) {
 chrome.tabs.onSelectionChanged.addListener(function(tabId) {
 	if (ports['port_' + tabId] !== undefined)
 		return;
-	chrome.tabs.get(tabId, function(tab) {
-		connectTab(tab);
-	});
+	chrome.tabs.get(tabId, connectTab);
 });
 
 /* 监听选项变动 */

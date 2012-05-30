@@ -183,7 +183,7 @@ SF.pl.notification = new SF.plugin((function() {
 
 			showNotification({
 				type: 'text',
-				title: '太空饭否++ 升级至 ' + SF.version,
+				title: '太空饭否++ 由 ' + SF.old_version + ' 升级至 ' + SF.version,
 				content: updated_items,
 				timeout: period / 2
 			}).

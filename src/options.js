@@ -1,11 +1,11 @@
 var $ = document.getElementById.bind(document);
 var $$ = document.querySelectorAll.bind(document);
 
-document.addEventListener('DOMContentLoaded', function() {
-	function forEach(array, func, context) {
-		return Array.prototype.forEach.call(array, func, context);
-	}
+function forEach(array, func, context) {
+	return Array.prototype.forEach.call(array, func, context);
+}
 
+document.addEventListener('DOMContentLoaded', function() {
 	function getValue($elem) {
 		if ($elem.type == 'checkbox')
 			return $elem.checked;
@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		} else $elem.value = value;
 	}
 
-  var $foldables = $$('[foldable]');
-  forEach($$('[foldable]'), function($foldable) {
+	var $foldables = $$('[foldable]');
+	forEach($$('[foldable]'), function($foldable) {
 		var $foldable_src = $foldable.querySelector('[foldable_src]');
 		setValue($foldable_src, true);
 
@@ -40,57 +40,58 @@ document.addEventListener('DOMContentLoaded', function() {
 		setValue($t, SF.st.settings[$t.getAttribute('key')]);
 	});
 
-	$('btn_apply').addEventListener('click', function() {
-		var key;
-		forEach($$('[key]'), function($t) {
-			key = $t.getAttribute('key');
-			SF.st.settings[key] = getValue($t);
+	forEach($$('.btn_apply'), function(btn) {
+		btn.addEventListener('click', function() {
+			forEach($$('[key]'), function($t) {
+				var key = $t.getAttribute('key');
+				SF.st.settings[key] = getValue($t);
+			});
+			localStorage['settings'] = JSON.stringify(SF.st.settings);
 		});
-		localStorage['settings'] = JSON.stringify(SF.st.settings);
 	});
 
-	window.addEventListener('unload', function() {
-		SF.fn.emulateClick($('btn_apply'));
+	addEventListener('unload', function() {
+		SF.fn.emulateClick($$('.btn_apply')[0]);
 	}, false);
 
 	$('version').textContent = localStorage['sf_version'];
 
 	var $wrapper = $('wrapper');
-  var $screenshots = $$('.screenshot');
-  var $tabs = $('tabs');
-  var $screenshot = $('screenshot');
-  var $preview_img = $('preview_img');
-  var $preview_des = $('preview_des');
+	var $screenshots = $$('.screenshot');
+	var $tabs = $('tabs');
+	var $screenshot = $('screenshot');
+	var $preview_img = $('preview_img');
+	var $preview_des = $('preview_des');
 
-  for (var i = 0; i < $screenshots.length; i++) {
-    var $ss = $screenshots[i];
-    $ss.description = $ss.title;
-    $ss.title = '';
-    $ss.addEventListener('mouseover', function(e) {
+	for (var i = 0; i < $screenshots.length; i++) {
+		var $ss = $screenshots[i];
+		$ss.description = $ss.title;
+		$ss.title = '';
+		$ss.addEventListener('mouseover', function(e) {
 			if (e.target != this) return;
-      $preview_img.src = this.rel;
-      $preview_des.textContent = this.description;
-      $screenshot.classList.remove('fadeOut');
-    }, false);
-    $ss.addEventListener('mousemove', function(e) {
-      posPreview(e.pageX, e.pageY);
-    }, false);
-    $ss.addEventListener('mouseout', function(e) {
+			$preview_img.src = this.rel;
+			$preview_des.textContent = this.description;
+			$screenshot.classList.remove('fadeOut');
+		}, false);
+		$ss.addEventListener('mousemove', function(e) {
+			posPreview(e.pageX, e.pageY);
+		}, false);
+		$ss.addEventListener('mouseout', function(e) {
 			if (e.target != this) return;
-      $screenshot.classList.add('fadeOut');
-    }, false);
-  }
+			$screenshot.classList.add('fadeOut');
+		}, false);
+	}
 
-  var oH = $wrapper.offsetHeight;
-  function posPreview(x, y) {
-    var targetX = x + 30;
+	function posPreview(x, y) {
+		var oH = $wrapper.offsetHeight;
+		var targetX = x + 30;
 				targetY = y - 10;
 
-    var height = $screenshot.clientHeight;
-    if (targetY + height > oH)
-        targetY = oH - height - 10;
+		var height = $screenshot.clientHeight;
+		if (targetY + height + 10> oH)
+				targetY = oH - height - 10;
 
-    $screenshot.style.left = targetX + 'px';
-    $screenshot.style.top = targetY + 'px';
-  }
+		$screenshot.style.left = targetX + 'px';
+		$screenshot.style.top = targetY + 'px';
+	}
 }, false);

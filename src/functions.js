@@ -68,7 +68,7 @@ SF.fn.emulateClick = function(elem) {
 }
 
 SF.fn.waitFor(function() {
-	return document && document.body;
+	return document.body;
 }, function() {
 	var body = document.body;
 	var s = 0;
