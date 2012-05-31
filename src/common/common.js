@@ -26,9 +26,9 @@
 			}
 		}
 	}
-	
+
 	/* 将回复链接全部处理为回复到所有 */
-	
+
 	function changeHref($item) {
 		if (! $item.is('li')) return;
 		if ($item.attr('replytoall')) return;
@@ -63,5 +63,24 @@
 	$('#stream').bind('DOMNodeInserted',
 			function(e) { processStream($(e.target)); });
 	processStream($('#stream>ol'));
+
+	(function() {
+		var $textarea = $('#phupdate textarea');
+		if (! $textarea.length) return;
+		var body = document.body;
+		var textarea = $textarea[0];
+		var pos = $textarea.offset().top + textarea.offsetHeight;
+		$textarea = null;
+		var focused = true;
+		addEventListener('scroll', SF.fn.throttle(function(e) {
+			if (body.scrollTop > pos) {
+				focused && textarea.blur();
+				focused = false;
+			} else {
+				focused || textarea.focus();
+				focused = true;
+			}
+		}, 250), false);
+	})();
 
 })(jQuery);
