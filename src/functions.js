@@ -61,9 +61,9 @@ SF.fn.isUserPage = function() {
 	return !! document.getElementById('overlay-report');
 };
 
-SF.fn.emulateClick = function(elem) {
+SF.fn.emulateClick = function(elem, canBubble) {
 	var e = document.createEvent('MouseEvents');
-	e.initMouseEvent('click', false, true)
+	e.initMouseEvent('click', canBubble === true, true)
 	elem.dispatchEvent(e);
 }
 

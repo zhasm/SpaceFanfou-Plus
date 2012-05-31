@@ -101,4 +101,51 @@
 			upload_button.classList.remove('file-chosen');
 		}, false);
 	});
+
+	SF.fn.waitFor(function() {
+		return $i('timeline-notification') && $i('timeline-count');
+	}, function() {
+		var body = document.body;
+		var notif = $i('timeline-notification');
+		var unread_count = $i('timeline-count');
+		var btn = $t(notif, 'a')[0];
+		var count = 0;
+		var timeout;
+		var input_tags = ['textarea', 'input', 'TEXTAREA', 'INPUT'];
+		var waiting;
+		function doCount(x) {
+			count += x;
+			btn.dataset.pullProgress = count
+		}
+		addEventListener('mousewheel', function(e) {
+			if (waiting) return;
+			if (body.scrollTop) return;
+			if (e.wheelDeltaY <= 0) return;
+			if (input_tags.indexOf(e.target.tagName) > -1) return;
+			if (notif.style.display == 'none') return;
+			if (! parseInt(unread_count.textContent)) return;
+			clearTimeout(timeout);
+			doCount(1);
+			if (count === 3) {
+				count = 0;
+				waiting = setTimeout(function() {
+					waiting = null;
+					SF.fn.emulateClick(btn, true);
+					notif.classList.remove('onpull');
+				}, 250);
+			} else {
+				notif.classList.add('onpull');
+				timeout = setTimeout(function recover() {
+					count = Math.min(3, count);
+					count = Math.max(1, count);
+					doCount(-1);
+					if (! count) {
+						notif.classList.remove('onpull');
+					} else {
+						timeout = setTimeout(recover, 500);
+					}
+				}, 500);
+			}
+		}, false);
+	});
 })();
