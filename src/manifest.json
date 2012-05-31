@@ -20,5 +20,5 @@
 		"popup": "options.html"
 	},
 	"permissions": [ "http://fanfou.com/*", "http://*.fanfou.com/*", "tabs", "notifications", "contextMenus" ],
-	"version": "0.6.6.0"
+	"version": "0.6.6.3"
 }
