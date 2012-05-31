@@ -68,8 +68,9 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 						$('<div />')
 						.addClass('statbar statbar_a')
 						.append(
-							$('<div />').width(
-								(regDuration / sinceFanfouStart * 100) + '%')
+							$('<div />').width(0).delay(0).animate({
+								width: regDuration / sinceFanfouStart * 100 + '%'
+								})
 							)
 					   )
 					)
@@ -81,9 +82,9 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 						$('<div />')
 						.addClass('statbar statbar_b')
 						.append(
-							$('<div />').width(
-								(statusFreq > 300 ?
-								 '100' : statusFreq / 3) + '%')
+							$('<div />').width(0).delay(0).animate({
+								width: Math.min(100, statusFreq / 3) + '%'
+								})
 							)
 						)
 					)
@@ -94,8 +95,9 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 						$('<div />')
 						.addClass('statbar statbar_c')
 						.append(
-							$('<div />').width(
-								(infIndex > 300 ?  '100' : infIndex / 3) + '%')
+							$('<div />').width(0).delay(0).animate({
+								width: Math.min(100, infIndex / 3) + '%'
+								})
 							)
 						)
 					);
