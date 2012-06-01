@@ -3,38 +3,69 @@ function $c(tagname) { return document.createElement(tagname); }
 function $t(text) { return document.createTextNode(text); }
 
 var docelem = document.documentElement;
-var timeout;
-var fragment;
+var fragment = document.createDocumentFragment();
 
 function insertCode(type, code, name) {
 	var id ='sf_' + type + '_' + name;
-	if ($i(id)) return;
+	if (name && $i(id)) return;
 	var $code = $c(type);
-	$code.appendChild($t(code));
+	if (code.indexOf('chrome-extension://') === 0) {
+		if (type == 'style') {
+			$code = $c('link');
+			$code.href = code;
+			$code.rel = 'stylesheet';
+		} else {
+			$code.src = code;
+		}
+	} else {
+		$code.appendChild($t(code));
+	}
 	if (name) $code.id = id;
 	$code.className = 'space-fanfou';
 
-	fragment = fragment || document.createDocumentFragment();
-	fragment.appendChild($code);
-	clearTimeout(timeout);
-	timeout = setTimeout(apply, 0);
+	if (type == 'script')
+		$code.setAttribute('defer', '');
+
+	setTimeout(function() {
+		fragment.appendChild($code);
+		apply();
+	}, 0);
+
+	return $code;
 }
 
 function insertStyle(style, name) {
-	insertCode('style', style, name);
+	return insertCode('style', style, name);
 }
 
 function insertScript(script, name) {
-	insertCode('script', script, name);
+	return insertCode('script', script, name);
 }
 
-function apply() {
+var apply = SF.fn.throttle(function() {
 	if (! fragment) return;
 	try {
 		docelem.appendChild(fragment);
 	} catch (e) { }
-	delete fragment;
-}
+}, 0);
+
+var loadScript = (function() {
+	var waiting_list = [];
+	var slice = Array.prototype.slice;
+	var load = SF.fn.throttle(function() {
+		if (! waiting_list.length) return;
+		var $code = insertScript.apply(
+			insertScript, waiting_list.shift());
+		if ($code.complete || ! $code.src)
+			load();
+		else
+			$code.onload = $code.onerror = load;
+	}, 0);
+	return function() {
+		waiting_list.push(slice.call(arguments, 0));
+		load();
+	}
+})();
 
 if (($i('sf_flag_libs_ok') || {}).name == 'spacefanfou-flags') {
 	location.assign('javascript:(' + SF.unload + ')();');
@@ -73,14 +104,15 @@ port.onMessage.addListener(function(msg) {
 			}
 		}
 		scripts.push([load_plugins.join('\n')]);
+		load_plugins = null;
 		insertScript(msg.common.probe, 'probe');
 		SF.fn.waitFor(function() {
 			return $i('sf_flag_libs_ok');
 		}, function() {
 			for (var i = 0; i < scripts.length; ++i)
-				insertScript.apply(insertScript, scripts[i]);
+				loadScript.apply(null, scripts[i]);
 			SF.loaded = true;
-			delete scripts;
+			scripts = null;
 		});
 	} else if (msg.type == 'update') {
 		for (var i = 0; i < msg.data.length; ++i) {

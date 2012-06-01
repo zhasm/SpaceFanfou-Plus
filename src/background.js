@@ -1,7 +1,6 @@
 /* 文件缓存 */
 
 function loadFile(file) {
-	if (! file) return;
 	var req = new XMLHttpRequest();
 	req.open('GET', file, false);
 	req.send(null);
@@ -145,7 +144,7 @@ for (var i = 0; i < plugins.length; ++i) {
 	// 处理其他类型扩展
 	if (detail.type == 'background') {
 		var script = document.createElement('script');
-		script.innerHTML = loadFile(detail.script);
+		script.src = detail.script;
 		document.head.appendChild(script);
 	}
 	delete plugins;
@@ -170,8 +169,8 @@ function buildPageCache() {
 		if (item.type || ! SF.st.settings[name]) continue;
 		var detail = {
 			name: name,
-			style: loadFile(item.style),
-			script: loadFile(item.script)
+			style: item.style && chrome.extension.getURL(item.style),
+			script: item.script && chrome.extension.getURL(item.script)
 		};
 		if (item.options)
 			detail.options = getPluginOptions(name);
@@ -180,18 +179,18 @@ function buildPageCache() {
 	var init_message = {
 		type: 'init',
 		common: {
-			probe: loadFile('common/probe.js'),
-			namespace: loadFile('namespace.js'),
-			functions: loadFile('functions.js'),
+			probe: chrome.extension.getURL('common/probe.js'),
+			namespace: chrome.extension.getURL('namespace.js'),
+			functions: chrome.extension.getURL('functions.js'),
 			style: {
-				css: loadFile('common/main.css'),
-				js: loadFile('common/style.js')
+				css: chrome.extension.getURL('common/main.css'),
+				js: chrome.extension.getURL('common/style.js')
 			},
-			common: loadFile('common/common.js')
+			common: chrome.extension.getURL('common/common.js')
 		},
 		data: page_cache
 	};
-	return localStorage['init_message'] = JSON.stringify(init_message);
+	localStorage['init_message'] = JSON.stringify(init_message);
 }
 buildPageCache();
 
@@ -318,9 +317,11 @@ function updateSettings(e) {
 	if (! changed_keys) return;
 
 	var update_info = [];
-	for (var i = 0; i < changed_keys.length; ++i) {
-		var setting_name = changed_keys[i];
+	var processed_plugins = [];
+	changed_keys.forEach(function(setting_name) {
 		SF.st.settings[setting_name] = new_settings[setting_name];
+	});
+	changed_keys.forEach(function(setting_name) {
 		// 分离选项信息
 		var main_name, option_name;
 		var dot_pos = setting_name.indexOf('.');
@@ -330,6 +331,8 @@ function updateSettings(e) {
 		} else {
 			main_name = setting_name;
 		}
+		if (processed_plugins.indexOf(main_name) > -1) return;
+		processed_plugins.push(main_name);
 
 		// 确定处理方式
 		if (details[main_name]) {
@@ -348,11 +351,14 @@ function updateSettings(e) {
 			} else {
 				// 页面扩展
 				if (option_name) {
-					update_info.push({
-						type: 'update',
-						name: main_name,
-						options: getPluginOptions(main_name)
-					});
+					if (new_settings[main_name] &&
+						old_settings[main_name]) {
+						update_info.push({
+							type: 'update',
+							name: main_name,
+							options: getPluginOptions(main_name)
+						});
+					}
 				} else {
 					if (! SF.st.settings[main_name]) {
 						update_info.push({
@@ -363,15 +369,15 @@ function updateSettings(e) {
 						update_info.push({
 							type: 'enable',
 							name: main_name,
-							style: loadFile(detail.style),
-							script: loadFile(detail.script),
+							style: detail.style && chrome.extension.getURL(detail.style),
+							script: detail.script && chrome.extension.getURL(detail.script),
 							options: getPluginOptions(main_name)
 						});
 					}
 				}
 			}
 		}
-	}
+	});
 
 	// 更新缓存
 	if (update_info)
@@ -386,5 +392,5 @@ function updateSettings(e) {
 			data: update_info
 		});
 	}
-};
+}
 addEventListener('storage', updateSettings, false);
