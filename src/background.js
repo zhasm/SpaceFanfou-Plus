@@ -14,7 +14,7 @@ function loadFile(file) {
 /* 扩展信息 */
 
 (function() {
-	var manifest = JSON.parse(loadFile('manifest.json'));
+	var manifest = chrome.app.getDetails();
 
 	SF.version = manifest.version;
 	SF.old_version = localStorage['sf_version'];
@@ -96,9 +96,15 @@ var playSound = (function() {
 })();
 
 function createTab(url) {
-	chrome.tabs.create({
-		url: url,
-		selected: true
+	chrome.tabs.query({
+		active: true
+	}, function(tabs) {
+		var current_tab = tabs[0] || {};
+		chrome.tabs.create({
+			url: url,
+			selected: true,
+			index: (current_tab.index + 1) || void(0)
+		});
 	});
 }
 
