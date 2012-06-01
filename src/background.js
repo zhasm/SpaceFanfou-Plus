@@ -1,5 +1,9 @@
 /* 文件缓存 */
 
+function getURL(path) {
+	return chrome.extension.getURL(path) + '?' + new Date().getTime();
+}
+
 function loadFile(file) {
 	var req = new XMLHttpRequest();
 	req.open('GET', file, false);
@@ -82,7 +86,8 @@ var playSound = (function() {
 	return function() {
 		clearTimeout(timeout);
 		timeout = setTimeout(function() {
-			if (! SF.st.settings['notification.playsound']) return;
+			if (! SF.st.settings['notification.playsound'])
+				return;
 			if (audio.networkState !== 1)
 				return playSound();
 			audio.play();
@@ -128,6 +133,7 @@ PLUGINS_DIR = 'plugins/';
 
 // 初始化扩展信息
 var details = { };
+var bg_script = document.querySelector('script[src="background.js"]');
 for (var i = 0; i < plugins.length; ++i) {
 	var item = plugins[i];
 	var detail = {
@@ -142,13 +148,16 @@ for (var i = 0; i < plugins.length; ++i) {
 	details[item.name] = detail;
 
 	// 处理其他类型扩展
-	if (detail.type == 'background') {
+	if (detail.type == 'background') (function(name) {
 		var script = document.createElement('script');
 		script.src = detail.script;
-		document.head.appendChild(script);
-	}
-	delete plugins;
+		script.onload = function(e) {
+			initBgPlugin(name);
+		}
+		document.head.insertBefore(script, bg_script);
+	})(item.name);
 }
+plugins = void(0);
 
 // 获取一个插件的全部选项信息
 function getPluginOptions(name) {
@@ -161,36 +170,22 @@ function getPluginOptions(name) {
 }
 
 // 建立为页面提供的数据缓存
+var page_cache;
 function buildPageCache() {
-	var page_cache = [];
+	page_cache = [];
 	for (var name in details) {
 		if (! details.hasOwnProperty(name)) continue;
 		var item = details[name];
 		if (item.type || ! SF.st.settings[name]) continue;
 		var detail = {
 			name: name,
-			style: item.style && chrome.extension.getURL(item.style),
-			script: item.script && chrome.extension.getURL(item.script)
+			style: item.style && getURL(item.style),
+			script: item.script && getURL(item.script)
 		};
 		if (item.options)
 			detail.options = getPluginOptions(name);
 		page_cache.push(detail);
 	}
-	var init_message = {
-		type: 'init',
-		common: {
-			probe: chrome.extension.getURL('common/probe.js'),
-			namespace: chrome.extension.getURL('namespace.js'),
-			functions: chrome.extension.getURL('functions.js'),
-			style: {
-				css: chrome.extension.getURL('common/main.css'),
-				js: chrome.extension.getURL('common/style.js')
-			},
-			common: chrome.extension.getURL('common/common.js')
-		},
-		data: page_cache
-	};
-	localStorage['init_message'] = JSON.stringify(init_message);
 }
 buildPageCache();
 
@@ -217,8 +212,7 @@ function unloadBgPlugin(name) {
 	}, 0);
 }
 
-for (var name in SF.pl) {
-	if (! SF.pl.hasOwnProperty(name)) continue;
+function initBgPlugin(name) {
 	if (SF.st.settings[name]) loadBgPlugin(name);
 }
 
@@ -263,7 +257,20 @@ chrome.extension.onConnect.addListener(function(port) {
 	// 显示太空饭否图标
 	chrome.pageAction.show(tabId);
 	// 向目标发送初始化数据
-	port.postMessage(localStorage['init_message']);
+	port.postMessage({
+		type: 'init',
+		common: {
+			probe: getURL('common/probe.js'),
+			namespace: getURL('namespace.js'),
+			functions: getURL('functions.js'),
+			style: {
+				css: getURL('common/main.css'),
+				js: getURL('common/style.js')
+			},
+			common: getURL('common/common.js')
+		},
+		data: page_cache
+	});
 });
 
 // 维持太空饭否图标
@@ -369,8 +376,8 @@ function updateSettings(e) {
 						update_info.push({
 							type: 'enable',
 							name: main_name,
-							style: detail.style && chrome.extension.getURL(detail.style),
-							script: detail.script && chrome.extension.getURL(detail.script),
+							style: detail.style && getURL(detail.style),
+							script: detail.script && getURL(detail.script),
 							options: getPluginOptions(main_name)
 						});
 					}

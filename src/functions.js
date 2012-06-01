@@ -22,7 +22,9 @@ SF.fn.waitFor = (function() {
 				}
 			}
 
-			if (! not_avail || document.readyState == 'complete') {
+			if (! not_avail ||
+				(document.readyState == 'complete' &&
+					document.getElementById('sf_flag_libs_ok'))) {
 				interval = 0 * clearInterval(interval);
 			}
 

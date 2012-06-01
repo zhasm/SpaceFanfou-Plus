@@ -32,14 +32,29 @@ var SF = (function() {
 		},
 		unload: function() {
 			if (typeof FF == 'undefined') return;
+			var $ = jQuery;
+			var reserved_scripts = [
+				'sf_script_common',
+				'sf_script_style'
+			];
 			for (var plugin in SF.pl) {
 				if (! SF.pl.hasOwnProperty(plugin)) continue;
 				try {
 					SF.pl[plugin].unload();
 				} catch (e) { }
 			}
-			jQuery('#sf_flag_libs_ok, style.space-fanfou, script.space-fanfou').remove();
-			delete SF;
+			var items = [
+				'#sf_flag_libs_ok',
+				'script.space-fanfou',
+				'style.space-fanfou',
+				'link.space-fanfou[rel="stylesheet"]'
+			];
+			$(items.join(', ')).each(function() {
+				if (reserved_scripts.indexOf(this.id) === -1) {
+					this.parentNode.removeChild(this);
+				}
+			});
+			SF.pl = { };
 		}
 	};
 })();

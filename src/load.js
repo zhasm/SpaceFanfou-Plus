@@ -56,7 +56,7 @@ var loadScript = (function() {
 		if (! waiting_list.length) return;
 		var $code = insertScript.apply(
 			insertScript, waiting_list.shift());
-		if ($code.complete || ! $code.src)
+		if (! $code || $code.complete || ! $code.src)
 			load();
 		else
 			$code.onload = $code.onerror = load;
@@ -82,9 +82,9 @@ port.onMessage.addListener(function(msg) {
 	if (msg.type == 'init') {
 		var scripts = [];
 		insertStyle(msg.common.style.css, 'common');
-		insertScript(msg.common.namespace, 'namespace');
-		insertScript(msg.common.functions, 'functions');
-		insertScript(msg.common.style.js, 'style');
+		loadScript(msg.common.namespace, 'namespace');
+		loadScript(msg.common.functions, 'functions');
+		loadScript(msg.common.style.js, 'style');
 		scripts.push([msg.common.common, 'common']);
 		var load_plugins = [];
 		for (var i = 0; i < msg.data.length; ++i) {
@@ -105,7 +105,7 @@ port.onMessage.addListener(function(msg) {
 		}
 		scripts.push([load_plugins.join('\n')]);
 		load_plugins = null;
-		insertScript(msg.common.probe, 'probe');
+		loadScript(msg.common.probe, 'probe');
 		SF.fn.waitFor(function() {
 			return $i('sf_flag_libs_ok');
 		}, function() {
@@ -130,7 +130,7 @@ port.onMessage.addListener(function(msg) {
 					if (item.style)
 						insertStyle(item.style, item.name);
 					if (item.script) {
-						insertScript(item.script, item.name);
+						loadScript(item.script, item.name);
 						if (item.options) {
 							updates.push(
 									plugin + '.update.apply(' + plugin + ',' +
@@ -148,8 +148,9 @@ port.onMessage.addListener(function(msg) {
 					break;
 			}
 			// 对每个插件单独执行可以防止一个更新错误影响后面的更新
-			insertScript(updates.join(''), 'update_' + item.name);
+			loadScript(updates.join(''), 'update_' + item.name);
 		}
-		insertScript('jQuery("[id^=sf_script_update_]").remove();', 'update_clear');
+		loadScript('jQuery("' +
+			'[id^=sf_script_update_]").remove();', 'update_clear');
 	}
 });
