@@ -1,7 +1,7 @@
 /* 文件缓存 */
 
 function getURL(path) {
-	return chrome.extension.getURL(path) + '?' + new Date().getTime();
+	return chrome.extension.getURL(path) + '?v=' + SF.version;
 }
 
 function loadFile(file) {
