@@ -13,16 +13,14 @@ function loadFile(file) {
 
 /* 扩展信息 */
 
-(function() {
-	var manifest = chrome.app.getDetails();
+var manifest = chrome.app.getDetails();
 
-	SF.version = manifest.version;
-	SF.old_version = localStorage['sf_version'];
-	localStorage['sf_version'] = SF.version;
+SF.version = manifest.version;
+SF.old_version = localStorage['sf_version'];
+localStorage['sf_version'] = SF.version;
 
-	SF.updated = SF.old_version && SF.old_version != SF.version;
-	SF.contentScripts = manifest['content_scripts'][0];
-})();
+SF.updated = SF.old_version && SF.old_version != SF.version;
+SF.contentScripts = manifest['content_scripts'][0];
 
 /* 通知 */
 
@@ -81,7 +79,7 @@ function hideNotification(notification) {
 
 var playSound = (function() {
 	var audio = new Audio;
-	audio.src = '/ding.mp3';
+	audio.src = '/resources/sounds/ding.mp3';
 	var timeout;
 	return function() {
 		clearTimeout(timeout);
