@@ -38,7 +38,10 @@ var plugins = [
 
 	{
 		name: 'expanding_replies',
-		options: ['number', 'auto_expand'],
+		options: [
+			'number',
+			'auto_expand'
+		],
 		js: 'expanding_replies.js',
 		css: 'expanding_replies.css'
 	},
@@ -49,7 +52,11 @@ var plugins = [
 	},
 	{
 		name: 'float_message',
-		options: ['noajaxattop', 'notlostfocus', 'keepmentions'],
+		options: [
+			'noajaxattop',
+			'notlostfocus',
+			'keepmentions'
+		],
 		js: 'float_message.js',
 		css: 'float_message.css'
 	},
@@ -92,7 +99,13 @@ var plugins = [
 	{
 		name: 'notification',
 		type: 'background',
-		options: ['updates', 'mentions', 'followers', 'notdisturb', 'playsound'],
+		options: [
+			'updates',
+			'mentions',
+			'followers',
+			'notdisturb',
+			'playsound'
+		],
 		js: 'notification.js'
 	}
 
@@ -101,6 +114,20 @@ var plugins = [
 /* 历史记录 */
 
 var history = {
-	'0.6.6.3': ['优化 "返回顶部" 功能和页面滚动性能', '样式更新', '更新 "侧栏统计信息" 插件'],
-	'0.6.6.0': ['新增通知插件 (具体功能见设置页)', '更新设置页']
+	'0.6.7.0': [
+		'更换插件加载原理, 提升性能',
+		'增加向上滚动滚轮后自动点击 "显示新增 X 条新消息"功能',
+		'修正 "侧边详细统计信息" 插件',
+		'修正更改设置项后不能及时生效的问题',
+		'细节更新'
+	],
+	'0.6.6.3': [
+		'优化 "返回顶部" 功能和页面滚动性能',
+		'样式更新',
+		'更新 "侧栏统计信息" 插件'
+	],
+	'0.6.6.0': [
+		'新增通知插件 (具体功能见设置页)',
+		'更新设置页'
+	]
 };
