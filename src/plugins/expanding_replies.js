@@ -2,11 +2,17 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 	var $stream = $('#stream');
 	if (! $stream.length) return;
 
+	var $notificationBtn = $('#timeline-notification a');
+
 	var replies_number;
 	var auto_expand;
 
 	var MSG_DELETED = '已删除';
 	var MSG_NOPUBLIC = '不公开';
+
+	function showBufferedStatuses() {
+		$('#stream li.buffered').removeClass('buffered');
+	}
 
 	function showWaiting($e) {
 		var $wait = $('<li>');
@@ -212,6 +218,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 		load: function() {
 			$stream.bind('DOMNodeInserted', onStreamInserted);
 			processStream($('>ol', $stream));
+			$notificationBtn.click(showBufferedStatuses);
 		},
 		unload: function() {
 			$stream.unbind('DOMNodeInserted', onStreamInserted);
@@ -221,6 +228,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 			$ol.unbind('DOMNodeRemoved', onDOMNodeRemoved);
 			$('li.reply', $ol).remove();
 			$('li[expended]', $ol).removeAttr('expended');
+			$notificationBtn.unbind('click', showBufferedStatuses);
 		}
 	};
 })(jQuery));
