@@ -6,7 +6,8 @@ var plugins = [
 
 	{
 		name: 'font_reset_cn',
-		css: 'font_reset_cn.css'
+		css: 'font_reset_cn.css',
+		sync: true
 	},
 	{
 		name: 'translucent_sidebar',
@@ -27,7 +28,8 @@ var plugins = [
 	{
 		name: 'logo_remove_beta',
 		css: 'logo_remove_beta.css',
-		js: 'logo_remove_beta.js'
+		js: 'logo_remove_beta.js',
+		sync: true
 	},
 	{
 		name: 'remove_app_recom',

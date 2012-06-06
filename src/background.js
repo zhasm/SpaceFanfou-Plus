@@ -142,7 +142,8 @@ for (var i = 0; i < plugins.length; ++i) {
 	var item = plugins[i];
 	var detail = {
 		options: item.options,
-		type: item.type
+		type: item.type,
+		sync: item.sync
 	};
 	// 同步缓存样式内容
 	if (item.css)
@@ -174,22 +175,39 @@ function getPluginOptions(name) {
 }
 
 // 建立为页面提供的数据缓存
-var page_cache;
 function buildPageCache() {
-	page_cache = [];
+	var page_cache = [];
 	for (var name in details) {
 		if (! details.hasOwnProperty(name)) continue;
 		var item = details[name];
 		if (item.type || ! SF.st.settings[name]) continue;
 		var detail = {
 			name: name,
-			style: item.style && getURL(item.style),
-			script: item.script && getURL(item.script)
+			style: item.style &&
+				(item.sync ? loadFile(item.style) : getURL(item.style)),
+			script: item.script &&
+				(item.sync ? loadFile(item.script) : getURL(item.script)),
 		};
 		if (item.options)
 			detail.options = getPluginOptions(name);
 		page_cache.push(detail);
 	}
+	var init_message = {
+		type: 'init',
+		common: {
+			probe: loadFile('common/probe.js'),
+			namespace: loadFile('namespace.js'),
+			functions: loadFile('functions.js'),
+			style: {
+				css: getURL('common/main.css'),
+				js: getURL('common/style.js')
+			},
+			font: loadFile('resources/fonts/Lato-Regular.css'),
+			common: getURL('common/common.js')
+		},
+		data: page_cache
+	};
+	localStorage['init_message'] = JSON.stringify(init_message);
 }
 buildPageCache();
 
@@ -261,20 +279,7 @@ chrome.extension.onConnect.addListener(function(port) {
 	// 显示太空饭否图标
 	chrome.pageAction.show(tabId);
 	// 向目标发送初始化数据
-	port.postMessage({
-		type: 'init',
-		common: {
-			probe: getURL('common/probe.js'),
-			namespace: getURL('namespace.js'),
-			functions: getURL('functions.js'),
-			style: {
-				css: getURL('common/main.css'),
-				js: getURL('common/style.js')
-			},
-			common: getURL('common/common.js')
-		},
-		data: page_cache
-	});
+	port.postMessage(localStorage['init_message']);
 });
 
 // 维持太空饭否图标

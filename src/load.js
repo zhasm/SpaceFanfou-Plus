@@ -9,7 +9,8 @@ function insertCode(type, code, name) {
 	var id ='sf_' + type + '_' + name;
 	if (name && $i(id)) return;
 	var $code = $c(type);
-	if (code.indexOf('chrome-extension://') === 0) {
+	var is_link_mode = code.indexOf('chrome-extension://') === 0;
+	if (is_link_mode) {
 		if (type == 'style') {
 			$code = $c('link');
 			$code.href = code;
@@ -23,13 +24,8 @@ function insertCode(type, code, name) {
 	if (name) $code.id = id;
 	$code.className = 'space-fanfou';
 
-	if (type == 'script')
-		$code.setAttribute('defer', '');
-
-	setTimeout(function() {
-		fragment.appendChild($code);
-		apply();
-	}, 0);
+	fragment.appendChild($code);
+	apply(! is_link_mode);
 
 	return $code;
 }
@@ -42,12 +38,21 @@ function insertScript(script, name) {
 	return insertCode('script', script, name);
 }
 
-var apply = SF.fn.throttle(function() {
-	if (! fragment) return;
-	try {
-		docelem.appendChild(fragment);
-	} catch (e) { }
-}, 0);
+var apply = (function() {
+	var timeout;
+	function applyChange() {
+		try {
+			docelem.appendChild(fragment);
+		} catch (e) { }
+	}
+	return function(force_apply) {
+		clearTimeout(timeout);
+		if (force_apply)
+			return applyChange();
+		else
+			timeout = setTimeout(applyChange, 0);
+	}
+})();
 
 var loadScript = (function() {
 	var waiting_list = [];
@@ -81,6 +86,7 @@ port.onMessage.addListener(function(msg) {
 
 	if (msg.type == 'init') {
 		var scripts = [];
+		insertStyle(msg.common.font, 'font');
 		insertStyle(msg.common.style.css, 'common');
 		loadScript(msg.common.namespace, 'namespace');
 		loadScript(msg.common.functions, 'functions');
@@ -104,7 +110,7 @@ port.onMessage.addListener(function(msg) {
 			}
 		}
 		scripts.push([load_plugins.join('\n')]);
-		load_plugins = null;
+		load_plugins = void 0;
 		loadScript(msg.common.probe, 'probe');
 		SF.fn.waitFor(function() {
 			return $i('sf_flag_libs_ok');
@@ -112,7 +118,7 @@ port.onMessage.addListener(function(msg) {
 			for (var i = 0; i < scripts.length; ++i)
 				loadScript.apply(null, scripts[i]);
 			SF.loaded = true;
-			scripts = null;
+			scripts = void 0;
 		});
 	} else if (msg.type == 'update') {
 		for (var i = 0; i < msg.data.length; ++i) {
