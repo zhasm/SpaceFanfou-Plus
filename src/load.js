@@ -9,8 +9,7 @@ function insertCode(type, code, name) {
 	var id ='sf_' + type + '_' + name;
 	if (name && $i(id)) return;
 	var $code = $c(type);
-	var is_link_mode = code.indexOf('chrome-extension://') === 0;
-	if (is_link_mode) {
+	if (code.indexOf('chrome-extension://') === 0) {
 		if (type == 'style') {
 			$code = $c('link');
 			$code.href = code;
@@ -25,7 +24,7 @@ function insertCode(type, code, name) {
 	$code.className = 'space-fanfou';
 
 	fragment.appendChild($code);
-	apply(! is_link_mode);
+	apply();
 
 	return $code;
 }
@@ -91,6 +90,7 @@ port.onMessage.addListener(function(msg) {
 		loadScript(msg.common.namespace, 'namespace');
 		loadScript(msg.common.functions, 'functions');
 		loadScript(msg.common.style.js, 'style');
+		apply(true);
 		scripts.push([msg.common.common, 'common']);
 		var load_plugins = [];
 		for (var i = 0; i < msg.data.length; ++i) {
@@ -108,6 +108,7 @@ port.onMessage.addListener(function(msg) {
 				load_plugins.push(plugin + '.load();');
 				load_plugins.push('}, 0);');
 			}
+			if (item.sync) apply(true);
 		}
 		scripts.push([load_plugins.join('\n')]);
 		load_plugins = void 0;

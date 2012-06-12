@@ -1,10 +1,11 @@
 /* 文件缓存 */
 
 function getURL(path) {
-	return chrome.extension.getURL(path) + '?v=' + SF.version;
+	return path && chrome.extension.getURL(path) + '?v=' + SF.version;
 }
 
 function loadFile(file) {
+	if (! file) return;
 	var req = new XMLHttpRequest();
 	req.open('GET', file, false);
 	req.send(null);
@@ -183,10 +184,10 @@ function buildPageCache() {
 		if (item.type || ! SF.st.settings[name]) continue;
 		var detail = {
 			name: name,
-			style: item.style &&
-				(item.sync ? loadFile(item.style) : getURL(item.style)),
-			script: item.script &&
-				(item.sync ? loadFile(item.script) : getURL(item.script)),
+			sync: item.sync,
+			style: getURL(item.style),
+			script: item.sync ?
+				loadFile(item.script) : getURL(item.script),
 		};
 		if (item.options)
 			detail.options = getPluginOptions(name);
@@ -385,8 +386,8 @@ function updateSettings(e) {
 						update_info.push({
 							type: 'enable',
 							name: main_name,
-							style: detail.style && getURL(detail.style),
-							script: detail.script && getURL(detail.script),
+							style: getURL(detail.style),
+							script: getURL(detail.script),
 							options: getPluginOptions(main_name)
 						});
 					}
