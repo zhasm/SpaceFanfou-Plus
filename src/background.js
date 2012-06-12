@@ -202,7 +202,7 @@ function buildPageCache() {
 				css: getURL('common/main.css'),
 				js: getURL('common/style.js')
 			},
-			font: loadFile('resources/fonts/Lato-Regular.css'),
+			font: getURL('resources/fonts/Lato-Regular.css'),
 			common: getURL('common/common.js')
 		},
 		data: page_cache
