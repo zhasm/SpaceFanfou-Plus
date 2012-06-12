@@ -619,8 +619,24 @@ p.pm-parent {
 	height: 36px;
 	border-radius: 2px;
 }
+#sidebar #friends li {
+	position: relative;
+}
+#sidebar #friends li::after {
+	border-radius: 2px;
+	width: 48px;
+	height: 48px;
+	position: absolute;
+	z-index: 2;
+	left: 0;
+	top: 0;
+	content: " ";
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .15) inset;
+	pointer-events: none;
+}
 #friends li img {
 	border-radius: 2px;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .5);
 }
 #sidebar .user-op a {
 	background: rgba(0, 0, 0, .05) url(http://static2.fanfou.com/img/icon-block-user.gif?v=001) no-repeat 1px -14px !important;
