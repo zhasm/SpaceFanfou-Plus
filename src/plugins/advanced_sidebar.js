@@ -57,7 +57,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 				.append($('<ul />'));
 				$('.advanced_group>ul')
 				.append(
-					$('<li />').addClass('advanced')
+					$('<li />').addClass('advanced ptest')
 					.text('注册于 ' + SF.fn.formatDate(created))
 					)
 				.append(
@@ -79,7 +79,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 					)
 				.append(
 					$('<li />')
-					.addClass('advanced ptest')
+					.addClass('advanced')
 					.text('饭量：平均 ' + statusFreq + ' 条消息 / 天')
 					.append(
 						$('<div />')
@@ -112,6 +112,19 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 					);
 				$('.ptest').addClass(
 						data.protected ? 'protected' : 'notprotected');
+
+				var bgImageStyle = $('body').css('background-image');
+				if (bgImageStyle != 'none' && bgImage) {
+					$('<li />').addClass('advanced')
+					.append(
+						$('<a />')
+						.attr('href', bgImage)
+						.attr('target', '_blank')
+						.addClass('more')
+						.text('» 查看背景图片')
+					)
+					.appendTo('.advanced_group ul');
+				}
 			};
 			$script = $('<script />').attr('src',
 				'http://api.fanfou.com/users/show.json?id=' +
