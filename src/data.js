@@ -90,6 +90,11 @@ var plugins = [
 		name: 'auto_pager',
 		js: 'auto_pager.js'
 	},
+	{
+		name: 'status_manage',
+		js: 'status_manage.js',
+		css: 'status_manage.css'
+	},
 
 	/* 其他扩展 */
 

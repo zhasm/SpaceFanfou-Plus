@@ -1,0 +1,14 @@
+#stream>ol>li {
+	position: relative;
+}
+#stream>ol>li>input[type=checkbox] {
+	position: absolute;
+	right: 9px;
+	bottom: 5px;
+}
+ul.paginator .batch-manage {
+	height: 35px;
+}
+ul.paginator .batch-manage>a {
+	margin-left: 5px;
+}

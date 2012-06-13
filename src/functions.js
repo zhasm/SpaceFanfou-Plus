@@ -63,6 +63,20 @@ SF.fn.isUserPage = function() {
 	return !! document.getElementById('overlay-report');
 };
 
+SF.fn.isMyPage = function() {
+	var my_page_url = '';
+	var nav_links = document.querySelectorAll('#navigation li a');
+	for (var i = 0; i < nav_links.length; i++) {
+		var link = nav_links[i];
+		if (link.textContent === '我的空间') {
+			my_page_url = link.href;
+			break;
+		}
+	}
+	return my_page_url != null &&
+		location.href.indexOf(my_page_url) === 0;
+}
+
 SF.fn.emulateClick = function(elem, canBubble) {
 	var e = document.createEvent('MouseEvents');
 	e.initMouseEvent('click', canBubble === true, true)
