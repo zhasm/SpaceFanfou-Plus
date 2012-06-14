@@ -1,0 +1,16 @@
+#stream>ol>li {
+	position: relative;
+}
+#stream>ol>li>input[type=checkbox] {
+	position: absolute;
+	right: 9px;
+	bottom: 5px;
+}
+#info {
+	position: relative;
+}
+div.batch-manage {
+	position: absolute;
+	right: 9px;
+	bottom: 5px;
+}

@@ -30,7 +30,8 @@ SF.st.default_settings = {
 	'notification.mentions': true,
 	'notification.followers': true,
 	'notification.notdisturb': false,
-	'notification.playsound': true
+	'notification.playsound': true,
+	status_manage: true
 };
 
 /* 读取选项 */
