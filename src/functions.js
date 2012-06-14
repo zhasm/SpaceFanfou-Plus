@@ -64,7 +64,7 @@ SF.fn.isUserPage = function() {
 };
 
 SF.fn.isMyPage = function() {
-	var my_page_url = '';
+	var my_page_url;
 	var nav_links = document.querySelectorAll('#navigation li a');
 	for (var i = 0; i < nav_links.length; i++) {
 		var link = nav_links[i];

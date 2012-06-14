@@ -10,9 +10,7 @@ SF.pl.status_manage = new SF.plugin((function($) {
 	var $manage = $('<div />');
 	$manage.addClass('batch-manage');
 
-	var $del = $('<a>删除选定</a>');
-	$del.addClass('delete');
-	$del.click(function(evt) {
+	function batchDelete() {
 		var $todel = $('#stream li input[type=checkbox]:checked');
 		var length = $todel.length;
 		if (! length) return;
@@ -43,14 +41,19 @@ SF.pl.status_manage = new SF.plugin((function($) {
 				},
 			});
 		});
-	});
+	}
 
 	var $select = $('<select />');
 	$select
 	.append(
 		$('<option />')
 		.val('default')
-		.text('筛选..')
+		.text('批量处理..')
+	)
+	.append(
+		$('<option />')
+		.val('delete')
+		.text('删除选中消息')
 	)
 	.append(
 		$('<option />')
@@ -72,9 +75,18 @@ SF.pl.status_manage = new SF.plugin((function($) {
 		.val('select-reposts')
 		.text('选中转发')
 	)
+	.append(
+		$('<option />')
+		.val('cancel')
+		.text('取消选择')
+	)
+	.val('default')
 	.change(function(evt) {
 		switch (this.value) {
 		case 'default':
+			break;
+		case 'delete':
+			batchDelete();
 			break;
 		case 'select-all':
 			$('#stream li input[type=checkbox]')
@@ -96,36 +108,41 @@ SF.pl.status_manage = new SF.plugin((function($) {
 			$('#stream li[repost-status] input[type=checkbox]')
 			.prop('checked', true);
 			break;
+		case 'cancel':
+			$('#stream li input[type=checkbox]')
+			.prop('checked', false);
+			break;
 		}
 		this.value = 'default';
-	});
-
-	$manage
-	.append($select)
-	.append($del);
+	})
+	.appendTo($manage);
 
 	return {
 		load: function() {
+			var $checkbox = $('<input>').attr('type', 'checkbox');
 			$li.each(function() {
-				var $chk = $('<input>');
-				$chk.attr('type', 'checkbox');
-				var msgid = $('.op a', this).attr('href').split('/').pop();
+				var op_btns = $('.op a', this);
+				if (! op_btns.length) return;
+				var msgid = op_btns.attr('href').split('/').pop();
+				var $chk = $checkbox.clone();
 				$chk.attr('msgid', msgid);
 				$chk.appendTo(this);
 				var $reply = $('>.stamp>.reply', this);
 				if ($reply.length) {
-					$(this).
-					attr($reply.text().indexOf('转自') === 0 ?
-						'repost-status' : 'reply-status', '');
+					var attr;
+					var text = $reply.text();
+					if (/^转自(.+)(\(查看\))?$/.test(text))
+						attr = 'repost-status';
+					else if (/^给(.+)的回复(\(查看\))?/.test(text))
+						attr = 'reply-status';
+					attr && $(this).attr(attr, '');
 				}
 			});
-			$paginator.prepend($manage);
+			$manage.appendTo('#info');
 		},
 		unload: function() {
 			$('#stream li input[type=checkbox]').remove();
-			$li
-			.removeAttr('repost-status')
-			.removeAttr('reply');
+			$li.removeAttr('repost-status reply-status');
 			$manage.detach();
 		}
 	};

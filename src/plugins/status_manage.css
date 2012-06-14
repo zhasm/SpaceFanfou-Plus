@@ -6,9 +6,11 @@
 	right: 9px;
 	bottom: 5px;
 }
-ul.paginator .batch-manage {
-	height: 35px;
+#info {
+	position: relative;
 }
-ul.paginator .batch-manage>a {
-	margin-left: 5px;
+div.batch-manage {
+	position: absolute;
+	right: 9px;
+	bottom: 5px;
 }
