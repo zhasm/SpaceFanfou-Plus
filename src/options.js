@@ -35,6 +35,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		$f.style.height = $f.offsetHeight + 'px';
 	});
 
+	document.body.classList.add('init');
+	forEach($$('.tabs ul'), function($ul) {
+		$ul.style.maxHeight = $ul.offsetHeight + 'px';
+	});
+	document.body.classList.remove('init');
+
 	// 获取选项信息
 	forEach($$('[key]'), function($t) {
 		setValue($t, SF.st.settings[$t.getAttribute('key')]);

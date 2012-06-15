@@ -284,7 +284,8 @@ input[key="expanding_replies.number"] {
   -webkit-transition: height .2s linear;
   overflow: hidden;
 }
-[foldable].folded [foldable_tgt] {
+[foldable].folded [foldable_tgt],
+.init [foldable_tgt] {
   height: 0 !important;
 }
 .comment {
