@@ -8,7 +8,7 @@ SF.pl.status_manage = new SF.plugin((function($) {
 	if (! $paginator.length || ! $li.length) return;
 
 	var $manage = $('<div />');
-	$manage.addClass('batch-manage');
+	$manage.addClass('batch-manage statuses');
 
 	function batchDelete() {
 		var $todel = $('#stream li input[type=checkbox]:checked');

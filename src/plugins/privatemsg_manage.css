@@ -1,15 +1,16 @@
 #stream>ol>li {
 	position: relative;
 }
-#stream>ol>li>input[type=checkbox] {
+#stream>ol>li>input[type=checkbox][privatemsgid] {
 	position: absolute;
-	right: 5px; bottom: 5px;
+	right: 9px; 
+	bottom: 15px;
 }
-#main>.tabs>.batch-manage {
+#main>.tabs>.batch-manage.privatemsgs {
 	position: absolute;
-	right: 5px;
+	right: 9px;
 	bottom: 5px;
 }
-#main>.tabs>.batch-manage>input {
+#main>.tabs>.batch-manage.privatemsgs>input {
 	margin-left: 5px;
 }

@@ -1,18 +1,20 @@
 #stream>ol>li {
 	position: relative;
 }
-#stream>ol>li>input[type=checkbox] {
+#stream>ol>li>input[type=checkbox][userid] {
 	position: absolute;
-	right: 5px; bottom: 17px;
+	right: 5px;
+	bottom: 17px;
 }
-#friends>.batch-manage {
+#friends>.batch-manage.friends {
 	float: right;
 	margin-top: -27px;
+	margin-right: 5px;
 }
-#friends>.batch-manage>input {
+#friends>.batch-manage.friends>input {
 	margin-left: 12px;
 }
-#friends>.batch-manage>.friend-remove {
+#friends>.batch-manage.friends>.friend-remove {
 	width: 85px;
 	display: inline-block;
 	float: none;

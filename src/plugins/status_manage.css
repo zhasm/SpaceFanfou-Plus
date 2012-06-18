@@ -1,15 +1,15 @@
 #stream>ol>li {
 	position: relative;
 }
-#stream>ol>li>input[type=checkbox] {
+#stream>ol>li>input[type=checkbox][msgid] {
 	position: absolute;
 	right: 9px;
-	bottom: 5px;
+	bottom: 3px;
 }
 #info {
 	position: relative;
 }
-div.batch-manage {
+div.batch-manage.statuses {
 	position: absolute;
 	right: 9px;
 	bottom: 5px;

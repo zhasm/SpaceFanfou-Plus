@@ -5,7 +5,7 @@ SF.pl.privatemsg_manage = new SF.plugin((function($) {
 	var $li = $('#stream li');
 
 	var $manage = $('<div>');
-	$manage.addClass('batch-manage');
+	$manage.addClass('batch-manage privatemsgs');
 	var $del = $('<a>删除选定</a>');
 	$del.addClass('delete');
 	$del.attr('href', '#');
@@ -23,7 +23,7 @@ SF.pl.privatemsg_manage = new SF.plugin((function($) {
 				url: location.href,
 				data: {
 					action: 'privatemsg.del',
-					privatemsg: $t.attr('msgid'),
+					privatemsg: $t.attr('privatemsgid'),
 					token: $del.attr('token'),
 					ajax: 'yes',
 				},
@@ -61,8 +61,8 @@ SF.pl.privatemsg_manage = new SF.plugin((function($) {
 			$li.each(function() {
 				var $chk = $('<input>');
 				$chk.attr('type', 'checkbox');
-				var msgid = $('>.op>a', this).attr('href').split('/').pop();
-				$chk.attr('msgid', msgid);
+				var privatemsgid = $('>.op>a', this).attr('href').split('/').pop();
+				$chk.attr('privatemsgid', privatemsgid);
 				$chk.appendTo(this);
 			});
 			$manage.appendTo('#main .tabs');

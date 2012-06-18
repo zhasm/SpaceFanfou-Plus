@@ -10,7 +10,7 @@ SF.pl.friend_manage = new SF.plugin((function($) {
 
 	var $li = $('#stream li');
 	var $manage = $('<div>');
-	$manage.addClass('batch-manage actions');
+	$manage.addClass('friends batch-manage actions');
 	var $del = isFriend ? $('<a>取消关注选定</a>') : $('<a>删除选定用户</a>');
 	$del.addClass('friend-remove');
 	$del.attr('href', '#');
