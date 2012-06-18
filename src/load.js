@@ -71,14 +71,19 @@ var loadScript = (function() {
 	}
 })();
 
+function unload() {
+	location.assign('javascript:SF.unload();');
+	removeEventListener('beforeunload', unload, false);
+}
+
 if (($i('sf_flag_libs_ok') || {}).name == 'spacefanfou-flags') {
 	location.assign('javascript:(' + SF.unload + ')();');
 }
 
+addEventListener('beforeunload', unload, false);
+
 var port = chrome.extension.connect();
-port.onDisconnect.addListener(function() {
-	location.assign('javascript:SF.unload();');
-});
+port.onDisconnect.addListener(unload);
 port.onMessage.addListener(function(msg) {
 	if (typeof msg == 'string')
 		msg = JSON.parse(msg);
