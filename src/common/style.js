@@ -89,18 +89,21 @@
 		});
 	});
 
-	SF.fn.waitFor(function() {
-		return $i('upload-file') && $i('upload-button') &&
-			$cn(document, 'upload-close-handle').length;
-	}, function() {
-		var upload_button = $i('upload-button');
-		$i('upload-file').addEventListener('change', function(e) {
-			upload_button.classList[this.files.length ? 'add' : 'remove']('file-chosen');
-		}, false);
-		$cn(document, 'upload-close-handle')[0].addEventListener('click', function(e) {
-			upload_button.classList.remove('file-chosen');
-		}, false);
-	});
+	SF.fn.fixUploaderStyle = function() {
+		SF.fn.waitFor(function() {
+			return $i('upload-file') && $i('upload-button') &&
+				$cn(document, 'upload-close-handle').length;
+		}, function() {
+			var upload_button = $i('upload-button');
+			$i('upload-file').addEventListener('change', function(e) {
+				upload_button.classList[this.files.length ? 'add' : 'remove']('file-chosen');
+			}, false);
+			$cn(document, 'upload-close-handle')[0].addEventListener('click', function(e) {
+				upload_button.classList.remove('file-chosen');
+			}, false);
+		});
+	}
+	SF.fn.fixUploaderStyle();
 
 	SF.fn.waitFor(function() {
 		return $i('timeline-notification') && $i('timeline-count');
