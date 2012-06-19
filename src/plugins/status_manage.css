@@ -1,6 +1,16 @@
 #stream>ol>li {
 	position: relative;
 }
+#stream>ol>li[batch-manage-start],
+#stream>ol>li[batch-manage-start].light {
+	background-color: #ffa !important;
+}
+#stream>ol>li[batch-manage-upward] {
+	background: -webkit-linear-gradient(top, #fff, #ffa);
+}
+#stream>ol>li[batch-manage-downward] {
+	background: -webkit-linear-gradient(bottom, #fff, #ffa);
+}
 #stream>ol>li>input[type=checkbox][msgid] {
 	position: absolute;
 	right: 9px;

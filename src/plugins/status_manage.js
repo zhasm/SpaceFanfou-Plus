@@ -7,8 +7,54 @@ SF.pl.status_manage = new SF.plugin((function($) {
 
 	if (! $paginator.length || ! $li.length) return;
 
+	var start_attr = 'batch-manage-start',
+		index_attr = 'status-index';
+
 	var $manage = $('<div />');
 	$manage.addClass('batch-manage statuses');
+
+	var $start;
+	var start_index = null;
+
+	function getIndex($li) {
+		return parseInt($li.attr(index_attr), 10);
+	}
+
+	function onDblclick(e) {
+		e.preventDefault();
+		getSelection().collapse();
+		var $li = $(e.currentTarget);
+		$start = $('li[' + start_attr + ']');
+		if ($start.length) {
+			if ($start[0] !== e.currentTarget) {
+				var start = getIndex($start);
+				var end = getIndex($li);
+				for (var i = Math.min(start, end); i <= Math.max(start, end); i++) {
+					var $item = $('[' + index_attr + '=' + i + ']');
+					$item.find('input[type=checkbox][msgid]').prop('checked', true);
+				}
+			}
+			$start.removeAttr(start_attr +
+				' batch-manage-upward batch-manage-downward');
+			$start = start_index = null;
+		} else {
+			$start = $li;
+			$start.attr(start_attr, '');
+			start_index = getIndex($start);
+		}
+	}
+
+	function onMouseenter(e) {
+		if (start_index === null) return;
+		var $li = $(e.currentTarget);
+		var index = getIndex($li);
+		$start.removeAttr('batch-manage-upward batch-manage-downward');
+		if (index > start_index) {
+			$start.attr('batch-manage-downward', '');
+		} else if (index < start_index) {
+			$start.attr('batch-manage-upward', '');
+		}
+	}
 
 	function batchDelete() {
 		var $todel = $('#stream li input[type=checkbox][msgid]:checked');
@@ -116,15 +162,15 @@ SF.pl.status_manage = new SF.plugin((function($) {
 		this.value = 'default';
 	})
 	.appendTo($manage);
-	
-	function toggle(e) {
-		$('input[type=checkbox][msgid]', this).click();
-	}
 
 	return {
 		load: function() {
 			var $checkbox = $('<input>').attr('type', 'checkbox');
-			$li.each(function() {
+			$li
+			.each(function(i) {
+				var $item = $(this);
+				if ($item.hasClass('reply')) return;
+				$item.attr(index_attr, i);
 				var op_btns = $('.op a', this);
 				if (! op_btns.length) return;
 				var msgid = op_btns.attr('href').split('/').pop();
@@ -141,12 +187,18 @@ SF.pl.status_manage = new SF.plugin((function($) {
 						attr = 'reply-status';
 					attr && $(this).attr(attr, '');
 				}
-			}).dblclick(toggle);
+			})
+			.mouseenter(onMouseenter);
+			$('#stream').delegate('li:not(.reply)', 'dblclick', onDblclick);
 			$manage.appendTo('#info');
 		},
 		unload: function() {
 			$('#stream li input[type=checkbox][msgid]').remove();
-			$li.removeAttr('repost-status reply-status').off('dblclick', toggle);
+			$li
+			.off('mouseenter', onMouseenter)
+			.removeAttr('repost-status reply-status ' +
+				start_attr + ' ' + index_attr);
+			$('#stream').undelegate('li:not(.reply)', 'dblclick', onDblclick);
 			$manage.detach();
 		}
 	};
