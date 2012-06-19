@@ -73,14 +73,15 @@ var loadScript = (function() {
 
 function unload() {
 	location.assign('javascript:SF.unload();');
-	removeEventListener('beforeunload', unload, false);
 }
 
 if (($i('sf_flag_libs_ok') || {}).name == 'spacefanfou-flags') {
 	location.assign('javascript:(' + SF.unload + ')();');
 }
 
-addEventListener('beforeunload', unload, false);
+addEventListener('beforeunload', function() {
+	port.onDisconnect.removeListener(unload);
+}, false);
 
 var port = chrome.extension.connect();
 port.onDisconnect.addListener(unload);
