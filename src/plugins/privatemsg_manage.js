@@ -7,7 +7,7 @@ SF.pl.privatemsg_manage = new SF.plugin((function($) {
 	var $manage = $('<div>');
 	$manage.addClass('batch-manage privatemsgs');
 	var $del = $('<a>删除选定</a>');
-	$del.addClass('delete');
+	$del.addClass('delete-privatemsg');
 	$del.attr('href', '#');
 	$del.click(function(evt) {
 		evt.preventDefault();

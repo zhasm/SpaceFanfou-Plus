@@ -911,6 +911,7 @@ input.inlinebutton,
 .post_act.friend-remove,
 .post_act.close-notice,
 .batch-manage .friend-remove,
+.batch-manage .delete-privatemsg,
 #setmobile input[type="submit"] {
 	font-size: 12px;
 	height: 19px !important;
@@ -947,6 +948,7 @@ input.formbutton:hover,
 .post_act.friend-remove:hover,
 .post_act.close-notice:hover,
 .batch-manage .friend-remove:hover,
+.batch-manage .delete-privatemsg:hover,
 #setmobile input[type="submit"]:hover {
 	-webkit-animation-name: bl-blinking;
 	-webkit-animation-timing-function: ease-in-out;
@@ -960,6 +962,7 @@ input.formbutton:focus,
 .post_act.friend-remove:focus,
 .post_act.close-notice:focus,
 .batch-manage .friend-remove:focus,
+.batch-manage .delete-privatemsg:focus,
 #setmobile input[type="submit"]:focus {
 	outline: none;
 	border-color: rgba(83, 186, 237, 1) !important;
@@ -1054,6 +1057,7 @@ a.bl-added:active,
 .post_act.friend-remove:active,
 .post_act.close-notice:active,
 .batch-manage .friend-remove:active,
+.batch-manage .delete-privatemsg:active,
 #settings input.formbutton:active,
 #setmobile input[type="submit"]:active,
 a.bh:active {

@@ -11,6 +11,12 @@
 	right: 9px;
 	bottom: 5px;
 }
+#main>.tabs>.batch-manage.privatemsgs>a {
+	width: 60px;
+	display: inline-block;
+	float: none;
+	text-align: center;
+}
 #main>.tabs>.batch-manage.privatemsgs>input {
 	margin-left: 5px;
 }
