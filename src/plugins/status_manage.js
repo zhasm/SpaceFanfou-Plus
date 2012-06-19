@@ -11,7 +11,7 @@ SF.pl.status_manage = new SF.plugin((function($) {
 	$manage.addClass('batch-manage statuses');
 
 	function batchDelete() {
-		var $todel = $('#stream li input[type=checkbox]:checked');
+		var $todel = $('#stream li input[type=checkbox][msgid]:checked');
 		var length = $todel.length;
 		if (! length) return;
 		if (! confirm('确定要删除选定的' + $todel.length + '条消息吗？'))
@@ -116,6 +116,10 @@ SF.pl.status_manage = new SF.plugin((function($) {
 		this.value = 'default';
 	})
 	.appendTo($manage);
+	
+	function toggle(e) {
+		$('input[type=checkbox][msgid]', this).click();
+	}
 
 	return {
 		load: function() {
@@ -137,12 +141,12 @@ SF.pl.status_manage = new SF.plugin((function($) {
 						attr = 'reply-status';
 					attr && $(this).attr(attr, '');
 				}
-			});
+			}).dblclick(toggle);
 			$manage.appendTo('#info');
 		},
 		unload: function() {
-			$('#stream li input[type=checkbox]').remove();
-			$li.removeAttr('repost-status reply-status');
+			$('#stream li input[type=checkbox][msgid]').remove();
+			$li.removeAttr('repost-status reply-status').off('dblclick', toggle);
 			$manage.detach();
 		}
 	};
