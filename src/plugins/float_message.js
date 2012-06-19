@@ -127,7 +127,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 		backup.msg_keyup = msg_keyup[0].fn;
 		backup.update_submit = update_submit[0].fn;
 	});
-	
+
 	function processData(callback) {
 		var arr_data = $form.serializeArray();
 		arr_data.forEach(function(item) {
@@ -147,21 +147,19 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 		this.dispatchEvent(eve);
 		// 继续执行相关处理
 		e.preventDefault();
-		var data;
-		var $file = $('input[type=file]');
-		var files;
-		var is_uploading = false;
+		var data, files,
+			$file = $('input[type=file]'),
+			is_uploading = false;
 		if ($file.length) {
 			files = $file[0].files;
 			if (files.length) {
-				var img = files[0];
 				is_uploading = true;
 				var fd = new FormData;
 				processData(function(name, value) {
 					fd.append(name, value);
 				});
 				fd.append('ajax', 'yes');
-				fd.append('picture', img);
+				fd.append('picture', files[0]);
 				data = fd;
 			}
 		}
@@ -171,24 +169,18 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 				data[name] = value;
 			});
 			if (data.action == 'photo.upload') {
-				/*if (data.in_reply_to_status_id)
-					data.action = 'msg.reply';
-				else if (data.repost_status_id)
-					data.action = 'msg.repost'
-				else*/
-					data.action = 'msg.post';
+				data.action = 'msg.post';
 				data.content = data.desc;
 				delete data.desc;
 			}
 			data.ajax = 'yes';
 		}
-		console.log(data);
 		$.ajax({
-			url: is_uploading ? '/home/upload' : '/home', 
+			url: is_uploading ? '/home/upload' : '/home',
 			type: 'POST',
 			data: data,
 			processData: ! is_uploading,
-			contentType: is_uploading ? 
+			contentType: is_uploading ?
 				false : 'application/x-www-form-urlencoded; charset=UTF-8',
 			accepts: 'json',
 			dataType: 'json',
@@ -214,8 +206,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 							}
 						}
 						msg = msg.join(' ');
-						if (msg)
-							msg += ' ';
+						if (msg) msg += ' ';
 					}
 					$msg.val(msg);
 					if (notlostfocus)
@@ -224,11 +215,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 					$repost.val('');
 				}
 				if (data.status && is_uploading) {
-					$('#upload-filename, #ul_close').hide();
-					$('#upload-button').removeClass('file-chosen');
-					$file.after($file.clone());
-					$file.remove();
-					SF.fn.fixUploaderStyle();
+					$('#ul_close').click();
 					data.msg = data.msg || '图片上传成功！';
 				}
 				$notice.text(data.msg);
@@ -236,9 +223,6 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 				$('#header').append($notice);
 				$notice.fadeIn(500).delay(3500).fadeOut(500,
 					function() { $(this).remove(); });
-			},
-			complete: function() {
-				console.log(arguments);
 			}
 		}, 'json');
 		return false;

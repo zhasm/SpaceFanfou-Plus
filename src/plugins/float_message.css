@@ -79,3 +79,8 @@
 .float-message:hover .tip {
 	opacity: 1;
 }
+.float-message#phupdate:not(:hover) .act .loading {
+	position: absolute;
+	right: 5px;
+	-webkit-transform: translateX(0);
+}
