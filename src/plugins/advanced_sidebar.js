@@ -119,7 +119,6 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 					.append(
 						$('<a />')
 						.attr('href', bgImage)
-						.attr('target', '_blank')
 						.addClass('more')
 						.text('» 查看背景图片')
 					)
