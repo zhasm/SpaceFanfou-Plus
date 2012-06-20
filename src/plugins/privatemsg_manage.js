@@ -13,7 +13,7 @@ SF.pl.privatemsg_manage = new SF.plugin((function($) {
 		evt.preventDefault();
 		var $todel = $('#stream li input[type=checkbox]:checked');
 		if (! $todel.length) return;
-		if (! confirm('确定要删除选定的' + $todel.length + '条私信吗？'))
+		if (! confirm('确定要删除选定的 ' + $todel.length + ' 条私信吗？'))
 			return;
 		$todel.each(function() {
 			var $t = $(this);
@@ -52,8 +52,18 @@ SF.pl.privatemsg_manage = new SF.plugin((function($) {
 	$manage.append($del).append($all);
 
 	$('#stream ol').change(function(evt) {
-		if (! evt.target.checked)
+		if (! evt.target.checked) {
 			$all.removeAttr('checked');
+		} else {
+			var all_checked = true;
+			var $chks = $('#stream li input[type=checkbox]');
+			$chks.each(function() {
+				all_checked = all_checked && $(this).is(':checked');
+			});
+			if (all_checked) {
+				$all.prop('checked', true);
+			}
+		}
 	});
 
 	return {

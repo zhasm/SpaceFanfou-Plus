@@ -19,7 +19,7 @@ SF.pl.friend_manage = new SF.plugin((function($) {
 		var $todel = $('#stream li input[type=checkbox]:checked');
 		if (!$todel.length) return;
 		var text = isFriend ? '取消关注' : '删除';
-		if (!confirm('确定要' + text + '选定的' + $todel.length + '个人吗？'))
+		if (!confirm('确定要' + text + '选定的 ' + $todel.length + ' 个人吗？'))
 			return;
 		$todel.each(function() {
 			var $t = $(this);
@@ -60,8 +60,18 @@ SF.pl.friend_manage = new SF.plugin((function($) {
 	$manage.append($del).append($all);
 
 	$('#stream ol').change(function(evt) {
-		if (!evt.target.checked)
+		if (! evt.target.checked) {
 			$all.removeAttr('checked');
+		} else {
+			var all_checked = true;
+			var $chks = $('#stream li input[type=checkbox]');
+			$chks.each(function() {
+				all_checked = all_checked && $(this).is(':checked');
+			});
+			if (all_checked) {
+				$all.prop('checked', true);
+			}
+		}
 	});
 
 	return {
