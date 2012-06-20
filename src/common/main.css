@@ -135,6 +135,9 @@
 }
 
 /* Screen */
+#columns {
+	border-radius: 10px;
+}
 #main {
 	background:
 		-webkit-gradient(
