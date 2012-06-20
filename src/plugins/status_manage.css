@@ -6,10 +6,10 @@
 	background-color: #ffa !important;
 }
 #stream>ol>li[batch-manage-upward] {
-	background: -webkit-linear-gradient(top, #fff, #ffa);
+	background: -webkit-linear-gradient(bottom, #ffc, #fff 40px);
 }
 #stream>ol>li[batch-manage-downward] {
-	background: -webkit-linear-gradient(bottom, #fff, #ffa);
+	background: -webkit-linear-gradient(top, #ffc, #fff 40px);
 }
 #stream>ol>li>input[type=checkbox][msgid] {
 	position: absolute;

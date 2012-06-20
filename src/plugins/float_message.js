@@ -220,7 +220,9 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 				}
 				$notice.text(data.msg);
 				$notice.hide();
-				$('#header').append($notice);
+				var $header = $('#header');
+				$('.errmsg, .sysmsg', $header).remove();
+				$header.append($notice);
 				$notice.fadeIn(500).delay(3500).fadeOut(500,
 					function() { $(this).remove(); });
 			}
