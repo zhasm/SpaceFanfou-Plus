@@ -3,64 +3,112 @@ SF.pl.status_manage = new SF.plugin((function($) {
 	if (! $('#stream li .op .delete').length) return;
 
 	var $paginator = $('ul.paginator');
-	var $li = $('#stream li');
+	var $li = $('#stream li:not(.reply)');
 
 	if (! $paginator.length || ! $li.length) return;
 
-	var start_attr = 'batch-manage-start',
-		index_attr = 'status-index';
+	var REPLY_ATTR = 'repost-status',
+		REPOST_ATTR = 'reply-status',
+		START_ATTR = 'batch-manage-start',
+		INDEX_ATTR = 'status-index',
+		HL_ATTR = 'highlighted',
+		UP_ATTR = 'batch-manage-upward',
+		DOWN_ATTR = 'batch-manage-downward';
+	
+	var ALL_ATTRS = [
+		REPLY_ATTR,
+		REPOST_ATTR,
+		INDEX_ATTR,
+		START_ATTR,
+		HL_ATTR,
+		UP_ATTR,
+		DOWN_ATTR
+	];
+	
+	var SEL_ATTRS = [
+		START_ATTR,
+		HL_ATTR,
+		UP_ATTR,
+		DOWN_ATTR
+	];
+	
+	var HL_ATTRS = [
+		HL_ATTR,
+		UP_ATTR,
+		DOWN_ATTR
+	];
+	
+	var $stream = $('#stream');
 
 	var $manage = $('<div />');
 	$manage.addClass('batch-manage statuses');
 
 	var $start;
-	var start_index = null;
-
+	
 	function getIndex($li) {
-		return parseInt($li.attr(index_attr), 10);
+		return parseInt($li.attr(INDEX_ATTR), 10);
 	}
 
-	function onDblclick(e) {
+	function onClick(e) {
+		if ($(e.target).is('input')) return;
+		if (! e.shiftKey) return;
 		e.preventDefault();
 		getSelection().collapse();
-		var $li = $(e.currentTarget);
-		$start = $('li[' + start_attr + ']');
-		if ($start.length) {
+		var $current_li = $(e.currentTarget);
+		if ($start) {
 			if ($start[0] !== e.currentTarget) {
-				var start = getIndex($start);
-				var end = getIndex($li);
-				for (var i = Math.min(start, end); i <= Math.max(start, end); i++) {
-					var $item = $('[' + index_attr + '=' + i + ']');
+				var start_index = getIndex($start);
+				var end_index = getIndex($current_li);
+				var min = Math.min(start_index, end_index);
+				var max = Math.max(start_index, end_index);
+				for (var i = min; i <= max; i++) {
+					var $item = $('[' + INDEX_ATTR + '=' + i + ']');
 					$item.find('input[type=checkbox][msgid]').prop('checked', true);
 				}
 			}
-			$start.removeAttr(start_attr +
-				' batch-manage-upward batch-manage-downward');
-			$start = start_index = null;
+			$li.removeAttr(SEL_ATTRS.join(' '));
+			$start = null;
 		} else {
-			$start = $li;
-			$start.attr(start_attr, '');
-			start_index = getIndex($start);
+			$start = $current_li;
+			$start.attr(START_ATTR, '');
 		}
 	}
 
 	function onMouseenter(e) {
-		if (start_index === null) return;
-		var $li = $(e.currentTarget);
-		var index = getIndex($li);
-		$start.removeAttr('batch-manage-upward batch-manage-downward');
+		if (! $start) return;
+		$li.removeAttr(HL_ATTRS.join(' '));
+		var $current_li = $(e.currentTarget);
+		var index = getIndex($current_li);
+		var start_index = getIndex($start);
 		if (index > start_index) {
-			$start.attr('batch-manage-downward', '');
+			$start.attr(UP_ATTR, '');
+			$start.nextAll().each(function() {
+				var $li = $(this);
+				if (getIndex($li) <= index)
+					$li.attr(HL_ATTR, '');
+			});
+			$current_li.attr(DOWN_ATTR, '');
 		} else if (index < start_index) {
-			$start.attr('batch-manage-upward', '');
+			$start.attr(DOWN_ATTR, '');
+			$start.prevAll().each(function() {
+				var $li = $(this);
+				if (getIndex($li) >= index)
+					$li.attr(HL_ATTR, '');
+			});
+			$current_li.attr(UP_ATTR, '');
 		}
+	}
+	
+	function getCheckboxes(selector) {
+		selector = 'li input[type=checkbox][msgid]' + (selector || '');
+		return $(selector, $stream);
 	}
 
 	function batchDelete() {
-		var $todel = $('#stream li input[type=checkbox][msgid]:checked');
+		var $todel = getCheckboxes(':checked');
 		var length = $todel.length;
 		if (! length) return;
-		if (! confirm('确定要删除选定的' + $todel.length + '条消息吗？'))
+		if (! confirm('确定要删除选定的 ' + $todel.length + ' 条消息吗？'))
 			return;
 		var count = 0;
 		$todel.each(function() {
@@ -135,11 +183,10 @@ SF.pl.status_manage = new SF.plugin((function($) {
 			batchDelete();
 			break;
 		case 'select-all':
-			$('#stream li input[type=checkbox]')
-			.prop('checked', true);
+			getCheckboxes().prop('checked', true);
 			break;
 		case 'toggle':
-			$('#stream li input[type=checkbox]')
+			getCheckboxes()
 			.each(function() {
 				var $checkbox = $(this);
 				$checkbox.
@@ -147,15 +194,15 @@ SF.pl.status_manage = new SF.plugin((function($) {
 			});
 			break;
 		case 'select-replies':
-			$('#stream li[reply-status] input[type=checkbox]')
+			$('li[reply-status] input[type=checkbox][msgid]', $stream)
 			.prop('checked', true);
 			break;
 		case 'select-reposts':
-			$('#stream li[repost-status] input[type=checkbox]')
+			$('li[repost-status] input[type=checkbox][msgid]', $stream)
 			.prop('checked', true);
 			break;
 		case 'cancel':
-			$('#stream li input[type=checkbox]')
+			getCheckboxes()
 			.prop('checked', false);
 			break;
 		}
@@ -169,8 +216,7 @@ SF.pl.status_manage = new SF.plugin((function($) {
 			$li
 			.each(function(i) {
 				var $item = $(this);
-				if ($item.hasClass('reply')) return;
-				$item.attr(index_attr, i);
+				$item.attr(INDEX_ATTR, i);
 				var op_btns = $('.op a', this);
 				if (! op_btns.length) return;
 				var msgid = op_btns.attr('href').split('/').pop();
@@ -189,16 +235,14 @@ SF.pl.status_manage = new SF.plugin((function($) {
 				}
 			})
 			.mouseenter(onMouseenter);
-			$('#stream').delegate('li:not(.reply)', 'dblclick', onDblclick);
+			$stream.delegate('li:not(.reply)', 'click.batch-manage', onClick);
 			$manage.appendTo('#info');
+			$start = null;
 		},
 		unload: function() {
-			$('#stream li input[type=checkbox][msgid]').remove();
-			$li
-			.off('mouseenter', onMouseenter)
-			.removeAttr('repost-status reply-status ' +
-				start_attr + ' ' + index_attr);
-			$('#stream').undelegate('li:not(.reply)', 'dblclick', onDblclick);
+			getCheckboxes().remove();
+			$li.off('mouseenter', onMouseenter).removeAttr(ALL_ATTRS.join(' '));
+			$stream.undelegate('.batch-manage');
 			$manage.detach();
 		}
 	};
