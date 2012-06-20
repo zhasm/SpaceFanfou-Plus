@@ -180,6 +180,8 @@ SF.pl.status_manage = new SF.plugin((function($) {
 		case 'default':
 			break;
 		case 'delete':
+			$('option', $select).first().text('处理中..');
+			$select.prop('disabled', true);
 			batchDelete();
 			break;
 		case 'select-all':
