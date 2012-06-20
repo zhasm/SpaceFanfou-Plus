@@ -2,7 +2,8 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 	var $stream = $('#stream');
 	if (! $stream.length) return;
 
-	var $notificationBtn = $('#timeline-notification a');
+	var $notification_btn = $('#timeline-notification a');
+	var $last_refresh;
 
 	var replies_number;
 	var auto_expand;
@@ -10,8 +11,19 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 	var MSG_DELETED = '已删除';
 	var MSG_NOPUBLIC = '不公开';
 
+	var getLastRefresh = SF.fn.throttle(function() {
+		$last_refresh = $('#stream li.buffered').last();
+	}, 16);
+
 	function showBufferedStatuses() {
-		$('#stream li.buffered').removeClass('buffered');
+		setTimeout(function() {
+			$('#stream li.buffered').removeClass('buffered');
+			$('.last-refresh').removeClass('last-refresh');
+			if ($last_refresh) {
+				$last_refresh.addClass('last-refresh').removeAttr('last-refresh');
+			}
+			$last_refresh = null;
+		}, 16);
 	}
 
 	function showWaiting($e) {
@@ -143,6 +155,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 
 	function processItem($item) {
 		if (! $item.is('li')) return;
+		getLastRefresh();
 		if ($item.hasClass('reply hide')) {
 			$item.click(hideReplyList);
 		} else if (! $item.attr('href')) {
@@ -218,7 +231,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 		load: function() {
 			$stream.bind('DOMNodeInserted', onStreamInserted);
 			processStream($('>ol', $stream));
-			$notificationBtn.click(showBufferedStatuses);
+			$notification_btn.click(showBufferedStatuses);
 		},
 		unload: function() {
 			$stream.unbind('DOMNodeInserted', onStreamInserted);
@@ -228,7 +241,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 			$ol.unbind('DOMNodeRemoved', onDOMNodeRemoved);
 			$('li.reply', $ol).remove();
 			$('li[expended]', $ol).removeAttr('expended');
-			$notificationBtn.unbind('click', showBufferedStatuses);
+			$notification_btn.unbind('click', showBufferedStatuses);
 		}
 	};
 })(jQuery));
