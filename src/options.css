@@ -148,7 +148,7 @@ h4 {
 			0 1px 0 rgba(0, 0, 0, .09);
 	}
 }
-@-webkit-keyframes leftSlideIn {
+/*@-webkit-keyframes leftSlideIn {
 	from {
 		opacity: 0;
 		-webkit-transform: translateX(-100px);
@@ -167,7 +167,7 @@ h4 {
 		opacity: 1;
 		-webkit-transform: translateX(0);
 	}
-}
+}*/
 
 /* Screen */
 #wrapper {
