@@ -137,6 +137,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 
 	/* AJAX化提交 */
 	var $loading = $('.loading', $form);
+	var $count = $('#user_stats .count').eq(2);
 	function onFormSubmit(e) {
 		$loading.css('visibility', 'visible');
 		if ($form.attr('target')) return;
@@ -215,10 +216,11 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 						$msg.focus();
 					$in_reply.val('');
 					$repost.val('');
-				}
-				if (data.status && is_uploading) {
-					$('#ul_close').click();
-					data.msg = data.msg || '图片上传成功！';
+					$count.text(+$count.text() + 1);
+					if (is_uploading) {
+						$('#ul_close').click();
+						data.msg = data.msg || '图片上传成功！';
+					}
 				}
 				$notice.text(data.msg);
 				$notice.hide();
