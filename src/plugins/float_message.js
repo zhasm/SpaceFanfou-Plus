@@ -149,20 +149,23 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 		e.preventDefault();
 		var data, files,
 			$file = $('input[type=file]'),
+			$base64 = $('#upload-base64'),
 			is_uploading = false;
-		if ($file.length) {
+		if ($file.length || $base64.length) {
 			files = $file[0].files;
-			if (files.length) {
+			base64 = $base64[0].value;
+			if (files.length || base64) {
 				is_uploading = true;
 				var fd = new FormData;
 				processData(function(name, value) {
 					fd.append(name, value);
 				});
 				fd.append('ajax', 'yes');
-				fd.append('picture', files[0]);
+				files[0] && fd.append('picture', files[0]);
 				data = fd;
 			}
 		}
+		console.log(is_uploading)
 		if (! is_uploading) {
 			data = {};
 			processData(function(name, value) {
