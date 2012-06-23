@@ -541,6 +541,24 @@ li:hover p.pm-parent {
 	/* -webkit-text-stroke: 1px transparent; */
 	-webkit-font-smoothing: antialiased;
 }
+#user_top > a {
+	position: relative;
+}
+#user_top > a::after {
+	border-radius: 2px;
+	position: absolute;
+	z-index: 3;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	content: " ";
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .25) inset;
+	pointer-events: none;
+}
+#user_top > a img {
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+}
 #user_top img {
 	border-radius: 2px;
 }
