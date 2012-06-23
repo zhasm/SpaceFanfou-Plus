@@ -183,6 +183,10 @@
 #systip div {
 	border-top: 1px solid rgba(255, 255, 255, .75) !important;
 }
+.label.new_feature::after, .label.test_feature::after {
+	padding-left: 4px;
+	-webkit-text-size-adjust: none;
+}
 #newsfeed li {
 	border-bottom: 1px solid rgba(0, 0, 0, .12) !important;
 	background: url('/resources/images/dot.png') 5px center no-repeat !important;
