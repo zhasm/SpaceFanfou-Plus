@@ -165,7 +165,6 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 				data = fd;
 			}
 		}
-		console.log(is_uploading)
 		if (! is_uploading) {
 			data = {};
 			processData(function(name, value) {
