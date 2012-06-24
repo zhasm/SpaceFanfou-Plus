@@ -1,0 +1,57 @@
+#info span.fav_friends {
+	position: absolute;
+	content: " ";
+	width: 32px;
+	height: 32px;
+	top: -20px;
+	right: -20px;
+	z-index: 1;
+	background: url('/resources/images/star.png') right top no-repeat;
+	display: inline-block;
+}
+#info span.fav_friends:not(.faved),
+#info span.fav_friends:hover {
+	background: none;
+}
+#info span.fav_friends a {
+	position: absolute;
+	right: 9px;
+	top: 11px;
+	cursor: pointer;
+	width: 20px;
+	height: 16px;
+	display: none;
+	background: url('/resources/images/op-icons.png') 0 -16px no-repeat;
+}
+#info span.fav_friends:not(.faved) a,
+#info span.fav_friends:hover a {
+	display: inline-block;
+}
+#info span.fav_friends a:hover {
+	background-position: -20px -16px;
+}
+#info span.fav_friends a:active {
+	background-position: -40px -16px;
+}
+#info span.fav_friends.faved a {
+	background-position: 0 -48px !important;
+}
+#info span.fav_friends.faved a:hover {
+	background-position: -20px -48px !important;
+}
+#info span.fav_friends.faved a:active {
+	background-position: -40px -48px !important;
+}
+#sidebar .fav_friends {
+	font-size: 12px;
+}
+#sidebar .fav_friends ul {
+	margin: 0 15px;
+}
+#sidebar .fav_friends li a {
+	padding-left: 0 !important;
+	background: none !important;
+}
+#sidebar .fav_friends span {
+	font-weight: 400;
+}

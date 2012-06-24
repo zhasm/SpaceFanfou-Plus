@@ -31,7 +31,8 @@ SF.st.default_settings = {
 	'notification.followers': true,
 	'notification.notdisturb': false,
 	'notification.playsound': true,
-	status_manage: true
+	status_manage: true,
+	fav_friends: false
 };
 
 /* 读取选项 */
