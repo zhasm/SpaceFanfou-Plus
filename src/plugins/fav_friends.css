@@ -55,3 +55,8 @@
 #sidebar .fav_friends span {
 	font-weight: 400;
 }
+#sidebar .fav_friends li.shadow {
+	position: absolute;
+	opacity: .5;
+	display: none;
+}

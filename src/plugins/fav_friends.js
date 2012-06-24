@@ -37,6 +37,15 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		$fav_friends_title
 		.addClass('fav_friends_title')
 		.text('有爱饭友')
+		.contextmenu(function(e) {
+			e.preventDefault();
+			if (confirm('确实要清空有爱饭友列表？')) {
+				fav_friends = [];
+				saveData();
+				SF.pl.fav_friends.unload();
+				SF.pl.fav_friends.load();
+			}
+		})
 		.click(function(e) {
 			$fav_friends_list.toggle();
 			var visible = $fav_friends_list.is(':visible');
@@ -92,7 +101,13 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 	function initializeList() {
 		$fav_friends_list.empty();
 		if (fav_friends.length) {
-			fav_friends.forEach(function(user_data, i) {
+			var data = fav_friends.concat({
+				userid:'',
+				nickname:  '',
+				avatar_url: '',
+				user_url: ''
+			});
+			data.forEach(function(user_data, i) {
 				$('<li />')
 				.data('index', i)
 				.append(
@@ -110,6 +125,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 				)
 				.appendTo($fav_friends_list);
 			});
+			$('li', $fav_friends_list).last().addClass('shadow');
 		} else {
 			$fav_friends_list.text('把你常常翻看的饭友添加到这里..');
 		}
