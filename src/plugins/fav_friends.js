@@ -84,6 +84,11 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 			FAVED_TIP : UNFAVED_TIP);
 	}
 	
+	function updateUserData(index) {
+		fav_friends.splice(index, 1, user_data);
+		saveData();
+	}
+	
 	function initializeList() {
 		$fav_friends_list.empty();
 		if (fav_friends.length) {
@@ -121,7 +126,11 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 	return {
 		load: function() {
 			if (is_user_page) {
-				var faved = getIndex(user_data.userid) > -1;
+				var index = getIndex(user_data.userid);
+				var faved = index > -1;
+				if (faved) {
+					updateUserData(index);
+				}
 				process(faved);
 				$fav.appendTo('#info');
 			} else if (is_home_page) {
