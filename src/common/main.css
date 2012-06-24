@@ -160,7 +160,7 @@
 	background: rgba(255, 255, 255, .9) !important;
 	text-shadow: 0 1px 0 #fff;
 	box-shadow: 
-		-2px -2px 5px rgba(255, 255, 255, 1) inset, 
+		-2px -2px 5px rgba(255, 255, 255, .75) inset, 
 		0 0 5px #666;
 }
 .errmsg {
