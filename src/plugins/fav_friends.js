@@ -37,6 +37,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		$fav_friends_title
 		.addClass('fav_friends_title')
 		.text('有爱饭友')
+		.prop('title', '右击这里可以清空列表，拖拽头像可以重新排序。')
 		.contextmenu(function(e) {
 			e.preventDefault();
 			if (confirm('确实要清空有爱饭友列表？')) {
@@ -45,7 +46,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 				SF.pl.fav_friends.unload();
 				SF.pl.fav_friends.load();
 			}
-		})
+		})	
 		.click(function(e) {
 			$fav_friends_list.toggle();
 			var visible = $fav_friends_list.is(':visible');
