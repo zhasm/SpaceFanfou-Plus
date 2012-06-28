@@ -37,8 +37,9 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		$fav_friends_title
 		.addClass('fav_friends_title')
 		.text('有爱饭友')
-		.prop('title', '右击这里可以清空列表，拖拽头像可以重新排序。')
+		.prop('title', '1. 拖拽头像可以重新排序\n2. 按住 Shift 键点击头像可以删除\n3. 右击这里可以清空列表')
 		.contextmenu(function(e) {
+			if (! fav_friends.length) return;
 			e.preventDefault();
 			if (confirm('确实要清空有爱饭友列表？')) {
 				fav_friends = [];
@@ -61,6 +62,13 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		$fav_friends_list = $('<ul />').prop('id', 'friends');
 		$fav_friends_list
 		.addClass('alist')
+		.prop('draggable', true)
+		.on({
+			'dragover': function(e) {
+				e.preventDefault();
+			},
+			'drop mouseleave': resetDragging
+		})
 		.appendTo($fav_friends);
 	}
 	
@@ -99,18 +107,17 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		saveData();
 	}
 	
+	function resetDragging() {
+		$('.drag-source', $fav_friends_list).removeClass('drag-source');
+	}
+	
 	function initializeList() {
 		$fav_friends_list.empty();
 		if (fav_friends.length) {
-			var data = fav_friends.concat({
-				userid:'',
-				nickname:  '',
-				avatar_url: '',
-				user_url: ''
-			});
-			data.forEach(function(user_data, i) {
-				$('<li />')
-				.data('index', i)
+			fav_friends.forEach(function(user_data, i) {
+				var $li = $('<li />');
+				$li
+				.data('user_data', user_data)
 				.append(
 					$('<a />')
 					.prop('href', user_data.user_url)
@@ -119,17 +126,54 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 						$('<img />')
 						.prop('src', user_data.avatar_url)
 						.prop('alt', user_data.nickname)
+						.click(function(e) {
+							if (! e.shiftKey) return;
+							e.preventDefault();
+							e.stopPropagation
+							$li.remove();
+							saveListData();
+						})
 					)
 					.append(
 						$('<span />').text(user_data.nickname)
 					)
 				)
+				.prop('draggable', true)
+				.on({
+					'drag': function(e) {
+						$li.addClass('drag-source');
+					},
+					'dragover': function (e) {
+						if ($li.hasClass('drag-source')) return;
+						e.preventDefault();
+					},
+					'drop': function (e) {
+						if ($li.hasClass('drag-source')) return;
+						var $dragsource = $('.drag-source', $fav_friends_list);
+						if (! $dragsource.length) return;
+						var $placeholder = $('<span />');
+						$dragsource
+						.after($placeholder)
+						.insertAfter($li)
+						.removeClass('drag-source');
+						$li.insertAfter($placeholder);
+						$placeholder.remove();
+						saveListData();
+					}
+				})
 				.appendTo($fav_friends_list);
 			});
-			$('li', $fav_friends_list).last().addClass('shadow');
 		} else {
 			$fav_friends_list.text('把你常常翻看的饭友添加到这里..');
 		}
+	}
+	
+	function saveListData() {
+		fav_friends = [];
+		$('>li', $fav_friends_list).each(function() {
+			fav_friends.push($(this).data('user_data'));
+			saveData();
+		});
 	}
 	
 	function getData() {

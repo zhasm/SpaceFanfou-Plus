@@ -48,6 +48,9 @@
 #sidebar .fav_friends ul {
 	margin: 0 15px;
 }
+#sidebar .fav_friends ul li {
+	-webkit-transition: opacity .2s ease-in-out;
+}
 #sidebar .fav_friends li a {
 	padding-left: 0 !important;
 	background: none !important;
@@ -55,8 +58,6 @@
 #sidebar .fav_friends span {
 	font-weight: 400;
 }
-#sidebar .fav_friends li.shadow {
-	position: absolute;
+#sidebar .fav_friends li.drag-source {
 	opacity: .5;
-	display: none;
 }
