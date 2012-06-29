@@ -683,10 +683,12 @@ li:hover p.pm-parent {
 	height: 36px;
 	border-radius: 2px;
 }
-#sidebar #friends li {
+#sidebar #friends li,
+#sidebar .fav_friends li {
 	position: relative;
 }
-#sidebar #friends li::after {
+#sidebar #friends li::after,
+#sidebar .fav_friends li::after {
 	border-radius: 2px;
 	width: 48px;
 	height: 48px;
@@ -698,7 +700,8 @@ li:hover p.pm-parent {
 	box-shadow: 0 1px 3px rgba(0, 0, 0, .25) inset;
 	pointer-events: none;
 }
-#friends li img {
+#friends li img,
+#sidebar .fav_friends li img {
 	border-radius: 2px;
 	box-shadow: 0 1px 0 rgba(255, 255, 255, .5);
 }

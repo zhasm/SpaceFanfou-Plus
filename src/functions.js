@@ -113,3 +113,15 @@ SF.fn.waitFor(function() {
 		if (s >= 1) setTimeout(SF.fn.goTop, 24);
 	}
 });
+
+SF.fn.getData = function(key) {
+	var data = null;
+	try {
+		data = JSON.parse(localStorage.getItem(key));
+	} catch (e) { }
+	return data;
+}
+
+SF.fn.setData = function(key, data) {
+	localStorage.setItem(key, JSON.stringify(data));
+}

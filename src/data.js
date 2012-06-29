@@ -95,6 +95,11 @@ var plugins = [
 		js: 'status_manage.js',
 		css: 'status_manage.css'
 	},
+	{
+		name: 'fav_friends',
+		js: 'fav_friends.js',
+		css: 'fav_friends.css'
+	},
 
 	/* 其他扩展 */
 
