@@ -309,7 +309,7 @@ input[key="expanding_replies.number"] {
 	border-bottom-color: rgba(0, 0, 0, .6);
 	border-radius: 5px;
 	box-shadow: 0 5px 10px rgba(0, 0, 0, .5);
-  -webkit-transition: opacity .2s ease-in;
+	-webkit-transition: opacity .2s ease-in;
 	color: #333;
 	text-shadow: 0 1px 0 white;
 	pointer-events: none;
