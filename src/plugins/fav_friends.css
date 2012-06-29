@@ -1,28 +1,40 @@
-#info span.fav_friends {
+#info #avatar {
+	position: relative;
+	overflow: hidden;
+}
+#info #avatar span.fav_friends {
 	position: absolute;
 	content: " ";
 	width: 32px;
 	height: 32px;
-	top: -20px;
-	right: -20px;
+	top: 0;
+	right: 0;
 	z-index: 1;
+	opacity: 0;
+	border-top-right-radius: 2px;
 	display: inline-block;
-}
-#info.faved span.fav_friends {
+	pointer-events: none;
 	background: url('/resources/images/star.png') right top no-repeat;
-	-webkit-animation: fadeIn .2s ease-in-out;
+	-webkit-transform: translate(16px, -16px);
+	-webkit-transition-property: -webkit-transform, opacity;
+	-webkit-transition-duration: .2s;
+	-webkit-transition-timing-function: linear;
+}
+#info.faved #avatar span.fav_friends {
+	opacity: .85;
+	-webkit-transform: translate(0, 0);
 }
 #info #panel h1 a {
 	cursor: pointer;
 	width: 20px;
 	height: 16px;
+	margin: 2px 0 2px 4px;
 	opacity: 0;
 	display: inline-block;
-	margin-left: 4px;
 	background: url('/resources/images/op-icons.png') 0 -16px no-repeat;
 	-webkit-transition: opacity .2s ease-in-out;
 }
-#info #panel:hover h1 a {
+#info:hover #panel h1 a {
 	opacity: 1;
 }
 #info:not(.faved) #panel h1 a:hover {
@@ -35,7 +47,7 @@
 	background-position: 0 -48px !important;
 }
 #info.faved #panel h1 a:hover {
-	opacity: .5;
+	opacity: .75;
 }
 #info.faved #panel h1 a:active {
 	background-position: -40px -48px !important;

@@ -42,9 +42,13 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 			if (! fav_friends.length) return;
 			e.preventDefault();
 			if (confirm('确定要清空有爱饭友列表？')) {
-				fav_friends = [];
-				saveData();
-				initializeList();
+				var t = 500;
+				$fav_friends_list.slideUp(t, function() {
+					fav_friends = [];
+					saveData();
+					initializeList();
+					$fav_friends_list.slideDown(t);
+				});
 			}
 		})	
 		.click(function(e) {
@@ -86,6 +90,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 	}
 	
 	function toggle(user_data) {
+		fav_friends = getData();
 		var index = getIndex(user_data.userid);
 		if (index > -1)
 			fav_friends.splice(index, 1);
@@ -98,6 +103,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 	function process(faved) {
 		$('#info')[faved ? 'addClass' : 'removeClass']('faved');
 		$star.prop('title', faved ? FAVED_TIP : UNFAVED_TIP);
+		//$fav.css('-webkit-animation-name', faved ? 'flyIn' : 'flyOut');
 	}
 	
 	function updateUserData(index) {
@@ -128,11 +134,15 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 							if (! e.shiftKey) return;
 							e.preventDefault();
 							e.stopPropagation
-							$li.remove();
-							saveListData();
-							if (! fav_friends.length) {
-								initializeList();
-							}
+							var t = parseFloat($li.css('-webkit-transition-duration')) * 1000;
+							$li.css('opacity', 0);
+							setTimeout(function() {
+								$li.remove();
+								saveListData();
+								if (! fav_friends.length) {
+									initializeList();
+								}
+							}, t);
 						})
 					)
 					.append(
@@ -173,13 +183,13 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		}
 	}
 	
-	function saveListData() {
+	var saveListData = SF.fn.throttle(function() {
 		fav_friends = [];
 		$('>li', $fav_friends_list).each(function() {
 			fav_friends.push($(this).data('user_data'));
-			saveData();
 		});
-	}
+		saveData();
+	}, 16);
 	
 	function getData() {
 		return SF.fn.getData('fav_friends') || [];
@@ -198,7 +208,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 					updateUserData(index);
 				}
 				process(faved);
-				$fav.appendTo('#info');
+				$fav.appendTo('#avatar');
 				$star.appendTo('#panel h1');
 			} else if (is_home_page) {
 				initializeList();
