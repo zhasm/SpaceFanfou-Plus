@@ -18,7 +18,8 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		user_data.user_url = 'http://fanfou.com/' + user_data.userid;
 		var $fav = $('<span />');
 		$fav.addClass('fav_friends');
-		$('<a />')
+		var $star = $('<a />');
+		$star
 		.attr('href', 'javascript:void(0)')
 		.attr('title', UNFAVED_TIP)
 		.click(function(e) {
@@ -26,7 +27,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 			var faved = toggle(user_data);
 			process(faved);
 		})
-		.appendTo($fav);
+		//.appendTo($fav);
 	}
 	
 	if (is_home_page) {
@@ -97,7 +98,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 	}
 	
 	function process(faved) {
-		$fav[faved ? 'addClass' : 'removeClass']('faved');
+		$('#info')[faved ? 'addClass' : 'removeClass']('faved');
 		$('a', $fav).prop('title', faved ?
 			FAVED_TIP : UNFAVED_TIP);
 	}
@@ -143,11 +144,15 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 					'drag': function(e) {
 						$li.addClass('drag-source');
 					},
-					'dragover': function (e) {
+					'dragover': function(e) {
 						if ($li.hasClass('drag-source')) return;
 						e.preventDefault();
+						$li.addClass('dragover');
 					},
-					'drop': function (e) {
+					'dragleave drop': function(e) {
+						$li.removeClass('dragover');
+					},
+					'drop': function(e) {
 						if ($li.hasClass('drag-source')) return;
 						var $dragsource = $('.drag-source', $fav_friends_list);
 						if (! $dragsource.length) return;
@@ -194,6 +199,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 				}
 				process(faved);
 				$fav.appendTo('#info');
+				$star.appendTo('#panel h1');
 			} else if (is_home_page) {
 				initializeList();
 				$insert.before($fav_friends);
@@ -205,6 +211,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		unload: function() {
 			if (is_user_page) {
 				$fav.detach();
+				$star.detach();
 			} else if (is_home_page) {
 				$fav_friends.detach();
 			}
