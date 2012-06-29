@@ -10,6 +10,7 @@
 }
 #info.faved span.fav_friends {
 	background: url('/resources/images/star.png') right top no-repeat;
+	-webkit-animation: fadeIn .2s ease-in-out;
 }
 #info #panel h1 a {
 	cursor: pointer;
@@ -24,7 +25,7 @@
 #info #panel:hover h1 a {
 	opacity: 1;
 }
-#info #panel h1 a:hover {
+#info:not(.faved) #panel h1 a:hover {
 	background-position: -20px -16px;
 }
 #info #panel h1 a:active {
@@ -34,7 +35,7 @@
 	background-position: 0 -48px !important;
 }
 #info.faved #panel h1 a:hover {
-	background-position: -20px -48px !important;
+	opacity: .5;
 }
 #info.faved #panel h1 a:active {
 	background-position: -40px -48px !important;

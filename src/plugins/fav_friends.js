@@ -26,8 +26,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 			e.stopPropagation();
 			var faved = toggle(user_data);
 			process(faved);
-		})
-		//.appendTo($fav);
+		});
 	}
 	
 	if (is_home_page) {
@@ -42,11 +41,10 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		.contextmenu(function(e) {
 			if (! fav_friends.length) return;
 			e.preventDefault();
-			if (confirm('确实要清空有爱饭友列表？')) {
+			if (confirm('确定要清空有爱饭友列表？')) {
 				fav_friends = [];
 				saveData();
-				SF.pl.fav_friends.unload();
-				SF.pl.fav_friends.load();
+				initializeList();
 			}
 		})	
 		.click(function(e) {
@@ -99,8 +97,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 	
 	function process(faved) {
 		$('#info')[faved ? 'addClass' : 'removeClass']('faved');
-		$('a', $fav).prop('title', faved ?
-			FAVED_TIP : UNFAVED_TIP);
+		$star.prop('title', faved ? FAVED_TIP : UNFAVED_TIP);
 	}
 	
 	function updateUserData(index) {
@@ -133,6 +130,9 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 							e.stopPropagation
 							$li.remove();
 							saveListData();
+							if (! fav_friends.length) {
+								initializeList();
+							}
 						})
 					)
 					.append(
