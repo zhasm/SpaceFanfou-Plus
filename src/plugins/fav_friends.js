@@ -1,16 +1,16 @@
 SF.pl.fav_friends = new SF.plugin((function($) {
 	var is_user_page = SF.fn.isUserPage() || SF.fn.isMyPage();
 	var is_home_page = location.href.indexOf('http://fanfou.com/home') === 0;
-	
+
 	var FAVED_TIP = '从有爱饭友列表去除';
 	var UNFAVED_TIP = '加入有爱饭友列表';
-	
+
 	if (is_user_page) {
 		var $avatar_link = $('#avatar a');
 		var my_page_url = $('#navigation li a').eq(1).prop('href');
 		var avatar_link_url = $avatar_link.prop('href');
 		var user_data = {
-			userid: SF.fn.isMyPage() ? 
+			userid: SF.fn.isMyPage() ?
 				(my_page_url || '').split('/').reverse()[0] : decodeURIComponent(avatar_link_url.split('/').reverse()[0]),
 			nickname:  $('#panel h1').text(),
 			avatar_url: $avatar_link.find('img').prop('src')
@@ -28,10 +28,10 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 			process(faved);
 		});
 	}
-	
+
 	if (is_home_page) {
-		var $insert = $('.stabs:not(#navtabs)').first();
-		var $fav_friends = $('<div />').addClass('stabs colltab fav_friends');
+		var $insert = $('.colltab:not(.stabs)').first();
+		var $fav_friends = $('<div />').addClass('colltab fav_friends');
 		var $toggle = $('<b />').appendTo($fav_friends);
 		var $fav_friends_title = $('<h2 />');
 		$fav_friends_title
@@ -50,7 +50,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 					$fav_friends_list.slideDown(t);
 				});
 			}
-		})	
+		})
 		.click(function(e) {
 			$fav_friends_list.toggle();
 			var visible = $fav_friends_list.is(':visible');
@@ -74,9 +74,9 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		})
 		.appendTo($fav_friends);
 	}
-	
+
 	var fav_friends = getData();
-	
+
 	function getIndex(userid) {
 		var index = -1;
 		fav_friends.some(function(item, i) {
@@ -88,7 +88,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		});
 		return index;
 	}
-	
+
 	function toggle(user_data) {
 		fav_friends = getData();
 		var index = getIndex(user_data.userid);
@@ -99,22 +99,21 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		saveData();
 		return index === -1;
 	}
-	
+
 	function process(faved) {
 		$('#info')[faved ? 'addClass' : 'removeClass']('faved');
 		$star.prop('title', faved ? FAVED_TIP : UNFAVED_TIP);
-		//$fav.css('-webkit-animation-name', faved ? 'flyIn' : 'flyOut');
 	}
-	
+
 	function updateUserData(index) {
 		fav_friends.splice(index, 1, user_data);
 		saveData();
 	}
-	
+
 	function resetDragging() {
 		$('.drag-source', $fav_friends_list).removeClass('drag-source');
 	}
-	
+
 	function initializeList() {
 		$fav_friends_list.empty();
 		if (fav_friends.length) {
@@ -179,10 +178,15 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 				.appendTo($fav_friends_list);
 			});
 		} else {
-			$fav_friends_list.text('把你常常翻看的饭友添加到这里..');
+			$fav_friends_list
+			.append(
+				$('<p />')
+				.text('把你常常翻看的饭友添加到这里..')
+				.prop('title', '去用户页面把饭友添加到这里')
+			);
 		}
 	}
-	
+
 	var saveListData = SF.fn.throttle(function() {
 		fav_friends = [];
 		$('>li', $fav_friends_list).each(function() {
@@ -190,15 +194,15 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		});
 		saveData();
 	}, 16);
-	
+
 	function getData() {
 		return SF.fn.getData('fav_friends') || [];
 	}
-	
+
 	function saveData() {
 		SF.fn.setData('fav_friends', fav_friends);
 	}
-	
+
 	return {
 		load: function() {
 			if (is_user_page) {
