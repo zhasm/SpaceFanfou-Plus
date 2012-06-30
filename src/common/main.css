@@ -626,6 +626,10 @@ li:hover p.pm-parent {
 #searchr-submit {
 	text-shadow: 0 1px 0 #fff;
 }
+#sidebar .trendtabs ul li .spinner {
+	top: 5px;
+	right: 15px;
+}
 #sidebar .tags ul {
 	max-width: 210px;
 }
