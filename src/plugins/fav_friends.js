@@ -132,7 +132,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 						.click(function(e) {
 							if (! e.shiftKey) return;
 							e.preventDefault();
-							e.stopPropagation
+							e.stopPropagation();
 							var t = parseFloat($li.css('-webkit-transition-duration')) * 1000;
 							$li.css('opacity', 0);
 							setTimeout(function() {
@@ -187,16 +187,22 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		}
 	}
 
-	var saveListData = SF.fn.throttle(function() {
+	function saveListData() {
 		fav_friends = [];
 		$('>li', $fav_friends_list).each(function() {
 			fav_friends.push($(this).data('user_data'));
 		});
 		saveData();
-	}, 16);
+	}
 
 	function getData() {
-		return SF.fn.getData('fav_friends') || [];
+		var default_data = [ {
+			userid: 'fanfou',
+			nickname:  '饭否',
+			avatar_url: 'http://avatar1.fanfou.com/l0/00/37/9g.jpg?1181650871',
+			user_url: 'http://fanfou.com/fanfou'
+		} ];
+		return SF.fn.getData('fav_friends') || default_data;
 	}
 
 	function saveData() {

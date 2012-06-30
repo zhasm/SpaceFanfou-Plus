@@ -52,7 +52,7 @@
 #info.faved #panel h1 a:active {
 	background-position: -40px -48px !important;
 }
-#sidebar .fav_friends p {
+#sidebar .fav_friends {
 	margin-bottom: 15px;
 }
 #sidebar .fav_friends ul li {
