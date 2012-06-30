@@ -12,7 +12,11 @@
 .advanced_group ul li a {
 	padding: 0 !important;
 	background: none !important;
+	box-shadow: none !important;
 	font-weight: 400 !important;
+}
+.advanced_group ul li a:hover {
+	text-decoration: underline !important;
 }
 .statbar {
 	display: block;

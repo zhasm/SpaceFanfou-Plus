@@ -64,6 +64,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 					$('<li />').addClass('advanced')
 					.text('饭龄：' + duration +
 						' (' + regDuration + ' 天)')
+					.prop('title', '注册时长')
 					.append(
 						$('<div />')
 						.addClass('statbar statbar_a')
@@ -81,6 +82,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 					$('<li />')
 					.addClass('advanced')
 					.text('饭量：平均 ' + statusFreq + ' 条消息 / 天')
+					.prop('title', '消息频率')
 					.append(
 						$('<div />')
 						.addClass('statbar statbar_b')
@@ -97,6 +99,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 				.append(
 					$('<li />').addClass('advanced')
 					.text('饭粒：' + infIndex + ' 个')
+					.prop('title', '影响力')
 					.append(
 						$('<div />')
 						.addClass('statbar statbar_c')
