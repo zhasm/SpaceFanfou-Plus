@@ -912,6 +912,9 @@ li:hover p.pm-parent {
 	text-align: center;
 	-webkit-text-size-adjust: none;
 }
+#sidebar .stabs {
+	overflow: hidden;	
+}
 #sidebar .stabs li {
 	position: relative;
 }
@@ -919,6 +922,9 @@ li:hover p.pm-parent {
 #navtabs .count {
 	font-weight: normal;
 	text-shadow: none;
+}
+#sidebar .stabs li a {
+	border-radius: 0;
 }
 #navtabs a[href="/privatemsg"] .count,
 #navtabs a[href="/mentions"] .count {
