@@ -939,7 +939,7 @@ li:hover p.pm-parent {
 	background: rgba(230, 50, 0, .75);
 	color: white;
 	font-size: 11px;
-	margin: 4px !important;
+	margin: 5px 4px !important;
 	padding: 0 1px;
 	min-width: 16px;
 	height: 18px;
