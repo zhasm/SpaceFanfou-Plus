@@ -164,7 +164,10 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 					'drop': function(e) {
 						if ($li.hasClass('drag-source')) return;
 						var $dragsource = $('.drag-source', $fav_friends_list);
-						if (! $dragsource.length) return;
+						if (! $dragsource.length) {
+							alert('请在用户个人页面通过点击名字右方的星形图标添加好友。');
+							return;
+						}
 						var $placeholder = $('<span />');
 						$dragsource
 						.after($placeholder)
@@ -181,7 +184,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 			$fav_friends_list
 			.append(
 				$('<p />')
-				.text('把你常常翻看的饭友添加到这里..')
+				.text('去个人页面把你常常翻看的饭友添加到这里..')
 				.prop('title', '去用户页面把饭友添加到这里')
 			);
 		}
