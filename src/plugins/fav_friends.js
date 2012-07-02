@@ -37,7 +37,11 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		$fav_friends_title
 		.addClass('fav_friends_title')
 		.text('有爱饭友')
-		.prop('title', '1. 拖拽头像可以重新排序\n2. 按住 Shift 键点击头像可以删除\n3. 右击这里可以清空列表')
+		.prop('title',
+			'1. 在用户个人页面通过点击名字右方的\n星形图标添加好友\n' +
+			'2. 拖拽头像重新排序\n' +
+			'3. 按住 Shift 键点击头像删除\n' +
+			'4. 右击这里清空列表')
 		.contextmenu(function(e) {
 			if (! fav_friends.length) return;
 			e.preventDefault();
@@ -47,7 +51,8 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 					fav_friends = [];
 					saveData();
 					initializeList();
-					$fav_friends_list.slideDown(t);
+					$fav_friends_list.show();
+					$('p', $fav_friends_list).hide().slideDown(t);
 				});
 			}
 		})
@@ -69,6 +74,25 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		.on({
 			'dragover': function(e) {
 				e.preventDefault();
+			},
+			'drop': function(e) {
+				var $dragsource = $('.drag-source', $fav_friends_list);
+				if (! $dragsource.length) {
+					e.preventDefault();
+					alert('请在用户个人页面通过点击名字右方的星形图标添加好友。');
+					return;
+				}
+				if (! e.srcElement) return;
+				var $li = $(e.srcElement).closest('div.fav_friends>ul>li');
+				if ($li.hasClass('drag-source')) return;
+				var $placeholder = $('<span />');
+				$dragsource
+				.after($placeholder)
+				.insertAfter($li)
+				.removeClass('drag-source');
+				$li.insertAfter($placeholder);
+				$placeholder.remove();
+				saveListData();
 			},
 			'drop mouseleave': resetDragging
 		})
@@ -160,22 +184,6 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 					},
 					'dragleave drop': function(e) {
 						$li.removeClass('dragover');
-					},
-					'drop': function(e) {
-						if ($li.hasClass('drag-source')) return;
-						var $dragsource = $('.drag-source', $fav_friends_list);
-						if (! $dragsource.length) {
-							alert('请在用户个人页面通过点击名字右方的星形图标添加好友。');
-							return;
-						}
-						var $placeholder = $('<span />');
-						$dragsource
-						.after($placeholder)
-						.insertAfter($li)
-						.removeClass('drag-source');
-						$li.insertAfter($placeholder);
-						$placeholder.remove();
-						saveListData();
 					}
 				})
 				.appendTo($fav_friends_list);
@@ -184,8 +192,8 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 			$fav_friends_list
 			.append(
 				$('<p />')
-				.text('去个人页面把你常常翻看的饭友添加到这里..')
-				.prop('title', '去用户页面把饭友添加到这里')
+				.text('把你常常翻看的饭友添加到这里…')
+				.prop('title', '在用户个人页面通过点击名字右方的星形图标添加好友')
 			);
 		}
 	}

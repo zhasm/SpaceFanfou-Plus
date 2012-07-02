@@ -55,6 +55,9 @@
 #sidebar .fav_friends {
 	margin-bottom: 15px;
 }
+#sidebar .fav_friends p {
+	margin-right: 15px;
+}
 #sidebar .fav_friends ul li {
 	-webkit-transition: opacity .2s ease-in-out;
 }
