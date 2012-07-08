@@ -275,6 +275,19 @@ chrome.extension.onConnect.addListener(function(port) {
 				oldValue: old_settings,
 				newValue: settings
 			});
+		} else if (msg.type == 'openURL') {
+			chrome.tabs.query({
+				active: true
+			}, function(tabs) {
+				var tab = tabs[0];
+				chrome.tabs.create({
+					url: msg.url,
+					index: tab.index + 1,
+					windowId: tab.windowId,
+					selected: true,
+					openerTabId: tab.id
+				});
+			});
 		}
 	});
 	// 显示太空饭否图标

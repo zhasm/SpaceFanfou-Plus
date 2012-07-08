@@ -5,6 +5,16 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 	var FAVED_TIP = '从有爱饭友列表去除';
 	var UNFAVED_TIP = '加入有爱饭友列表';
 
+	function openURL(url) {
+		var event = document.createEvent('MessageEvent');
+		var msg = {
+			type: 'openURL',
+			url: url
+		};
+		event.initMessageEvent('SFMessage', false, false, JSON.stringify(msg));
+		dispatchEvent(event);
+	}
+
 	if (is_user_page) {
 		var $avatar_link = $('#avatar a');
 		var my_page_url = $('#navigation li a').eq(1).prop('href');
@@ -97,6 +107,18 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 			'drop mouseleave': resetDragging
 		})
 		.appendTo($fav_friends);
+		var $showAll = $('<a />');
+		$showAll
+		.addClass('more')
+		.text('» 打开所有')
+		.click(function(e) {
+			fav_friends.forEach(function(user, i) {
+				setTimeout(function() {
+					openURL(user.user_url);
+				}, i * 1000);
+			});
+		})
+		.insertAfter($fav_friends_list);
 	}
 
 	var fav_friends = getData();
@@ -162,6 +184,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 							setTimeout(function() {
 								$li.remove();
 								saveListData();
+								oneClickAll();
 								if (! fav_friends.length) {
 									initializeList();
 								}
@@ -196,6 +219,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 				.prop('title', '在用户个人页面通过点击名字右方的星形图标添加好友')
 			);
 		}
+		oneClickAll();
 	}
 
 	function saveListData() {
@@ -204,6 +228,10 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 			fav_friends.push($(this).data('user_data'));
 		});
 		saveData();
+	}
+
+	function oneClickAll() {
+		$showAll[fav_friends.length > 2 ? 'show' : 'hide']();
 	}
 
 	function getData() {

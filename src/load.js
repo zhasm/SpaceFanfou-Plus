@@ -167,3 +167,10 @@ port.onMessage.addListener(function(msg) {
 			'[id^=sf_script_update_]").remove();', 'update_clear');
 	}
 });
+
+addEventListener('SFMessage', function(e) {
+	var msg = JSON.parse(e.data);
+	if (msg.type == 'openURL') {
+		port.postMessage(msg);
+	}
+});

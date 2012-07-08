@@ -65,3 +65,6 @@
 #sidebar .fav_friends li.dragover {
 	opacity: .5;
 }
+#sidebar .fav_friends a {
+	cursor: pointer;
+}
