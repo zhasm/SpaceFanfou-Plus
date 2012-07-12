@@ -138,7 +138,6 @@ PLUGINS_DIR = 'plugins/';
 
 // 初始化扩展信息
 var details = { };
-var bg_script = document.querySelector('script[src="background.js"]');
 for (var i = 0; i < plugins.length; ++i) {
 	var item = plugins[i];
 	var detail = {
@@ -160,7 +159,7 @@ for (var i = 0; i < plugins.length; ++i) {
 		script.onload = function(e) {
 			initBgPlugin(name);
 		}
-		document.head.insertBefore(script, bg_script);
+		document.body.appendChild(script);
 	})(item.name);
 }
 plugins = void(0);
