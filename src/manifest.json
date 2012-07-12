@@ -73,7 +73,7 @@
 	"page_action": {
 		"default_icon": "icons/icon-19.png",
 		"default_title": "\u592a\u7a7a\u996d\u5426++",
-		"popup": "options.html"
+		"default_popup": "options.html"
 	},
 	"permissions": [ "http://fanfou.com/*", "http://*.fanfou.com/*", "tabs", "notifications", "contextMenus" ],
 	"content_security_policy": "script-src 'self'; object-src 'self'",
