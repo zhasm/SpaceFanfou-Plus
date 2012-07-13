@@ -2,6 +2,9 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 	var $stream = $('#stream');
 	if (! $stream.length) return;
 
+	var MutationObserver = MutationObserver || WebKitMutationObserver;
+	var slice = Array.prototype.slice;
+
 	var $notification_btn = $('#timeline-notification a');
 	var $last_refresh;
 
@@ -10,6 +13,26 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 
 	var MSG_DELETED = '已删除';
 	var MSG_NOPUBLIC = '不公开';
+
+	var observer = new MutationObserver(function(mutations) {
+		mutations.forEach(function(mutation) {
+			var added = slice.call(mutation.addedNodes, 0);
+			var removed = slice.call(mutation.removedNodes, 0);
+			if (removed.length === 1) {
+				removed.forEach(function(item) {
+					var $item = $(item);
+					if ($item.attr('expended')) {
+						removeReplies($item,
+							$(mutation.previousSibling),
+							$(mutation.nextSibling));
+					}
+				});
+			}
+			added.forEach(function(item) {
+				processItem($(item));
+			});
+		});
+	});
 
 	var getLastRefresh = SF.fn.throttle(function() {
 		$last_refresh = $('#stream li.buffered').last();
@@ -124,17 +147,13 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 		$item.attr('expended', 'expended');
 		var $expand = $('<li>');
 		var $link = $('a', $reply);
-		if ($link.html().indexOf('转自') == 0)
-			$expand.attr('type', '转发');
-		else
-			$expand.attr('type', '回复');
-		$expand.attr('href', $link.attr('href'));
-		$expand.addClass('reply more first');
-		if ($link.html().indexOf('转自') == 0)
-			$expand.text('转自');
-		else
-			$expand.text('展开');
-		$expand.insertAfter($item);
+		var type = $link.text().indexOf('转自') == 0;
+		$expand
+		.attr('type', type ? '转发' : '回复')
+		.attr('href', $link.attr('href'))
+		.addClass('reply more first')
+		.text(type ? '转自' : '展开')
+		.insertAfter($item);
 		if (auto_expand) {
 			displayReplyList($expand.attr('href'),
 				showWaiting($expand), 1, $item.attr('type'));
@@ -154,7 +173,10 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 	}
 
 	function processItem($item) {
-		if (! $item.is('li')) return;
+		if ($item.length !== 1 ||
+			$item[0].tagName.toLowerCase() !== 'li') {
+			return;
+		}
 		getLastRefresh();
 		if ($item.hasClass('reply hide')) {
 			$item.click(hideReplyList);
@@ -170,16 +192,14 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 		}
 	}
 
-	function removeReplies($item) {
-		if (! $item.attr('expended')) return;
+	function removeReplies($item, $prev, $next) {
 		var $replies = [];
-		for (var $i = $item.next('.reply'); $i.is('.reply'); $i = $i.next())
-			$replies.push($i);
-		var $prev;
-		if ($item.hasClass('reply')) {
-			$prev = $item.prev();
-			if ($prev.hasClass('hide'))
-				$prev.fadeOut();
+		while ($next.hasClass('reply')) {
+			$replies.push($next);
+			$next = $next.next();
+		}
+		if ($item.hasClass('reply') && $prev.hasClass('hide')) {
+			$prev.fadeOut();
 		}
 		function fadeOut() {
 			if (! $replies.length) {
@@ -205,40 +225,20 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 		fadeOut();
 	}
 
-	function onDOMNodeInserted(e) {
-		processItem($(e.target));
-	}
-
-	function onDOMNodeRemoved(e) {
-		removeReplies($(e.target));
-	}
-
-	function processStream($ol) {
-		$ol.bind('DOMNodeInserted', onDOMNodeInserted);
-		$('li', $ol).each(function() { showExpand($(this)); });
-		$ol.bind('DOMNodeRemoved', onDOMNodeRemoved);
-	}
-
-	function onStreamInserted(e) {
-		processStream($(e.target));
-	}
-
 	return {
 		update: function(number, is_auto_expand) {
 			replies_number = number;
 			auto_expand = is_auto_expand;
 		},
 		load: function() {
-			$stream.bind('DOMNodeInserted', onStreamInserted);
-			processStream($('>ol', $stream));
 			$notification_btn.click(showBufferedStatuses);
+			observer.observe($stream[0], { childList: true, subtree: true });
+			$('>ol li', $stream).each(function() { showExpand($(this)); });
 		},
 		unload: function() {
-			$stream.unbind('DOMNodeInserted', onStreamInserted);
+			observer.disconnect();
 			var $ol = $('>ol', $stream);
 			if (! $ol.length) return;
-			$ol.unbind('DOMNodeInserted', onDOMNodeInserted);
-			$ol.unbind('DOMNodeRemoved', onDOMNodeRemoved);
 			$('li.reply', $ol).remove();
 			$('li[expended]', $ol).removeAttr('expended');
 			$notification_btn.unbind('click', showBufferedStatuses);
