@@ -9,6 +9,9 @@
 		"run_at": "document_start"
 	} ],
 	"web_accessible_resources": [
+		"icons/icon-128.png",
+		"icons/icon-48.png",
+		"icons/icon-16.png",
 		"common/common.js",
 		"common/main.css",
 		"common/style.js",
