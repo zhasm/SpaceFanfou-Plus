@@ -10,12 +10,16 @@
 #user_switcher a:hover {
 	text-decoration: none;
 }
-#user_switcher a h3 {
+#user_switcher a h3,
+#user_switcher li span {
 	font-size: 12px;
 	font-weight: normal;
 	line-height: 24px;
 }
-#user_switcher a h3:hover {
+#user_switcher li {
+	display: inline-block;
+}
+#user_switcher li:not(.addnew):hover {
 	background-color: rgba(0, 0, 0, .05);
 }
 #user_top.switcher {
@@ -38,16 +42,33 @@
 #user_top.switcher:hover > a img {
 	box-shadow: none;
 }
+#user_switcher li {
+	width: 100%;
+	clear: both;
+}
 #user_switcher li a {
-	float: none;
-	width: auto;
+	float: left;
+	margin: 0;
 	height: auto;
+	width: 184px;
+}
+#user_switcher li.addnew a {
+	width: auto;
+	float: none;
 }
 #user_switcher li a img {
 	float: left;
 	width: 16px;
 	height: 16px;
 	margin: 4px;
+}
+#user_switcher li span {
+	font-family: Lato !important;
+	float: right;
+	width: 8px;
+	margin: 0 4px;
+	overflow: hidden;
+	cursor: pointer;
 }
 #user_top.switcher:hover {
 	box-shadow: 1px 2px 5px rgba(0, 0, 0, .3);

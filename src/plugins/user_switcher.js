@@ -30,8 +30,7 @@ SF.pl.user_switcher = new SF.plugin((function($) {
 	}
 
 	/* 初始化数据 */
-	var data = localStorage.switcher;
-	data = data ? JSON.parse(data) : { };
+	var data = SF.fn.getData('switcher') || { };
 
 	/* Cookie 操作函数 */
 	function deleteCookie(name) {
@@ -51,6 +50,10 @@ SF.pl.user_switcher = new SF.plugin((function($) {
 			location.href = '/login';
 		}
 	}
+	function removeUser(id) {
+		data[id] = undefined;
+		SF.fn.setData('switcher', data);
+	}
 
 	/* 获取当前用户的信息 */
 	var user_id = cookies.u;
@@ -64,14 +67,13 @@ SF.pl.user_switcher = new SF.plugin((function($) {
 			'nickname': nickname,
 			'auto_login': auto_login,
 		};
-		localStorage.switcher = JSON.stringify(data);
+		SF.fn.setData('switcher', data);
 	}
 
 	/* 登出钩子 */
 	var $logout = $('#navigation a[href*="/logout/"]');
 	function onLogoutClick() {
-		data[user_id] = undefined;
-		localStorage.switcher = JSON.stringify(data);
+		removeUser(user_id);
 	}
 
 	/* 创建用户列表 */
@@ -81,25 +83,31 @@ SF.pl.user_switcher = new SF.plugin((function($) {
 		if (! data.hasOwnProperty(id)) continue;
 		var user = data[id];
 		if (id == user_id) continue;
-		var $item = $('<li>');
-		var $link = $('<a>');
-		$link.attr('href', 'javascript:void 0');
-		$link.click((function(id, al) {
-			return function() {
-				data[id] = undefined;
-				localStorage.switcher = JSON.stringify(data);
-				setLogin(al);
-			};
-		})(id, user.auto_login));
-		var $image = $('<img>');
-		$image.attr('src', user.image);
-		$image.attr('alt', user.nickname);
-		$link.append($image);
-		var $name = $('<h3>');
-		$name.text(user.nickname);
-		$link.append($name);
-		$item.append($link);
-		$user_list.prepend($item);
+		(function(user, id) {
+			var $item = $('<li>');
+			var $link = $('<a>');
+			$link.attr('href', 'javascript:void 0');
+			$link.click(function() {
+				removeUser(id);
+				setLogin(user.auto_login);
+			});
+			var $image = $('<img>');
+			$image.attr('src', user.image);
+			$image.attr('alt', user.nickname);
+			$link.append($image);
+			var $name = $('<h3>');
+			$name.text(user.nickname);
+			$link.append($name);
+			$item.append($link);
+			var $del = $('<span>');
+			$del.text('x');
+			$del.click(function() {
+				removeUser(id);
+				$item.remove();
+			});
+			$item.append($del);
+			$user_list.prepend($item);
+		})(user, id);
 	}
 	var $another = $('<li>');
 	$another.addClass('addnew');
