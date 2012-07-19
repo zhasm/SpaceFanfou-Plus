@@ -14,7 +14,7 @@ SF.pl.status_manage = new SF.plugin((function($) {
 		HL_ATTR = 'highlighted',
 		UP_ATTR = 'batch-manage-upward',
 		DOWN_ATTR = 'batch-manage-downward';
-	
+
 	var ALL_ATTRS = [
 		REPLY_ATTR,
 		REPOST_ATTR,
@@ -24,27 +24,27 @@ SF.pl.status_manage = new SF.plugin((function($) {
 		UP_ATTR,
 		DOWN_ATTR
 	];
-	
+
 	var SEL_ATTRS = [
 		START_ATTR,
 		HL_ATTR,
 		UP_ATTR,
 		DOWN_ATTR
 	];
-	
+
 	var HL_ATTRS = [
 		HL_ATTR,
 		UP_ATTR,
 		DOWN_ATTR
 	];
-	
+
 	var $stream = $('#stream');
 
 	var $manage = $('<div />');
 	$manage.addClass('batch-manage statuses');
 
 	var $start;
-	
+
 	function getIndex($li) {
 		return parseInt($li.attr(INDEX_ATTR), 10);
 	}
@@ -98,7 +98,7 @@ SF.pl.status_manage = new SF.plugin((function($) {
 			$current_li.attr(UP_ATTR, '');
 		}
 	}
-	
+
 	function getCheckboxes(selector) {
 		selector = 'li input[type=checkbox][msgid]' + (selector || '');
 		return $(selector, $stream);
