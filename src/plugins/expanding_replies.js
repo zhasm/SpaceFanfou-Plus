@@ -141,7 +141,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 		});
 	}
 
-	function showExpand($item) {
+	function showExpand($item, dont_auto_expand) {
 		if ($item.attr('expended')) return;
 		var $reply = $('.stamp .reply', $item);
 		if (! $reply.length) return;
@@ -155,9 +155,11 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 		.addClass('reply more first')
 		.text(type ? '转自' : '展开')
 		.insertAfter($item);
-		if (auto_expand) {
-			displayReplyList($expand.attr('href'),
-				showWaiting($expand), 1, $item.attr('type'));
+		if (auto_expand && dont_auto_expand !== true) {
+			setTimeout(function() {
+				displayReplyList($expand.attr('href'),
+					showWaiting($expand), 1, true);
+			}, 0);
 		}
 	}
 
@@ -166,7 +168,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 		$t.hide();
 		var $item = $t.prev();
 		$item.removeAttr('expended');
-		showExpand($item);
+		showExpand($item, true);
 		for (var $i = $t.next(); $i.hasClass('reply'); $i = $i.next())
 			$t = $t.add($i);
 		$t.removeAttr('expended');
@@ -174,11 +176,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 	}
 
 	function processItem($item) {
-		if ($item.length !== 1 ||
-			$item[0].tagName.toLowerCase() !== 'li') {
-			return;
-		}
-		if (! $item.hasClass('reply hide') && $item.attr('href')) {
+		if (! $item.hasClass('reply hide') && ! $item.attr('href')) {
 			showExpand($item);
 		}
 	}
@@ -189,12 +187,27 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 			$replies.push($next);
 			$next = $next.next();
 		}
-		if ($item.hasClass('reply') && $prev.hasClass('hide')) {
-			$prev.fadeOut();
+		if ($item.hasClass('reply')) {
+			if ($prev.hasClass('hide')) {
+				$prev.fadeOut();
+			}
+		} else {
+			$prev = null;
 		}
 		function fadeOut() {
-			if (! $replies.length)
+			if (! $replies.length) {
+				if ($prev) {
+					var $deleted = $('<li>');
+					$deleted.addClass('reply notavail');
+					$deleted.text(MSG_DELETED);
+					if ($prev.hasClass('hide')) {
+						$prev.replaceWith($deleted);
+					} else {
+						$prev.after($deleted);
+					}
+				}
 				return;
+			}
 			var $i = $replies.shift();
 			$i.fadeOut(function() {
 				fadeOut();
