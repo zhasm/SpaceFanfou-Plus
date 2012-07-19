@@ -23,23 +23,26 @@ SF.pl.clean_personal_theme = new SF.plugin((function($) {
 	return {
 		load: function() {
 			$('<a />').attr('id', 'sf_clean_personal_theme')
-					  .attr('title', '切换饭否默认模板 / 用户自定义模板')
-					  .attr('href', '#').text('使用饭否默认模板')
+					  .attr('href', 'javascript:void(0)')
+					  .attr('title', '使用饭否默认模板')
 					  .click(function(e) {
 							e.preventDefault();
+							var $button = $(this);
 							if ($('#sf_default_theme').length) {
 								$('#sf_default_theme').remove();
-								$(this).text('使用饭否默认模板').removeClass('sf_default_theme');
+								$button.attr('title', '使用饭否默认模板');
 							} else {
-								$('<style />').attr('id', 'sf_default_theme')
-											  .html(default_style).insertAfter('head style');
-								$(this).text('使用用户自定义模板').addClass('sf_default_theme');
+								$('<style />').prop('id', 'sf_default_theme')
+											  .text(default_style).appendTo('head');
+								$button.attr('title', '使用用户自定义模板');
 							}
+							$button.toggleClass('sf_default_theme');
+
 					  })
 					  .appendTo('body');
 		},
 		unload: function() {
-			$('#sf_default_theme').add('#sf_default_theme').remove();
+			$('#sf_clean_personal_theme, #sf_default_theme').remove();
 		}
 	};
 })(jQuery));
