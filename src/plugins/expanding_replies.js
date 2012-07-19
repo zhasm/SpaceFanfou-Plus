@@ -19,18 +19,19 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 			var added = slice.call(mutation.addedNodes, 0);
 			var removed = slice.call(mutation.removedNodes, 0);
 			if (removed.length === 1) {
-				removed.forEach(function(item) {
-					var $item = $(item);
-					if ($item.attr('expended')) {
-						removeReplies($item,
-							$(mutation.previousSibling),
-							$(mutation.nextSibling));
-					}
-				});
+				var $item = $(removed[0]);
+				if ($item.attr('expended')) {
+					removeReplies($item,
+						$(mutation.previousSibling),
+						$(mutation.nextSibling));
+				}
 			}
-			added.forEach(function(item) {
-				processItem($(item));
-			});
+			if (added.length) {
+				added.forEach(function(item) {
+					processItem($(item));
+				});
+				getLastRefresh();
+			}
 		});
 	});
 
@@ -177,18 +178,8 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 			$item[0].tagName.toLowerCase() !== 'li') {
 			return;
 		}
-		getLastRefresh();
-		if ($item.hasClass('reply hide')) {
-			$item.click(hideReplyList);
-		} else if (! $item.attr('href')) {
+		if (! $item.hasClass('reply hide') && $item.attr('href')) {
 			showExpand($item);
-		} else if (! $item.hasClass('notavail')) {
-			$item.click(function() {
-				var $t = $(this);
-				displayReplyList($item.attr('href'),
-					showWaiting($t), replies_number,
-					$t.hasClass('first') ? $item.attr('type') : false);
-			});
 		}
 	}
 
@@ -202,19 +193,8 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 			$prev.fadeOut();
 		}
 		function fadeOut() {
-			if (! $replies.length) {
-				if ($prev) {
-					var $deleted = $('<li>');
-					$deleted.addClass('reply notavail');
-					$deleted.text(MSG_DELETED);
-					if ($prev.hasClass('hide')) {
-						$prev.replaceWith($deleted);
-					} else {
-						$prev.after($deleted);
-					}
-				}
+			if (! $replies.length)
 				return;
-			}
 			var $i = $replies.shift();
 			$i.fadeOut(function() {
 				fadeOut();
@@ -234,6 +214,13 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 			$notification_btn.click(showBufferedStatuses);
 			observer.observe($stream[0], { childList: true, subtree: true });
 			$('>ol li', $stream).each(function() { showExpand($(this)); });
+			$stream.delegate('li.reply.more[href]', 'click.expanding-replies', function(e) {
+				var $t = $(this);
+				displayReplyList($t.attr('href'),
+				showWaiting($t), replies_number,
+				$t.hasClass('first') ? $t.attr('type') : false);
+			});
+			$stream.delegate('li.reply.hide', 'click.expanding-replies', hideReplyList);
 		},
 		unload: function() {
 			observer.disconnect();
@@ -242,6 +229,7 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 			$('li.reply', $ol).remove();
 			$('li[expended]', $ol).removeAttr('expended');
 			$notification_btn.unbind('click', showBufferedStatuses);
+			$stream.undelegate('.expanding-replies');
 		}
 	};
 })(jQuery));
