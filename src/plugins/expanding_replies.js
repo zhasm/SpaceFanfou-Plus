@@ -18,11 +18,18 @@ SF.pl.expanding_replies = new SF.plugin((function($) {
 		mutations.forEach(function(mutation) {
 			var added = slice.call(mutation.addedNodes, 0);
 			var removed = slice.call(mutation.removedNodes, 0);
+			var $prev = $(mutation.previousSibling);
+			if ($prev.is('ol')) {
+				$('>li', $prev).each(function() {
+					processItem($(this));
+				});
+				$('>li', $stream).remove();
+			}
 			if (removed.length === 1) {
 				var $item = $(removed[0]);
 				if ($item.attr('expended')) {
 					removeReplies($item,
-						$(mutation.previousSibling),
+						$prev,
 						$(mutation.nextSibling));
 				}
 			}
