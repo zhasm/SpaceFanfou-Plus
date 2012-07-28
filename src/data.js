@@ -116,7 +116,8 @@ var plugins = [
 			'mentions',
 			'followers',
 			'notdisturb',
-			'playsound'
+			'playsound',
+			'timeout'
 		],
 		js: 'notification.js'
 	}

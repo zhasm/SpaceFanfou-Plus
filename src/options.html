@@ -40,6 +40,9 @@
 						<label><a class="screenshot" rel="screenshots/01_02_01.png" title="消息通知功能预览"><input type="checkbox" key="notification" foldable_src="foldable_src" />启用消息通知</a></label>
 						<span class="comment">在屏幕一角显示通知窗口</span>
 						<p foldable_tgt="foldable_tgt">
+							<label class="sublabel">通知停留时间：<input type="number" min="5" max="60" step="2.5" key="notification.timeout" />秒</label>
+						</p>
+						<p foldable_tgt="foldable_tgt">
 							<label class="sublabel"><input type="checkbox" key="notification.updates" foldable_src="foldable_src" />每次扩展升级后显示通知</label>
 							<span class="comment">显示扩展更新内容</span>
 						</p>

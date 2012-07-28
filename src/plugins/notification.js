@@ -1,5 +1,5 @@
 SF.pl.notification = new SF.plugin((function() {
-	var notifyonupdated, notifyonmentioned, notifyonfollowed, notdisturb;
+	var notifyonupdated, notifyonmentioned, notifyonfollowed, notdisturb, timeout;
 	var period = 30000;
 
 	var source;
@@ -163,7 +163,7 @@ SF.pl.notification = new SF.plugin((function() {
 				id: item,
 				type: 'text',
 				content: content,
-				timeout: period / 2
+				timeout: timeout
 			}).
 			addEventListener('click', function(e) {
 				this.cancel();
@@ -185,7 +185,7 @@ SF.pl.notification = new SF.plugin((function() {
 				type: 'text',
 				title: '太空饭否++ 由 ' + SF.old_version + ' 升级至 ' + SF.version,
 				content: updated_items,
-				timeout: period / 2
+				timeout: timeout
 			}).
 			addEventListener('click', function(e) {
 				this.cancel();
@@ -208,11 +208,12 @@ SF.pl.notification = new SF.plugin((function() {
 	}
 
 	return {
-		update: function(a, b, c, d) {
+		update: function(a, b, c, d, _, e) {
 			notifyonupdated = a;
 			notifyonmentioned = b;
 			notifyonfollowed = c;
 			notdisturb = d;
+			timeout = e * 1000;
 			unload();
 			load();
 		},
