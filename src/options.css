@@ -278,8 +278,8 @@ h4 {
 input[type="checkbox"] {
 	margin-top: -1px;
 }
-input[key="expanding_replies.number"] {
-	width: 35px;
+input[type="number"] {
+	width: 45px;
 }
 [foldable_tgt] {
   -webkit-transition: height .2s linear;
