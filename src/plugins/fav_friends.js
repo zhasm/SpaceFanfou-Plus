@@ -121,7 +121,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 		.insertAfter($fav_friends_list);
 	}
 
-	var fav_friends = getData();
+	var fav_friends;
 
 	function getIndex(userid) {
 		var index = -1;
@@ -247,9 +247,18 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 	function saveData() {
 		SF.fn.setData('fav_friends', fav_friends);
 	}
+	
+	function onStorage(e) {
+		if (e.key != 'fav_friends') return;
+		if (e.oldValue == e.newValue) return;
+		
+		SF.pl.fav_friends.unload();
+		SF.pl.fav_friends.load();
+	}
 
 	return {
 		load: function() {
+			fav_friends = getData();
 			if (is_user_page) {
 				var index = getIndex(user_data.userid);
 				var faved = index > -1;
@@ -266,6 +275,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 					$fav_friends_title.click();
 				}
 			}
+			addEventListener('storage', onStorage, false);
 		},
 		unload: function() {
 			if (is_user_page) {
@@ -274,6 +284,7 @@ SF.pl.fav_friends = new SF.plugin((function($) {
 			} else if (is_home_page) {
 				$fav_friends.detach();
 			}
+			removeEventListener('storage', onStorage, false);
 		}
 	}
 })(jQuery));
