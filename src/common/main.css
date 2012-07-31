@@ -83,6 +83,23 @@
 		-webkit-transform: translateY(0)
 	}
 }
+@-webkit-keyframes bomb {
+	from {
+		-webkit-transform: translateY(-15px);
+	}
+	35% {
+		-webkit-transform: translateY(0);
+	}
+	55% {
+		-webkit-transform: rotateX(30deg);
+	}
+	85% {
+		-webkit-transform: rotateX(0) translateY(-5px);
+	}
+	to {
+		-webkit-transform: translateY(0);
+	}
+}
 @-webkit-keyframes bl-blinking {
 	from {
 		box-shadow:
@@ -927,14 +944,14 @@ li:hover p.pm-parent {
 #navtabs .count {
 	font-weight: normal;
 	text-shadow: none;
+	-webkit-animation: bomb 1.2s ease-in-out .5s;
 }
 #sidebar .stabs li a {
 	border-radius: 0;
 }
 #navtabs a[href="/privatemsg"] .count,
 #navtabs a[href="/mentions"] .count {
-	position: absolute;
-	top: 0px;
+	display: inline-block;
 	background: rgba(230, 50, 0, .75);
 	color: white;
 	font-size: 11px;
@@ -945,6 +962,7 @@ li:hover p.pm-parent {
 	line-height: 18px;
 	border-radius: 30px;
 	text-align: center;
+	-webkit-transform: translateY(-1px);
 }
 
 /* Buttons */
