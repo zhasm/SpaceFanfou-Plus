@@ -93,6 +93,9 @@
 	55% {
 		-webkit-transform: rotateX(30deg);
 	}
+	62.5% {
+		-webkit-transform: rotateX(10deg);
+	}
 	85% {
 		-webkit-transform: rotateX(0) translateY(-5px);
 	}
@@ -944,7 +947,7 @@ li:hover p.pm-parent {
 #navtabs .count {
 	font-weight: normal;
 	text-shadow: none;
-	-webkit-animation: bomb 1.2s ease-in-out .5s;
+	-webkit-animation: bomb 1s ease-in-out .5s;
 }
 #sidebar .stabs li a {
 	border-radius: 0;
