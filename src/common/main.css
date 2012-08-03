@@ -90,14 +90,23 @@
 	35% {
 		-webkit-transform: translateY(0);
 	}
-	55% {
+	42.5% {
 		-webkit-transform: rotateX(30deg);
 	}
-	62.5% {
+	47.5% {
 		-webkit-transform: rotateX(10deg);
 	}
+	65% {
+		-webkit-transform: rotateX(0) translateY(-8px);
+	}
+	82.5% {
+		-webkit-transform: translateY(0);
+	}
 	85% {
-		-webkit-transform: rotateX(0) translateY(-5px);
+		-webkit-transform: rotateX(25deg);
+	}
+	92.5% {
+		-webkit-transform: rotateX(0) translateY(-2px);
 	}
 	to {
 		-webkit-transform: translateY(0);
