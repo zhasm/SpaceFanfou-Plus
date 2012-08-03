@@ -985,6 +985,7 @@ input.formbutton,
 input.inlinebutton,
 .post_act.friend-remove,
 .post_act.close-notice,
+.post_act.friend-deny,
 .batch-manage .friend-remove,
 .batch-manage .delete-privatemsg,
 #setmobile input[type="submit"] {
@@ -1022,6 +1023,7 @@ a.bl-added:hover,
 input.formbutton:hover,
 .post_act.friend-remove:hover,
 .post_act.close-notice:hover,
+.post_act.friend-deny:hover,
 .batch-manage .friend-remove:hover,
 .batch-manage .delete-privatemsg:hover,
 #setmobile input[type="submit"]:hover {
@@ -1036,6 +1038,7 @@ a.bl-added:focus,
 input.formbutton:focus,
 .post_act.friend-remove:focus,
 .post_act.close-notice:focus,
+.post_act.friend-deny:focus,
 .batch-manage .friend-remove:focus,
 .batch-manage .delete-privatemsg:focus,
 #setmobile input[type="submit"]:focus {
@@ -1131,6 +1134,7 @@ a.bh:focus {
 a.bl-added:active,
 .post_act.friend-remove:active,
 .post_act.close-notice:active,
+.post_act.friend-deny:active,
 .batch-manage .friend-remove:active,
 .batch-manage .delete-privatemsg:active,
 #settings input.formbutton:active,
@@ -1155,6 +1159,9 @@ a.bh:active {
 		0 1px 0 rgba(255, 255, 255, 1) inset,
 		0 1px 0 rgba(0, 0, 0, .09);
 	-webkit-animation-name: none;
+}
+.post_act.friend-deny {
+	width: 75px;
 }
 
 /* Simplified */
