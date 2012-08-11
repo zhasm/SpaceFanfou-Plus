@@ -2,11 +2,10 @@
 	SF.fn.waitFor(function() {
 		return window.jQuery && window.YAHOO && window.FF;
 	}, function() {
-		var $ = jQuery;
-		var $meta = $('<meta>');
-		$meta.attr('name', 'spacefanfou-plus-flags');
-		$meta.attr('content', 'libs_ok');
-		$meta.attr('id', 'sf_flag_libs_ok');
-		$('head').append($meta);
+		jQuery('<meta>')
+			.attr('name', 'spacefanfou-plus-flags')
+			.attr('content', 'libs_ok')
+			.attr('id', 'sf_flag_libs_ok')
+			.appendTo('head');
 	});
 })();
