@@ -86,7 +86,6 @@ SF.pl.user_switcher = new SF.plugin((function($) {
 		(function(user, id) {
 			var $item = $('<li>');
 			var $link = $('<a>');
-			$link.attr('href', 'javascript:void 0');
 			$link.click(function() {
 				removeUser(id);
 				setLogin(user.auto_login);
@@ -112,7 +111,6 @@ SF.pl.user_switcher = new SF.plugin((function($) {
 	var $another = $('<li>');
 	$another.addClass('addnew');
 	var $link = $('<a>');
-	$link.attr('href', 'javascript:void 0');
 	$link.click(function() { setLogin(); });
 	$link.text('登入另一个...');
 	$another.append($link);

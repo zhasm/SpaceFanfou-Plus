@@ -9,6 +9,7 @@
 }
 #user_switcher a:hover {
 	text-decoration: none;
+	cursor: pointer;
 }
 #user_switcher a h3,
 #user_switcher li span {
