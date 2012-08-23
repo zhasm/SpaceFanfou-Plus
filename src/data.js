@@ -33,6 +33,7 @@ var plugins = [
 	},
 	{
 		name: 'remove_app_recom',
+		js: 'remove_app_recom.js',
 		css: 'remove_app_recom.css'
 	},
 
