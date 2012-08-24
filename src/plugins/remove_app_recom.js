@@ -16,17 +16,13 @@ SF.pl.remove_app_recom = new SF.plugin((function($) {
 
 	var $btn = $('<span />');
 	$btn
-		.text('x')
-		.css({
-			position: 'absolute',
-			top: '5px',
-			right: '9px',
-			cursor: 'pointer'
-		})
-		.prop('title', '不再推荐这个应用')
+		.text('\u00D7')
+		.prop('title', '\u4E0D\u518D\u63A8\u8350\u8FD9\u4E2A\u5E94\u7528')
 		.click(function(e) {
 			e.stopPropagation();
-			$goodapp.hide();
+			e.preventDefault();
+
+			$goodapp.fadeOut();
 
 			if (list.indexOf(app_url) === -1) {
 				list.push(app_url);
@@ -45,10 +41,10 @@ SF.pl.remove_app_recom = new SF.plugin((function($) {
 				$goodapp.show();
 			}
 
-			$goodapp.append($btn).css('position', 'relative');
+			$('>a>strong', $goodapp).append($btn);
 		},
 		'unload': function() {
-			$goodapp.show().css('position', '');
+			$goodapp.show();
 			$btn.detach();
 		}
 	};
