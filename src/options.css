@@ -373,6 +373,27 @@ input[type="number"] {
 		0 1px 0 rgba(0, 0, 0, .09);
 	-webkit-animation-name: none;
 }
+table {
+	margin-bottom: 10px;
+}
+table > tbody > tr {
+	width: 50%;
+}
+table .avatar img {
+	width: 36px;
+	height: 36px;
+}
+table .author, table .desc td {
+	height: 20px;
+	padding: 0 6px;
+	vertical-align: middle;
+}
+table .desc td {
+	width: 50%;
+	font-size: 11px;
+	color: #999;
+	-webkit-text-size-adjust: none;
+}
 #footer {
 	border-top: 1px solid rgba(0, 0, 0, .15);
 	padding-top: 10px;
