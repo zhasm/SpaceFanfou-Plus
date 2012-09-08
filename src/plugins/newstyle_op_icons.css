@@ -53,6 +53,9 @@ span.op a.repost:active {
 	width: 465px !important;
 	padding: 12px 30px 12px 5px !important;
 }
+#stream ol:not(.wa) li {
+	margin-right: -20px;
+}
 #stream .wa li {
 	width: 408px !important;
 	padding: 9px 30px 12px 62px !important;
