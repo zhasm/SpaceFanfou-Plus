@@ -791,6 +791,9 @@ p.pm-parent {
 .pagination .more-right {
 	display: none;
 }
+.inner-content #pagination-totop {
+	margin-left: 767px;
+}
 .tabs {
 	border-bottom: 1px solid rgba(0, 0, 0, .15) !important;
 }
