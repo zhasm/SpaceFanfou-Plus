@@ -81,6 +81,6 @@
 	},
 	"permissions": [ "http://fanfou.com/*", "http://*.fanfou.com/*", "tabs", "notifications", "contextMenus" ],
 	"content_security_policy": "script-src 'self'; object-src 'self'",
-	"version": "0.7.2.1",
+	"version": "0.7.2.2",
 	"manifest_version": 2
 }
