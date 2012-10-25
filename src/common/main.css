@@ -809,6 +809,7 @@ p.pm-parent {
 	border: 1px solid rgba(0, 0, 0, .12) !important;
 	border-bottom-color: rgba(0, 0, 0, .15) !important;
 	padding: 3px 11px !important;
+	margin-bottom: 1px !important;
 	color: #666 !important;
 	text-shadow: 0 1px 0 #fff;
 }
