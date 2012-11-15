@@ -128,6 +128,10 @@ var updates = (function() {
 				updated_items.push(item);
 		});
 	});
+	
+	if (! updated_items.length && SF.versioin != SF.old_version) {
+		updated_items.push('细节更新');
+	}
 
 	return updated_items;
 })();
