@@ -56,7 +56,6 @@ var plugins = [
 	{
 		name: 'float_message',
 		options: [
-			'noajaxattop',
 			'notlostfocus',
 			'keepmentions'
 		],

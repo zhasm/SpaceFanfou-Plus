@@ -15,7 +15,6 @@ SF.st.default_settings = {
 	'expanding_replies.auto_expand': false,
 	user_switcher: false,
 	float_message: false,
-	'float_message.noajaxattop': false,
 	'float_message.notlostfocus': false,
 	'float_message.keepmentions': false,
 	disable_autocomplete: false,

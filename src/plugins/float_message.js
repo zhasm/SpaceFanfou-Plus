@@ -4,8 +4,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 	var $update = $('>#phupdate', $main);
 	if (! $update.length) return;
 
-	var noajaxattop = false,
-		notlostfocus = false,
+	var notlostfocus = false,
 		keepmentions = false;
 
 	/* 处理悬浮 */
@@ -141,7 +140,6 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 	function onFormSubmit(e) {
 		$loading.css('visibility', 'visible');
 		if ($form.attr('target')) return;
-		if (noajaxattop && $update.is(':not(.float-message)')) return;
 		// 生成 form_submit 事件以触发彩蛋识别
 		var eve = document.createEvent('Event');
 		eve.initEvent('form_submit', false, false);
@@ -221,6 +219,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 						$('#ul_close').click();
 						data.msg = data.msg || '图片上传成功！';
 					}
+					FF.app.Timeline.checkNew();
 				}
 				$notice.text(data.msg);
 				$notice.hide();
@@ -272,8 +271,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 	}
 
 	return {
-		update: function(is_noajaxattop, is_notlostfocus, is_keepmentions) {
-			noajaxattop = is_noajaxattop;
+		update: function(is_notlostfocus, is_keepmentions) {
 			notlostfocus = is_notlostfocus;
 			keepmentions = is_keepmentions;
 		},
