@@ -6,6 +6,8 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 
 	var notlostfocus = false,
 		keepmentions = false;
+		
+	var is_home = location.href.indexOf('http://fanfou.com/home') === 0;
 
 	/* 处理悬浮 */
 	var $msg = $('textarea', $update);
@@ -219,7 +221,8 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 						$('#ul_close').click();
 						data.msg = data.msg || '图片上传成功！';
 					}
-					FF.app.Timeline.checkNew();
+					if (is_home)
+						FF.app.Timeline.checkNew();
 				}
 				$notice.text(data.msg);
 				$notice.hide();
