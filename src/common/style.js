@@ -73,7 +73,7 @@
 					$i('content').appendChild(pagination);
 				} else if ($i('stream')) {
 					$i('stream').parentNode.appendChild(pagination);
-				} else if ($cn(document, 'inner-content') != null) {
+				} else if ($cn(document, 'inner-content').length) {
 					$cn(document, 'inner-content')[0].appendChild(pagination);
 				}
 			}
