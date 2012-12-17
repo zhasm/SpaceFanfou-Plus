@@ -1,0 +1,11 @@
+#christmas_gift {
+	width: 128px;
+	height: 128px;
+	background: url('/resources/images/christmas-gift.png') left top;
+	opacity: .5;
+	-webkit-transition: opacity .5s ease-in-out;
+	cursor: pointer;
+}
+#christmas_gift:hover {
+	opacity: 1;
+}
