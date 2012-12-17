@@ -1,0 +1,15 @@
+#stream .wa li {
+	overflow: visible !important;
+}
+#stream .wa li .avatar::after {
+	content: url('/resources/images/christmas-hat.png');
+	position: absolute;
+	top: 8px;
+	left: -15px;
+	pointer-events: none;
+	-webkit-user-select: none;
+	z-index: 99;
+}
+#stream .wa li.reply .avatar::after {
+	content: none;
+}
