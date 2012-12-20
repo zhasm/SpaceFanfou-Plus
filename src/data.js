@@ -120,6 +120,23 @@ var plugins = [
 			'timeout'
 		],
 		js: 'notification.js'
+	},
+
+	/* 2012 圣诞节彩蛋 */
+
+	{
+		name: 'christmas_hat',
+		css: 'christmas_hat.css'
+	},
+	{
+		name: 'christmas_song',
+		js: 'christmas_song.js',
+		css: 'christmas_song.css'
+	},
+	{
+		name: 'snowstorm',
+		js: 'snowstorm.js',
+		css: 'snowstorm.css',
 	}
 
 ];
@@ -127,6 +144,9 @@ var plugins = [
 /* 历史记录 */
 
 var history = {
+	'0.7.3.4': [
+		'2012 圣诞节彩蛋'
+	],
 	'0.7.3.1': [
 		'修正侧栏模块无法折叠的问题'
 	],
