@@ -1,5 +1,7 @@
 SF.pl.snowstorm = (function (window, document, $) {
-	if (! SF.fn.isChristmasDay())
+	var end_date = new Date(2012, 11, 26);
+	var now = new Date;
+	if (now > end_date)
 		return new SF.plugin;
 
 	var s = this,
@@ -178,6 +180,7 @@ SF.pl.snowstorm = (function (window, document, $) {
 			s.events.remove(window, 'blur', s.freeze);
 			s.events.remove(window, 'focus', s.resume);
 		}
+		localStorage.removeItem('sf_snow_storm');
 	};
 
 	storm.show = function () {

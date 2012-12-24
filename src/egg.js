@@ -1,15 +1,29 @@
-var christmas_re = /圣[诞誕]快[乐樂]/;
+var christmas_re = /圣[诞誕]快[乐樂]|Christmas|Xmas/i;
 
 function checkStatus(status) {
 	if (christmas_re.test(status)) {
-		var event = document.createEvent('Event');
-		event.initEvent('merry_christmas', false, false);
-		dispatchEvent(event);
+		triggerSnowStorm();
+		var now = (new Date) + '';
+		SF.fn.setData('sf_snow_storm', now);
 	}
+}
+
+function triggerSnowStorm() {
+	var event = document.createEvent('Event');
+	event.initEvent('merry_christmas', false, false);
+	dispatchEvent(event);
 }
 
 addEventListener('sf_plugin_snowstorm_loaded', function(e) {
 	removeEventListener(e.type, arguments.callee, false);
+
+	var now = new Date;
+	var last_triggered_time = new Date(SF.fn.getData('sf_snow_storm'));
+	if (last_triggered_time.getTime() &&
+		now - last_triggered_time <= 5 * 60 * 1000) {
+		triggerSnowStorm();
+		return;
+	}
 
 	var xhr = new XMLHttpRequest;
 	var url = 'http://m.fanfou.com/home';
