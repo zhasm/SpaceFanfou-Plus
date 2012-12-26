@@ -79,6 +79,9 @@
 .float-message:hover .tip {
 	opacity: 1;
 }
+.float-message#phupdate .act {
+	display: block;
+}
 .float-message#phupdate:not(:hover) .act {
 	position: static;
 }
