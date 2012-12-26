@@ -32,10 +32,7 @@ SF.st.default_settings = {
 	'notification.playsound': true,
 	'notification.timeout': 15,
 	status_manage: true,
-	fav_friends: false,
-	christmas_hat: true,
-	christmas_song: true,
-	snowstorm: true
+	fav_friends: false
 };
 
 /* 读取选项 */

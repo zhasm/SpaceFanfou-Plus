@@ -77,12 +77,6 @@ SF.fn.isMyPage = function() {
 		location.href.indexOf(my_page_url) === 0;
 }
 
-SF.fn.isChristmasDay = function() {
-	var now = new Date;
-	return now.getMonth() == 11 &&
-		now.getDate() == 25;
-}
-
 SF.fn.emulateClick = function(elem, canBubble) {
 	var e = document.createEvent('MouseEvents');
 	e.initMouseEvent('click', canBubble === true, true)

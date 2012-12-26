@@ -120,23 +120,6 @@ var plugins = [
 			'timeout'
 		],
 		js: 'notification.js'
-	},
-
-	/* 2012 圣诞节彩蛋 */
-
-	{
-		name: 'christmas_hat',
-		css: 'christmas_hat.css'
-	},
-	{
-		name: 'christmas_song',
-		js: 'christmas_song.js',
-		css: 'christmas_song.css'
-	},
-	{
-		name: 'snowstorm',
-		js: 'snowstorm.js',
-		css: 'snowstorm.css',
 	}
 
 ];
