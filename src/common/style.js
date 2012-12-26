@@ -187,7 +187,7 @@
 
 	(function($) {
 		SF.fn.waitFor(function() {
-			return $ = window.jQuery;
+			return ($ = window.jQuery) && $i('footer');
 		}, function() {
 			$('.colltab:not(.fav_friends)').each(function() {
 				var $colltab = $(this);
