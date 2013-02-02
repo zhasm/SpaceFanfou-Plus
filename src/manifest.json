@@ -1,6 +1,6 @@
 {
 	"background": {
-		"scripts": [ "namespace.js", "data.js", "settings.js", "background.js" ]
+		"scripts": [ "namespace.js", "data.js", "settings.js", "functions.js", "background.js" ]
 	},
 	"content_scripts": [ {
 		"css": [ "common/main.css" ],

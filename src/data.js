@@ -120,6 +120,11 @@ var plugins = [
 			'timeout'
 		],
 		js: 'notification.js'
+	},
+	{
+		name: 'rating',
+		type: 'background',
+		js: 'rating.js'
 	}
 
 ];
