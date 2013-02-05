@@ -3,6 +3,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 	if ($main.hasClass('privatemsg')) return;
 	var $update = $('>#phupdate', $main);
 	if (! $update.length) return;
+	var $button = $('.formbutton[type="submit"]', $update);
 
 	var notlostfocus = false,
 		keepmentions = false;
@@ -187,6 +188,21 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 				false : 'application/x-www-form-urlencoded; charset=UTF-8',
 			accepts: 'json',
 			dataType: 'json',
+			xhr: function() {
+				var xhr = new XMLHttpRequest;
+				if (xhr.upload) {
+					xhr.upload.addEventListener('progress', function(e) {
+						if (! e.lengthComputable) return;
+						if (e.total < 50 * 1024) return;
+						var percent = Math.floor(e.loaded / e.total * 100);
+						$button.val(percent + '%');
+					}, false);
+				}
+				return xhr;
+			},
+			beforeSend: function() {
+				$button.val('发送');
+			},
 			success: function(data) {
 				$loading.css('visibility', 'hidden');
 				var $notice = $('<div>');
@@ -234,6 +250,9 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 				$header.append($notice);
 				$notice.fadeIn(500).delay(3500).fadeOut(500,
 					function() { $(this).remove(); });
+			},
+			complete: function() {
+				$button.val('发送');
 			}
 		}, 'json');
 		return false;
