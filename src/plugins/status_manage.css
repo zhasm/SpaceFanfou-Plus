@@ -27,3 +27,8 @@ div.batch-manage.statuses {
 	right: 9px;
 	bottom: 5px;
 }
+div.batch-manage.statuses a.bl {
+	float: right;
+	margin-left: 5px;
+	cursor: pointer;
+}

@@ -104,50 +104,12 @@ SF.pl.status_manage = new SF.plugin((function($) {
 		return $(selector, $stream);
 	}
 
-	function batchDelete() {
-		var $todel = getCheckboxes(':checked');
-		var length = $todel.length;
-		if (! length) return;
-		if (! confirm('确定要删除选定的 ' + $todel.length + ' 条消息吗？'))
-			return;
-		var count = 0;
-		$todel.each(function() {
-			var $t = $(this);
-			var $del = $t.parent().find('a.delete');
-			$.ajax({
-				type: 'POST',
-				url: location.href,
-				data: {
-					action: 'msg.del',
-					msg: $t.attr('msgid'),
-					token: $del.attr('token'),
-					ajax: 'yes',
-				},
-				dataType: 'json',
-				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-				success: function(data) {
-					if (data.status) {
-						FF.util.yFadeRemove($del.get(0), 'li');
-						if (++count === length) location.reload();
-					} else {
-						alert(data.msg);
-					}
-				},
-			});
-		});
-	}
-
 	var $select = $('<select />');
 	$select
 	.append(
 		$('<option />')
 		.val('default')
 		.text('批量处理..')
-	)
-	.append(
-		$('<option />')
-		.val('delete')
-		.text('删除选中消息')
 	)
 	.append(
 		$('<option />')
@@ -179,11 +141,6 @@ SF.pl.status_manage = new SF.plugin((function($) {
 		switch (this.value) {
 		case 'default':
 			break;
-		case 'delete':
-			$('option', $select).first().text('处理中..');
-			$select.prop('disabled', true);
-			batchDelete();
-			break;
 		case 'select-all':
 			getCheckboxes().prop('checked', true);
 			break;
@@ -209,6 +166,49 @@ SF.pl.status_manage = new SF.plugin((function($) {
 			break;
 		}
 		this.value = 'default';
+	})
+	.appendTo($manage);
+
+	var $button = $('<a />');
+	$button
+	.addClass('bl')
+	.text('删除消息')
+	.click(function() {
+		var $todel = getCheckboxes(':checked');
+		var length = $todel.length;
+		if (! length || ! confirm('确定要删除选定的 ' + length + ' 条消息吗？'))
+			return;
+
+		$button.unbind('click', arguments.callee);
+
+		$select.remove();
+		$button.text('处理中..');
+
+		var count = 0;
+		$todel.each(function() {
+			var $t = $(this);
+			var $del = $t.parent().find('a.delete');
+			$.ajax({
+				type: 'POST',
+				url: location.href,
+				data: {
+					action: 'msg.del',
+					msg: $t.attr('msgid'),
+					token: $del.attr('token'),
+					ajax: 'yes',
+				},
+				dataType: 'json',
+				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				success: function(data) {
+					if (data.status) {
+						FF.util.yFadeRemove($del.get(0), 'li');
+						if (++count === length) location.reload();
+					} else {
+						alert(data.msg);
+					}
+				},
+			});
+		});
 	})
 	.appendTo($manage);
 
