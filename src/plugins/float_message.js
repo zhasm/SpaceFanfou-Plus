@@ -240,7 +240,7 @@ SF.pl.float_message = new SF.plugin((function($, $Y) {
 					if (is_home) {
 						setTimeout(function() {
 							FF.app.Timeline.checkNew();
-						}, 250);
+						}, 500);
 					}
 				}
 				$notice.text(data.msg);
