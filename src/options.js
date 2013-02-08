@@ -149,6 +149,10 @@ addEventListener('load', function load(e) {
 		}
 	});
 
+	forEach($$('.avatar img'), function(img) {
+		img.src += '?' + (new Date).getTime();
+	});
+
 	setTimeout(function() {
 		if (document.documentElement.clientHeight < 300) return load();
 		forEach($$('div[id^="tabs"]'), function(tab) {
