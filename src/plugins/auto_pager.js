@@ -20,8 +20,8 @@ SF.pl.auto_pager = new SF.plugin((function($) {
 	var onScroll = SF.fn.throttle(autoPager, 250);
 
 	function autoPager() {
-		if (! mousewheel_down) 
-			return; 
+		if (! mousewheel_down)
+			return;
 		current_pos = body.scrollTop + docelem.clientHeight;
 		if (current_pos <= $more.offset().top - remain)
 			return;
@@ -30,9 +30,10 @@ SF.pl.auto_pager = new SF.plugin((function($) {
 		if ($more.hasClass('loading'))
 			return;
 
-		SF.fn.emulateClick($more[0]);
+		if (! $more.is(':hidden'))
+			SF.fn.emulateClick($more[0]);
 	}
-	
+
 	function onMousewheel(e) {
 		mousewheel_down = e.originalEvent.wheelDeltaY < 0;
 	}
