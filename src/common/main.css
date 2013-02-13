@@ -159,7 +159,7 @@
 }
 ::selection {
 	color: rgba(255, 255, 255, .85);
-	background: rgba(83, 186, 237, 1);
+	background: #53BAED;
 	text-shadow: none !important;
 }
 
