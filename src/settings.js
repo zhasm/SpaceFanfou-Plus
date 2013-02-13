@@ -33,7 +33,10 @@ SF.st.default_settings = {
 	'notification.timeout': 15,
 	status_manage: true,
 	fav_friends: false,
-	rating: true
+	rating: true,
+	unread_statuses: true,
+	'unread_statuses.auto_show': true,
+	'unread_statuses.playsound': false
 };
 
 /* 读取选项 */

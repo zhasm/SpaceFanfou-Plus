@@ -47,7 +47,7 @@ SF.fn.fixNumber = function(num, width) {
 		--delta;
 	}
 	return num;
-};
+}
 
 SF.fn.formatDate = function(date) {
 	var datestr;
@@ -57,13 +57,24 @@ SF.fn.formatDate = function(date) {
 					SF.fn.fixNumber(date.getDate(), 2);
 	}
 	return datestr;
-};
+}
 
-SF.fn.isUserPage = function() {
-	return !! document.getElementById('overlay-report');
-};
+SF.fn.getExtDomain = function() {
+	var ext_domain;
+	var elems = document.getElementsByClassName('space-fanfou');
 
-SF.fn.isMyPage = function() {
+	[].some.call(elems, function(elem) {
+		var url = elem.href;
+		if (! url || url.indexOf('chrome-extension://') !== 0)
+			return false;
+		ext_domain = url.match(/^(chrome-extension:\/\/[^\/]+\/)/)[1];
+		return true;
+	});
+
+	return ext_domain;
+}
+
+SF.fn.getMyPageURL = function() {
 	var my_page_url;
 	var nav_links = document.querySelectorAll('#navigation li a');
 	for (var i = 0; i < nav_links.length; i++) {
@@ -73,6 +84,15 @@ SF.fn.isMyPage = function() {
 			break;
 		}
 	}
+	return my_page_url;
+}
+
+SF.fn.isUserPage = function() {
+	return !! document.getElementById('overlay-report');
+}
+
+SF.fn.isMyPage = function() {
+	var my_page_url = SF.fn.getMyPageURL();
 	return my_page_url != null &&
 		location.href.indexOf(my_page_url) === 0;
 }

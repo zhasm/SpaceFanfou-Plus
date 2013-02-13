@@ -100,6 +100,14 @@ var plugins = [
 		js: 'fav_friends.js',
 		css: 'fav_friends.css'
 	},
+	{
+		name: 'unread_statuses',
+		options: [
+			'auto_show',
+			'playsound'
+		],
+		js: 'unread_statuses.js'
+	},
 
 	/* 其他扩展 */
 
