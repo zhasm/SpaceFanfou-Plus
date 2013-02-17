@@ -128,7 +128,7 @@ var updates = (function() {
 				updated_items.push(item);
 		});
 	});
-	
+
 	if (! updated_items.length && SF.versioin != SF.old_version) {
 		updated_items.push('细节更新');
 	}
@@ -427,3 +427,19 @@ function updateSettings(e) {
 	}
 }
 addEventListener('storage', updateSettings, false);
+
+if (! SF.old_version) {
+	// 首次使用 太空饭否++
+	createTab('http://fanfou.com/home');
+	setTimeout(function() {
+		var text = '太空饭否++ 已经安装到您的浏览器! 您将会发现, 饭否页面的外观发生了翻天覆地的变化! ' +
+			'请注意地址栏右端的 "饭" 字图标, 点击它将会弹出设置界面, 在这里可以开启和关闭 太空饭否++ 的各种功能, 以满足您的个性化需求.';
+		showNotification({
+			content: text,
+			timeout: 120000
+		})
+		.addEventListener('click', function() {
+			this.cancel();
+		});
+	}, 1000);
+}
