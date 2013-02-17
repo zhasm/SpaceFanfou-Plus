@@ -83,6 +83,6 @@
 	},
 	"permissions": [ "http://fanfou.com/*", "http://*.fanfou.com/*", "tabs", "notifications", "contextMenus" ],
 	"content_security_policy": "script-src 'self'; object-src 'self'",
-	"version": "0.7.4.8",
+	"version": "0.7.4.9",
 	"manifest_version": 2
 }
