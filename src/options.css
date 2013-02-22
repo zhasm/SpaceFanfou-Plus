@@ -318,9 +318,18 @@ input[type="number"] {
 #screenshot.fadeOut {
   opacity: 0;
 }
-#screenshot img {
+#screenshot_img_wrapper {
+	width: 200px;
+	height: 80px;
 	border: 1px solid rgba(0, 0, 0, .2);
 	border-radius: 3px;
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+}
+#screenshot_img_wrapper img {
+	border-radius: 3px;
+	vertical-align: middle;
 }
 .btn_apply {
 	font-family: inherit;
