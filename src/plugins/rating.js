@@ -21,7 +21,7 @@ SF.pl.rating = new SF.plugin((function() {
 						clearInterval(interval);
 
 						showNotification({
-							content: '喜欢 太空饭否++ 请点击这里把它推荐给你的饭友!',
+							content: '喜欢 太空饭否++ 请点击这里把它推荐给你的饭友! :)',
 							timeout: 60000
 						}).
 						addEventListener('click', function(e) {
