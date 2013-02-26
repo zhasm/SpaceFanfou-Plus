@@ -161,7 +161,8 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 				var script = document.createElement('script');
 				script.src = 'http://api.fanfou.com/users/show.json?id=' +
 					encodeURIComponent(userid) +
-					'&callback=SF.cb.advanced_sidebar';
+					'&callback=SF.cb.advanced_sidebar' +
+					'&unique=' + (new Date().getTime());
 				script.onerror = function(e) {
 					console.log('由于饭否服务器的 bug, 太空饭否++ 的 "侧栏详细统计信息" 插件加载失败, 并即将重试. ', e);
 					setTimeout(init, 250);
