@@ -9,10 +9,12 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 
 	return {
 		'load': function() {
-			SF.cb.advanced_sidebar = function(data) {
-				SF.cb.advanced_sidebar = undefined;
+			SF.cb.advanced_sidebar = function(data, isInit) {
+				if (! isInit) {
+					SF.cb.advanced_sidebar = undefined;
+				}
 
-				var created = new Date(data.created_at);
+				var created = new Date(isInit ? 0 : data.created_at);
 				var bgImage = data.profile_background_image_url;
 
 				var regDuration = Math.floor((new Date() - created) /
@@ -28,6 +30,12 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 					  (regDuration >= 7 ? '不足一个月' :
 					   (regDuration > 0 ? '不足一周' : '刚来不到一天'))));
 
+
+				if (isInit) {
+					duration = '';
+					regDuration = 0;
+				}
+
 				// 从饭否诞生开始计算
 				var sinceFanfouStart = Math.round(
 						(new Date() - new Date(2007, 4, 12)) /
@@ -42,6 +50,8 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 				if (!isFinite(statusFreq))
 					statusFreq = data.statuses_count;
 
+				if (isInit) statusFreq = 0;
+
 				// 饭粒公式
 				var actIndex = ((40 * statusFreq) - (statusFreq * statusFreq)) / 400;
 				if (statusFreq > 20)
@@ -49,10 +59,16 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 				if (data.protected)
 					actIndex = actIndex * 0.75
 
+				if (isInit) actIndex = 0;
+
 				var infIndex = (
 					(10 *(Math.sqrt(data.followers_count)) / Math.log(regDuration + 100)) +
 					((data.followers_count / 100) + (regDuration / 100)) * actIndex
 				).toFixed(0);
+
+				if (isInit) infIndex = 0;
+
+				$('div.stabs.advanced_group').remove();
 
 				$insert.after(
 					$('<div />').addClass('stabs advanced_group')
@@ -68,7 +84,7 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 				$('.advanced_group>ul')
 					.append(
 						$('<li />').addClass('advanced ptest')
-							.text('注册于 ' + SF.fn.formatDate(created))
+							.text('注册于 ' + (isInit ? '加载中...' : SF.fn.formatDate(created)))
 					)
 					.append(
 						$('<li />').addClass('advanced')
@@ -139,6 +155,8 @@ SF.pl.advanced_sidebar = new SF.plugin((function($) {
 						.appendTo('.advanced_group ul');
 				}
 			};
+			SF.cb.advanced_sidebar({}, true);
+
 			function init() {
 				var script = document.createElement('script');
 				script.src = 'http://api.fanfou.com/users/show.json?id=' +
