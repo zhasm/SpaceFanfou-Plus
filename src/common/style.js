@@ -39,6 +39,7 @@
 		function hideTotop() {
 			if (! hidden && $totop) {
 				$totop.css({
+					display: 'none',
 					visibility: 'hidden',
 					opacity: 0,
 					cursor: 'default',
@@ -50,12 +51,15 @@
 
 		function showTotop() {
 			if (hidden && $totop) {
-				$totop.css({
-					visibility: 'visible',
-					opacity: .5,
-					cursor: 'pointer',
-					'-webkit-transition': 'opacity .4s ease-in-out'
-				});
+				$totop.css('display', '');
+				setTimeout(function() {
+					$totop.css({
+						visibility: 'visible',
+						opacity: .5,
+						cursor: 'pointer',
+						'-webkit-transition': 'opacity .4s ease-in-out'
+					});
+				}, 0);
 				hidden = false;
 			}
 		}
