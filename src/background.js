@@ -179,8 +179,9 @@ function getPluginOptions(name) {
 }
 
 // 建立为页面提供的数据缓存
+var page_cache;
 function buildPageCache() {
-	var page_cache = [];
+	page_cache = [];
 	for (var name in details) {
 		if (! details.hasOwnProperty(name)) continue;
 		var item = details[name];
@@ -211,7 +212,7 @@ function buildPageCache() {
 		},
 		data: page_cache
 	};
-	localStorage['init_message'] = JSON.stringify(init_message);
+	page_cache = JSON.stringify(init_message);
 }
 buildPageCache();
 
@@ -296,7 +297,7 @@ chrome.extension.onConnect.addListener(function(port) {
 	// 显示太空饭否图标
 	chrome.pageAction.show(tabId);
 	// 向目标发送初始化数据
-	port.postMessage(localStorage['init_message']);
+	port.postMessage(page_cache);
 });
 
 // 维持太空饭否图标
